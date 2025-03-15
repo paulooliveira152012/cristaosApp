@@ -1,0 +1,3 @@
+- app/index.tsx works as the Entry point of my project. so it NEEDS to be named index.tsx
+
+-app/_layout.tsx is the nav bar, which is implicitly being used by default
