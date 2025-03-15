@@ -1,3 +1,20 @@
 - app/index.tsx works as the Entry point of my project. so it NEEDS to be named index.tsx
 
 -app/_layout.tsx is the nav bar, which is implicitly being used by default
+
+
+User Story:
+user signs up, a verification email is sent to his email
+a popup is displayed informing user about email confirmarion, with a button to go to login page
+user receives verification email
+user verifies email and is redirected to login page
+user logs in and sees main page with other user's listings and rooms
+user sees his information, and listings in his profile
+user navigates to settings page and sees options for:
+    - update email
+    - update name
+    - update password
+
+Implement login
+Display user info on profile
+
