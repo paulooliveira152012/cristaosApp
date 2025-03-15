@@ -1,7 +1,7 @@
 export const handleLogin = async (email, password) => {
     console.log("Logging in with:", email, password);
 
-    const api = "http://localhost:5001/login";
+    const api = "http://localhost:5001/api/auth/login";
 
     try {
         const response = await fetch(api, {

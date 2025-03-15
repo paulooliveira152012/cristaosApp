@@ -10,11 +10,8 @@ app.use(cors())
 // allow JSON parsing
 app.use(express.json())
 
-
-app.post('/login', (req, res) => {
-    res.json({ message: 'Welcome to the API' })
-    console.log("api reached")
-})
+const authRoutes = require('./routes/auth')
+app.use('/api/auth', authRoutes)
 
 // Start Server
 const PORT = process.env.PORT || 5001;
