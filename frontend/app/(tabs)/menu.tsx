@@ -22,6 +22,8 @@ export default function Menu() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const [modal, setModal] = useState(false)
+
   console.log("Selected Page:", selectedPage);
 
   const loginCall = async () => {
@@ -36,9 +38,12 @@ export default function Menu() {
             console.log("Login successful:", response.message);
             setEmail("");
             setPassword("");
+            setModal(false)
             setSelectedPage(null); // ✅ Navigate back or move to a dashboard
         } else {
             setError(response?.message || "Login failed.");
+            console.log("invalid login")
+            setModal(true)
         }
     } catch (error) {
         setError("Something went wrong. Please try again.");
@@ -138,6 +143,18 @@ const signupCall = async () => {
           >
             <ThemedText style={styles.backButtonText}>Back</ThemedText>
           </Pressable>
+
+          {/* modal */}
+          {modal && (
+            <View>
+            <ThemedText> 
+              Please, verify your account thorough the email we've sent you before proceeding!
+            </ThemedText>
+          </View>
+          )
+          }
+          
+
         </View>
       )}
 
