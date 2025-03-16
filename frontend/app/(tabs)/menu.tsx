@@ -26,12 +26,13 @@ export default function Menu() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
   const [modal, setModal] = useState(false)
   const [verificationNotificationModal, setVerificationNotificationModal] = useState(false)
-
   const router = useRouter();
-  const { login } = useUser()
+  const { login, currentUser, logout} = useUser()
+  const [showSettings, setShowSettings] = useState(false); // ✅ Controls settings menu visibility
+
+  console.log("✅", currentUser)
 
   console.log("Selected Page:", selectedPage);
 
@@ -99,146 +100,180 @@ const signupCall = async () => {
 
 
 
-  return (
-    <SafeAreaView style={styles.container}>
-      {/* Selection Menu */}
-      {selectedPage === null && (
-        <>
-          <Pressable
-            onPress={() => setSelectedPage("login")}
-            style={styles.button}
-          >
-            <ThemedText style={styles.buttonText}>Login</ThemedText>
-          </Pressable>
+return (
+  <SafeAreaView style={styles.container}>
+    {/* ✅ Show user info if logged in */}
+    {currentUser ? (
+  <View style={styles.settingsContainer}>
+    <ThemedText style={styles.welcomeText}>
+      Welcome, {currentUser.username}!
+    </ThemedText>
 
-          <Pressable
-            onPress={() => setSelectedPage("signup")}
-            style={styles.button}
-          >
-            <ThemedText style={styles.buttonText}>Sign Up</ThemedText>
-          </Pressable>
-        </>
-      )}
+    {/* Settings Button */}
+    <Pressable
+      style={styles.settingsButton}
+      onPress={() => setShowSettings(!showSettings)}
+    >
+      <ThemedText style={styles.settingsButtonText}>
+        {showSettings ? "Close Settings" : "Open Settings"}
+      </ThemedText>
+    </Pressable>
 
-      {/* Login Form */}
-      {selectedPage === "login" && (
-        <View style={styles.formContainer}>
-          <ThemedText style={styles.title}>Login</ThemedText>
+    {/* Settings Menu */}
+    {showSettings && (
+      <View style={styles.settingsMenu}>
+        <Pressable style={styles.settingsItem}>
+          <ThemedText>🔧 Profile Settings</ThemedText>
+        </Pressable>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
-            autoCapitalize="none"
-          />
+        <Pressable style={styles.settingsItem}>
+          <ThemedText>🔔 Notifications</ThemedText>
+        </Pressable>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-          />
+        <Pressable style={styles.settingsItem}>
+          <ThemedText>🔒 Account Security</ThemedText>
+        </Pressable>
 
-          <Pressable
-            style={styles.button}
-            // onPress={() => handleLogin(email, password)}
-            onPress={loginCall}
-          >
-            <ThemedText style={styles.buttonText}>Login</ThemedText>
-          </Pressable>
+        <Pressable style={styles.logoutButton} onPress={logout}>
+          <ThemedText style={styles.logoutButtonText}>🚪 Logout</ThemedText>
+        </Pressable>
+      </View>
+    )}
+  </View>
+) : (
 
-          <Pressable
-            onPress={() => setSelectedPage(null)}
-            style={styles.backButton}
-          >
-            <ThemedText style={styles.backButtonText}>Back</ThemedText>
-          </Pressable>
+      <>
+        {/* ✅ Show login/signup buttons if no user is logged in */}
+        {selectedPage === null && (
+          <>
+            <Pressable
+              onPress={() => setSelectedPage("login")}
+              style={styles.button}
+            >
+              <ThemedText style={styles.buttonText}>Login</ThemedText>
+            </Pressable>
 
-          {/* modal */}
-          {modal && (
-            <View>
-            <ThemedText> 
-              Please, verify your account thorough the email we've sent you before proceeding!
-            </ThemedText>
+            <Pressable
+              onPress={() => setSelectedPage("signup")}
+              style={styles.button}
+            >
+              <ThemedText style={styles.buttonText}>Sign Up</ThemedText>
+            </Pressable>
+          </>
+        )}
+
+        {/* Login Form */}
+        {selectedPage === "login" && (
+          <View style={styles.formContainer}>
+            <ThemedText style={styles.title}>Login</ThemedText>
+
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              keyboardType="email-address"
+              value={email}
+              onChangeText={setEmail}
+              autoCapitalize="none"
+            />
+
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
+            />
+
+            <Pressable
+              style={styles.button}
+              onPress={loginCall}
+            >
+              <ThemedText style={styles.buttonText}>Login</ThemedText>
+            </Pressable>
+
+            <Pressable
+              onPress={() => setSelectedPage(null)}
+              style={styles.backButton}
+            >
+              <ThemedText style={styles.backButtonText}>Back</ThemedText>
+            </Pressable>
+
+            {/* Modal */}
+            {modal && (
+              <View>
+                <ThemedText>
+                  Please verify your account through the email we've sent you before proceeding!
+                </ThemedText>
+              </View>
+            )}
           </View>
-          )
-          }
-          
+        )}
 
-        </View>
-      )}
+        {/* Signup Form */}
+        {selectedPage === "signup" && (
+          <View style={styles.formContainer}>
+            <ThemedText style={styles.title}>Sign Up</ThemedText>
 
-      {/* Signup Form */}
-      {selectedPage === "signup" && (
-        <View style={styles.formContainer}>
-          <ThemedText style={styles.title}>Sign Up</ThemedText>
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              keyboardType="email-address"
+              value={email}
+              onChangeText={setEmail}
+              autoCapitalize="none"
+            />
 
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
-            autoCapitalize="none"
-          />
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
+            />
 
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-          />
+            <TextInput
+              style={styles.input}
+              placeholder="Username"
+              value={username}
+              onChangeText={setUsername}
+            />
 
-          <TextInput
-            style={styles.input}
-            placeholder="Username"
-            value={username}
-            onChangeText={setUsername}
-          />
+            <Pressable
+              style={styles.button}
+              onPress={signupCall}
+            >
+              <ThemedText style={styles.buttonText}>Create Account</ThemedText>
+            </Pressable>
 
-          {/* <Pressable style={styles.button} onPress={() => handleLogin(email, password)}> */}
-          <Pressable
-            style={styles.button}
-            onPress={signupCall}
-          >
-            <ThemedText style={styles.buttonText}>Create Account</ThemedText>
-          </Pressable>
+            <Pressable
+              onPress={() => setSelectedPage(null)}
+              style={styles.backButton}
+            >
+              <ThemedText style={styles.backButtonText}>Back</ThemedText>
+            </Pressable>
 
-          <Pressable
-            onPress={() => setSelectedPage(null)}
-            style={styles.backButton}
-          >
-            <ThemedText style={styles.backButtonText}>Back</ThemedText>
-          </Pressable>
-
-          {/* paulooliveira152012@gmail.com */}
-          {verificationNotificationModal && (
-            <View style={styles.verificationNotificationModalContainer}>
-              <ThemedText>
-                A verification link has been sent to your email. Please verify it in order to log in
+            {verificationNotificationModal && (
+              <View style={styles.verificationNotificationModalContainer}>
+                <ThemedText>
+                  A verification link has been sent to your email. Please verify it in order to log in.
                 </ThemedText>
                 <Pressable 
                   onPress={() => {
                     setSelectedPage("login");
                     setVerificationNotificationModal(false);
                   }}
-                  
                   style={styles.okButton}
                 >
-                  <ThemedText>
-                    Ok
-                  </ThemedText>
+                  <ThemedText>Ok</ThemedText>
                 </Pressable>
-            </View>
-          )}
-        </View>
-      )}
-    </SafeAreaView>
-  );
+              </View>
+            )}
+          </View>
+        )}
+      </>
+    )}
+  </SafeAreaView>
+);
 }
 
 // ✅ Fixed & Improved Styles
@@ -315,6 +350,54 @@ const styles = StyleSheet.create({
 
     // ✅ Android Shadow
     elevation: 5, 
-}
+},
+settingsContainer: {
+  width: "90%",
+  alignItems: "center",
+},
+welcomeText: {
+  fontSize: 20,
+  fontWeight: "bold",
+  marginBottom: 10,
+},
+settingsButton: {
+  backgroundColor: "#007AFF",
+  padding: 12,
+  borderRadius: 8,
+  alignItems: "center",
+  width: "100%",
+  marginVertical: 10,
+},
+settingsButtonText: {
+  color: "#FFF",
+  fontSize: 16,
+  fontWeight: "700",
+},
+settingsMenu: {
+  backgroundColor: "#F0F0F0",
+  padding: 10,
+  borderRadius: 10,
+  width: "100%",
+  marginTop: 10,
+},
+settingsItem: {
+  backgroundColor: "#FFF",
+  padding: 12,
+  borderRadius: 8,
+  marginBottom: 5,
+  alignItems: "center",
+},
+logoutButton: {
+  backgroundColor: "red",
+  padding: 12,
+  borderRadius: 8,
+  marginTop: 10,
+  alignItems: "center",
+},
+logoutButtonText: {
+  color: "#FFF",
+  fontSize: 16,
+  fontWeight: "700",
+},
 
 });
