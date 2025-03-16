@@ -47,10 +47,14 @@ export const handleSignup = async (email, password, username) => {
             body: JSON.stringify({ email, password, username })
         })
         if (response.ok) {
-            return {success: true, message: data.message}
-        } else {
-            return {success: false, message: data.message || "Signup failed"}
+            console.log("User created successifully")
+                // ✅ Ensure data contains 'message' before accessing it
         }
+
+        const data = await response.json(); // ✅ Properly parse the response
+        console.log("Signup API response:", data);
+
+        return data
         
     } catch (error) {
         console.error("Signup Error:", error);

@@ -54,14 +54,20 @@ const signupCall = async () => {
 
   try {
       console.log("Calling handleSignup from a local function...");
-      const response = await handleSignup(email, password, username); // ✅ Await API call
+      const response = await handleSignup(email, password, username);
 
       if (response?.success) {
           console.log("Signup successful:", response.message);
+
+          // ✅ Clear fields before navigating
           setEmail("");
           setPassword("");
           setUsername("");
-          setSelectedPage(null); // ✅ Navigate back to main menu or move to a dashboard
+
+          console.log("✅ fields have been cleared!")
+
+          // ✅ Ensure state updates apply first
+          setTimeout(() => setSelectedPage(null), 100); 
       } else {
           setError(response?.message || "Signup failed.");
       }
@@ -74,7 +80,6 @@ const signupCall = async () => {
 };
 
 
-  
 
   return (
     <SafeAreaView style={styles.container}>
