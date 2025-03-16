@@ -10,6 +10,9 @@ import { ThemedText } from "../../components/ThemedText";
 
 // import functions
 import { handleLogin, handleSignup } from "../../functions/menu";
+import { useRouter } from "expo-router";
+
+
 
 // User can choose to sign in
 export default function Menu() {
@@ -23,6 +26,9 @@ export default function Menu() {
   const [error, setError] = useState("");
 
   const [modal, setModal] = useState(false)
+  const [verificationNotificationModal, setVerificationNotificationModal] = useState(false)
+
+  const router = useRouter();
 
   console.log("Selected Page:", selectedPage);
 
@@ -40,6 +46,8 @@ export default function Menu() {
             setPassword("");
             setModal(false)
             setSelectedPage(null); // ✅ Navigate back or move to a dashboard
+            router.push("/(tabs)");
+
         } else {
             setError(response?.message || "Login failed.");
             console.log("invalid login")
@@ -64,6 +72,8 @@ const signupCall = async () => {
       if (response?.success) {
           console.log("Signup successful:", response.message);
 
+          setVerificationNotificationModal(true)
+
           // ✅ Clear fields before navigating
           setEmail("");
           setPassword("");
@@ -72,7 +82,7 @@ const signupCall = async () => {
           console.log("✅ fields have been cleared!")
 
           // ✅ Ensure state updates apply first
-          setTimeout(() => setSelectedPage(null), 100); 
+          // setTimeout(() => setSelectedPage(null), 100); 
       } else {
           setError(response?.message || "Signup failed.");
       }
@@ -201,6 +211,23 @@ const signupCall = async () => {
           >
             <ThemedText style={styles.backButtonText}>Back</ThemedText>
           </Pressable>
+
+          {/* paulooliveira152012@gmail.com */}
+          {verificationNotificationModal && (
+            <View style={styles.verificationNotificationModalContainer}>
+              <ThemedText>
+                A verification link has been sent to your email. Please verify it in order to log in
+                </ThemedText>
+                <Pressable 
+                  onPress={() => {setSelectedPage("login"), setVerificationNotificationModal(false)}}
+                  style={styles.okButton}
+                >
+                  <ThemedText>
+                    Ok
+                  </ThemedText>
+                </Pressable>
+            </View>
+          )}
         </View>
       )}
     </SafeAreaView>
@@ -252,4 +279,35 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 15,
   },
+
+  verificationNotificationModalContainer: {
+    flex: 1,
+    height: "100%",
+    position: "absolute",
+    backgroundColor: "white",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    padding: 10,
+    borderRadius: 10,
+  },
+
+  okButton: {
+    backgroundColor: "white",
+    width: "50%",
+    alignItems: "center",
+    borderRadius: 10,
+    padding: 5,
+    borderColor: "lightgray",
+    borderWidth: 1,
+
+    // ✅ iOS Shadow
+    shadowColor: "black",
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+
+    // ✅ Android Shadow
+    elevation: 5, 
+}
+
 });

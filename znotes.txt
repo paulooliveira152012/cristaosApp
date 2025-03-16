@@ -4,7 +4,7 @@
 
 
 User Story:
-user signs up, a verification email is sent to his email
+✅ user signs up, a verification email is sent to his email
 a popup is displayed informing user about email confirmarion, with a button to go to login page
 user receives verification email
 user verifies email and is redirected to login page
