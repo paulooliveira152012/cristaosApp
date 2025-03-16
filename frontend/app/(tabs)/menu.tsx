@@ -12,6 +12,8 @@ import { ThemedText } from "../../components/ThemedText";
 import { handleLogin, handleSignup } from "../../functions/menu";
 import { useRouter } from "expo-router";
 
+import { useUser } from "context/UserContext";
+
 
 
 // User can choose to sign in
@@ -29,6 +31,7 @@ export default function Menu() {
   const [verificationNotificationModal, setVerificationNotificationModal] = useState(false)
 
   const router = useRouter();
+  const { login } = useUser()
 
   console.log("Selected Page:", selectedPage);
 
@@ -38,7 +41,7 @@ export default function Menu() {
 
     try {
         console.log("Calling handleLogin from a local function...");
-        const response = await handleLogin(email, password); // ✅ Await API call
+        const response = await handleLogin(email, password, login); // ✅ Await API call
 
         if (response?.success) {
             console.log("Login successful:", response.message);
@@ -219,7 +222,11 @@ const signupCall = async () => {
                 A verification link has been sent to your email. Please verify it in order to log in
                 </ThemedText>
                 <Pressable 
-                  onPress={() => {setSelectedPage("login"), setVerificationNotificationModal(false)}}
+                  onPress={() => {
+                    setSelectedPage("login");
+                    setVerificationNotificationModal(false);
+                  }}
+                  
                   style={styles.okButton}
                 >
                   <ThemedText>

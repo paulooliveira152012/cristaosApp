@@ -1,9 +1,10 @@
-export const handleLogin = async (email, password) => {
+import { useUser } from "../context/UserContext"; // ✅ Import useUser
+
+export const handleLogin = async (email, password, login) => {
     console.log("Logging in with:", email, password);
 
     const api = "http://localhost:5001/api/auth/login";
 
-    console.log("attempting login...")
     try {
         const response = await fetch(api, {
             method: "POST",
@@ -17,6 +18,13 @@ export const handleLogin = async (email, password) => {
         console.log("Server response:", data);
 
         if (response.ok) {
+            if (data) {  // ✅ Ensure response contains user data
+                login(data); // ✅ Store user in context & navigate
+                console.log("User logged in successfully:", data.user);
+            } else {
+                console.error("❌ Login failed: User data missing from response");
+            }
+
             return { success: true, message: data.message };
         } else {
             return { success: false, message: data.message || "Login failed" };
@@ -26,6 +34,7 @@ export const handleLogin = async (email, password) => {
         return { success: false, message: "Network error" };
     }
 };
+
 
 
 

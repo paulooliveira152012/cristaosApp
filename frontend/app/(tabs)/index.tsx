@@ -5,8 +5,13 @@ import { HelloWave } from '../../components/HelloWave';
 import ParallaxScrollView from '../../components/ParallaxScrollView';
 import { ThemedText } from '../../components/ThemedText';
 import { ThemedView } from '../../components/ThemedView';
+import { useUser } from 'context/UserContext';
 
 export default function HomeScreen() {
+
+  const user = useUser()
+
+  console.log("user in the home page is:", user)
   return (
     <SafeAreaView style={styles.safeArea}>
       <ThemedText>
