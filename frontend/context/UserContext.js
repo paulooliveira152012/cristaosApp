@@ -4,6 +4,8 @@ import { useRouter } from "expo-router";
 
 const UserContext = createContext();
 
+
+
 export const useUser = () => useContext(UserContext);
 
 export const UserProvider = ({ children }) => {

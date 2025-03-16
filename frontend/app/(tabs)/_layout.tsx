@@ -9,13 +9,13 @@ import { useColorScheme } from "hooks/useColorScheme.web";
 
 import { MaterialIcons } from "@expo/vector-icons";
 
-import { UserProvider } from "context/UserContext";
+// import { UserProvider } from "context/UserContext";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <UserProvider>
+    // <UserProvider>
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
@@ -69,6 +69,6 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
-    </UserProvider>
+    // </UserProvider>
   );
 }

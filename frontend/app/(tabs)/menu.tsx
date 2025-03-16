@@ -6,8 +6,8 @@ import {
   View,
   StyleSheet,
 } from "react-native";
+import { Link } from "expo-router";
 import { ThemedText } from "../../components/ThemedText";
-
 // import functions
 import { handleLogin, handleSignup } from "../../functions/menu";
 import { useRouter } from "expo-router";
@@ -122,7 +122,12 @@ return (
     {/* Settings Menu */}
     {showSettings && (
       <View style={styles.settingsMenu}>
-        <Pressable style={styles.settingsItem}>
+
+        {/* clicking the profile settings should navigate the user to the settings.tsx */}
+        <Pressable 
+          style={styles.settingsItem} 
+          onPress={() => router.push("/settings")} // ✅ Navigate to settings page
+        >
           <ThemedText>🔧 Profile Settings</ThemedText>
         </Pressable>
 
