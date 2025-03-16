@@ -45,19 +45,61 @@ router.post('/signup', async (req, res) => {
 });
 
 // Login Route
-router.post('/login', (req, res) => {
+// Login Route
+router.post("/login", async (req, res) => {
+    console.log("✅ In login route");
+
     const { email, password } = req.body;
-    console.log("Login API reached with:", email, password);
+    console.log("🟢 Received credentials:", email, password);
 
-    if (!email || !password) {
-        return res.status(400).json({ success: false, message: "Missing email or password" });
-    }
+    try {
+        if (!email || !password) {
+            console.log("❌ Missing email or password");
+            return res.status(400).json({ message: "Todos os campos são necessários" });
+        }
 
-    // Mock authentication check
-    if (email === "test@example.com" && password === "password123") {
-        return res.json({ success: true, message: "Login successful" });
-    } else {
-        return res.status(401).json({ success: false, message: "Invalid credentials" });
+        // Find user by email
+        const user = await User.findOne({ email });
+        if (!user) {
+            console.log("❌ No user found for email:", email);
+            return res.status(400).json({ message: "Credenciais inválidas" });
+        }
+
+        console.log("✅ User found in database:", user.email);
+
+        // Ensure user is verified
+        if (!user.isVerified) {
+            console.log("❌ User is not verified:", user.email);
+            return res.status(403).json({ message: "Verifique sua conta antes de fazer login." });
+        }
+
+        // Compare password
+        let isMatch = false;
+        try {
+            isMatch = await bcrypt.compare(password, user.password);
+            console.log("🔍 Password check result:", isMatch);
+        } catch (err) {
+            console.error("❌ Error comparing password:", err);
+            return res.status(500).json({ message: "Erro interno ao verificar senha" });
+        }
+
+        if (!isMatch) {
+            console.log("❌ Incorrect password for user:", user.email);
+            return res.status(400).json({ message: "Credenciais inválidas" });
+        }
+
+        console.log("✅ Password matched!");
+
+        // Remove password before sending response
+        const userObject = user.toObject();
+        delete userObject.password;
+
+        console.log("🚀 Login successful for:", user.email);
+        return res.status(200).json(userObject);
+
+    } catch (error) {
+        console.error("❌ Login error caught:", error);
+        return res.status(500).json({ message: "Erro interno do servidor" });
     }
 });
 

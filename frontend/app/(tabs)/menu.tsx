@@ -19,13 +19,62 @@ export default function Menu() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   console.log("Selected Page:", selectedPage);
 
+  const loginCall = async () => {
+    setLoading(true);
+    setError("");
 
-  const loginCall = () => {
-    handleLogin()
+    try {
+        console.log("Calling handleLogin from a local function...");
+        const response = await handleLogin(email, password); // ✅ Await API call
+
+        if (response?.success) {
+            console.log("Login successful:", response.message);
+            setEmail("");
+            setPassword("");
+            setSelectedPage(null); // ✅ Navigate back or move to a dashboard
+        } else {
+            setError(response?.message || "Login failed.");
+        }
+    } catch (error) {
+        setError("Something went wrong. Please try again.");
+        console.error("Login error:", error);
+    }
+
+    setLoading(false);
+};
+
+const signupCall = async () => {
+  setLoading(true);
+  setError("");
+
+  try {
+      console.log("Calling handleSignup from a local function...");
+      const response = await handleSignup(email, password, username); // ✅ Await API call
+
+      if (response?.success) {
+          console.log("Signup successful:", response.message);
+          setEmail("");
+          setPassword("");
+          setUsername("");
+          setSelectedPage(null); // ✅ Navigate back to main menu or move to a dashboard
+      } else {
+          setError(response?.message || "Signup failed.");
+      }
+  } catch (error) {
+      setError("Something went wrong. Please try again.");
+      console.error("Signup error:", error);
   }
+
+  setLoading(false);
+};
+
+
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -72,7 +121,8 @@ export default function Menu() {
 
           <Pressable
             style={styles.button}
-            onPress={() => handleLogin(email, password)}
+            // onPress={() => handleLogin(email, password)}
+            onPress={loginCall}
           >
             <ThemedText style={styles.buttonText}>Login</ThemedText>
           </Pressable>
@@ -118,7 +168,7 @@ export default function Menu() {
           {/* <Pressable style={styles.button} onPress={() => handleLogin(email, password)}> */}
           <Pressable
             style={styles.button}
-            onPress={() => handleSignup(email, password, username)}
+            onPress={signupCall}
           >
             <ThemedText style={styles.buttonText}>Create Account</ThemedText>
           </Pressable>

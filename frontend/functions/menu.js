@@ -3,6 +3,7 @@ export const handleLogin = async (email, password) => {
 
     const api = "http://localhost:5001/api/auth/login";
 
+    console.log("attempting login...")
     try {
         const response = await fetch(api, {
             method: "POST",
