@@ -6,6 +6,7 @@ import ParallaxScrollView from '../../components/ParallaxScrollView';
 import { ThemedText } from '../../components/ThemedText';
 import { ThemedView } from '../../components/ThemedView';
 import { useUser } from 'context/UserContext';
+import Header from '../../components/components/Header';
 
 export default function HomeScreen() {
 
@@ -14,6 +15,7 @@ export default function HomeScreen() {
   console.log("user in the home page is:", user)
   return (
     <SafeAreaView style={styles.safeArea}>
+      <Header />
       <ThemedText>
         Cristãos
       </ThemedText>
