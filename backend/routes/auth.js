@@ -15,40 +15,68 @@ const transporter = nodemailer.createTransport({
 });
 
 // ✅ Signup Route with Email Verification
+// ✅ Signup Route with Enhanced User Profile
 router.post("/signup", async (req, res) => {
-    const { email, username, password } = req.body;
-    console.log(`🟢 Signup request: email=${email}, username=${username}`);
+    const { 
+        firstName, 
+        lastName, 
+        email, 
+        username, 
+        password, 
+        phoneNumber, 
+        church, 
+        ministry, 
+        twitterHandle, 
+        instagramHandle 
+    } = req.body;
+
+    console.log(`🟢 Signup request: ${email}, username=${username}`);
 
     try {
-        // Validate input
-        if (!email || !password || !username) {
-            console.log("❌ Missing fields!");
-            return res.status(400).json({ success: false, message: "All fields are required." });
+        // ✅ Validate required fields
+        if (!firstName || !lastName || !email || !password || !username) {
+            console.log("❌ Missing required fields!");
+            return res.status(400).json({ success: false, message: "All required fields must be filled." });
         }
 
-        // Check if user already exists
+        // ✅ Check if user already exists by email
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             console.log("❌ User already exists:", email);
             return res.status(409).json({ success: false, message: "Email already registered." });
         }
 
-        // Hash password
+        // ✅ Hash password before storing
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Generate unique verification token
+        // ✅ Generate unique verification token
         const verificationToken = crypto.randomBytes(32).toString("hex");
 
         console.log("🔐 Password encrypted & token generated.");
 
-        // Create and save new user
+        // ✅ Create and save new user with full profile details
         const newUser = new User({ 
+            firstName, 
+            lastName, 
             email, 
+            username, 
             password: hashedPassword, 
-            username,
+            phoneNumber, 
+            church, 
+            ministry, 
+            twitterHandle,  // ✅ Added Twitter handle
+            instagramHandle, // ✅ Added Instagram handle
             verificationToken, // Save token in DB
-            isVerified: false, // ✅ Ensure user is not verified initially
+            isVerified: false, // Ensure user is not verified initially
+            profileImage: "", // Default empty profile image
+            bio: "Follower of Christ ✝️", // Default bio
+            location: { city: "", country: "" }, // Default empty location
+            privacySettings: { // Default privacy settings
+                showEmail: false,
+                showPhoneNumber: false,
+                allowMessages: true
+            }
         });
 
         await newUser.save();
@@ -61,20 +89,26 @@ router.post("/signup", async (req, res) => {
             from: "your-email@gmail.com",
             to: email,
             subject: "Confirm Your Account",
-            html: `<p>Click the link below to verify your account:</p>
-                   <a href="${verificationLink}">${verificationLink}</a>`,
+            html: `<p>Hello ${firstName},</p>
+                   <p>Click the link below to verify your account:</p>
+                   <a href="${verificationLink}">${verificationLink}</a>
+                   <p>God bless you! 🙏</p>`,
         };
 
         await transporter.sendMail(mailOptions);
         console.log("📩 Verification email sent to:", email);
 
-        return res.status(201).json({ success: true, message: "Account created! Check your email to verify your account." });
+        return res.status(201).json({ 
+            success: true, 
+            message: "Account created! Check your email to verify your account." 
+        });
 
     } catch (error) {
         console.error("❌ Signup Error:", error);
         return res.status(500).json({ success: false, message: "Server error." });
     }
 });
+
 
 // ✅ Email Verification Route
 router.get("/verify/:token", async (req, res) => {

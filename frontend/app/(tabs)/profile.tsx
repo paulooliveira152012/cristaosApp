@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView, View, Text, Image, StyleSheet, Pressable } from "react-native";
+import { SafeAreaView, View, Text, Image, StyleSheet, Pressable, Linking, ScrollView } from "react-native";
 import { ThemedText } from "../../components/ThemedText";
 import { useUser } from "context/UserContext";
 
@@ -13,6 +13,8 @@ export default function Profile() {
             <ThemedText style={styles.title}>Profile</ThemedText>
 
             {currentUser ? (
+                <ScrollView style={{ width: "100%"}}>
+                    <View style={styles.profileCardContainer}>
                 <View style={styles.profileCard}>
                     {/* Profile Picture */}
                     <Image 
@@ -24,21 +26,77 @@ export default function Profile() {
                         style={styles.avatar} 
                     />
 
+                    {/* Name */}
+                    <ThemedText style={styles.name}>
+                        {currentUser.firstName} {currentUser.lastName}
+                    </ThemedText>
+
                     {/* Username */}
                     <ThemedText style={styles.username}>
-                        {currentUser.username}
+                        @{currentUser.username}
                     </ThemedText>
 
                     {/* Email */}
                     <Text style={styles.email}>
-                        {currentUser.email}
+                        📧 {currentUser.email}
                     </Text>
+
+                    {/* Phone Number */}
+                    {currentUser.phoneNumber && (
+                        <Text style={styles.info}>
+                            📞 {currentUser.phoneNumber}
+                        </Text>
+                    )}
+
+                    {/* Church */}
+                    {currentUser.church && (
+                        <Text style={styles.info}>
+                            ⛪ {currentUser.church}
+                        </Text>
+                    )}
+
+                    {/* Ministry Involvement */}
+                    {currentUser.ministry && (
+                        <Text style={styles.info}>
+                            🙏 Ministry: {currentUser.ministry}
+                        </Text>
+                    )}
+
+                    {/* Bio */}
+                    {currentUser.bio && (
+                        <Text style={styles.bio}>
+                            📝 {currentUser.bio}
+                        </Text>
+                    )}
+
+                    {/* Social Media */}
+                    <View style={styles.socialContainer}>
+                        {currentUser.twitterHandle && (
+                            <Pressable 
+                                onPress={() => Linking.openURL(`https://twitter.com/${currentUser.twitterHandle}`)}
+                                style={styles.socialButton}
+                            >
+                                <Text style={styles.socialText}>🐦 Twitter: @{currentUser.twitterHandle}</Text>
+                            </Pressable>
+                        )}
+
+                        {currentUser.instagramHandle && (
+                            <Pressable 
+                                onPress={() => Linking.openURL(`https://instagram.com/${currentUser.instagramHandle}`)}
+                                style={styles.socialButton}
+                            >
+                                <Text style={styles.socialText}>📷 Instagram: @{currentUser.instagramHandle}</Text>
+                            </Pressable>
+                        )}
+                    </View>
 
                     {/* Logout Button */}
                     <Pressable style={styles.logoutButton} onPress={logout}>
-                        <Text style={styles.logoutText}>Logout</Text>
+                        <Text style={styles.logoutText}>🚪 Logout</Text>
                     </Pressable>
                 </View>
+                </View>
+                </ScrollView>
             ) : (
                 <ThemedText>No user logged in</ThemedText>
             )}
@@ -46,7 +104,7 @@ export default function Profile() {
     );
 }
 
-// ✅ Styles for the Profile Page
+// ✅ Updated Styles for the Profile Page
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -60,6 +118,16 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         marginBottom: 20,
     },
+
+    profileCardContainer: {
+        // backgroundColor: "green",
+        display: "flex",
+        alignItems: "center",
+        flex: 1,
+        minHeight: "95%",
+        justifyContent: "center"
+    },
+
     profileCard: {
         alignItems: "center",
         backgroundColor: "white",
@@ -78,22 +146,57 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         marginBottom: 10,
     },
-    username: {
-        fontSize: 20,
+    name: {
+        fontSize: 22,
         fontWeight: "bold",
         marginBottom: 5,
+    },
+    username: {
+        fontSize: 18,
+        color: "#555",
+        marginBottom: 10,
     },
     email: {
         fontSize: 16,
         color: "#6c757d",
-        marginBottom: 20,
+        marginBottom: 10,
+    },
+    info: {
+        fontSize: 16,
+        color: "#444",
+        marginBottom: 5,
+    },
+    bio: {
+        fontSize: 14,
+        fontStyle: "italic",
+        color: "#666",
+        marginVertical: 10,
+        textAlign: "center",
+    },
+    socialContainer: {
+        marginTop: 10,
+        width: "100%",
+        alignItems: "center",
+    },
+    socialButton: {
+        backgroundColor: "#007AFF",
+        padding: 10,
+        borderRadius: 5,
+        marginTop: 5,
+        width: "100%",
+        alignItems: "center",
+    },
+    socialText: {
+        color: "white",
+        fontSize: 14,
+        fontWeight: "600",
     },
     logoutButton: {
         backgroundColor: "#ff4d4d",
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderRadius: 8,
-        marginTop: 10,
+        marginTop: 20,
     },
     logoutText: {
         color: "white",
