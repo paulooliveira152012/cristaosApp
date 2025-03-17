@@ -15,7 +15,7 @@ export default function HomeScreen() {
   console.log("user in the home page is:", user)
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Header />
+      <Header/>
       <ThemedText>
         Cristãos
       </ThemedText>
@@ -44,6 +44,6 @@ const styles = StyleSheet.create({
     flex: 1,
     display: "flex",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   }
 });

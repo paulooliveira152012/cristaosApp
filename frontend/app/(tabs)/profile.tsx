@@ -3,6 +3,8 @@ import { SafeAreaView, View, Text, Image, StyleSheet, Pressable, Linking, Scroll
 import { ThemedText } from "../../components/ThemedText";
 import { useUser } from "context/UserContext";
 
+import Header from "../../components/components/Header";
+
 export default function Profile() {
     const { currentUser, logout } = useUser(); // ✅ Extract `currentUser` & `logout`
 
@@ -10,6 +12,7 @@ export default function Profile() {
 
     return (
         <SafeAreaView style={styles.container}>
+            <Header />
             <ThemedText style={styles.title}>Profile</ThemedText>
 
             {currentUser ? (
