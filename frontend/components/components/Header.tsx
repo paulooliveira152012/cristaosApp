@@ -1,9 +1,10 @@
-import { View, Text, StyleSheet, SafeAreaView, Pressable } from "react-native";
-import React, { useState } from "react";
+import { View, Text, StyleSheet, Pressable, Dimensions } from "react-native";
+import React, { useState, useCallback } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { MotiView } from "moti";
 import { useFocusEffect } from "expo-router";
-import { useCallback } from "react";
+
+const screenHeight = Dimensions.get("window").height; // ✅ Get full screen height
 
 const Header = ({
   showMenuIcon = true,
@@ -12,93 +13,88 @@ const Header = ({
 }) => {
   const [showMenu, setShowMenu] = useState(false); // ✅ Start with menu closed
 
-  // whenever screen looses focus setShowMenu to false
+  // Close menu when screen loses focus
   useFocusEffect(
     useCallback(() => {
-      setShowMenu(false)
-    },[])
-  )
+      setShowMenu(false);
+    }, [])
+  );
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.header}>
-        {/* Back Icon */}
-        {showBackIcon && (
-          <Pressable>
-            <MaterialIcons name="arrow-back-ios" size={28} color={"red"} />
-          </Pressable>
-        )}
+    <>
+      {/* ✅ Header Bar */}
+      <View style={styles.container}>
+        <View style={styles.header}>
+          {/* Back Icon */}
+          {showBackIcon && (
+            <Pressable>
+              <MaterialIcons name="arrow-back-ios" size={28} color={"red"} />
+            </Pressable>
+          )}
 
-        {/* Menu Icon */}
-        {showMenuIcon && (
-          <Pressable onPress={() => setShowMenu(true)}>
-            <MaterialIcons name="menu" size={28} color={"red"} />
-          </Pressable>
-        )}
+          {/* Menu Icon */}
+          {showMenuIcon && (
+            <Pressable onPress={() => setShowMenu(true)}>
+              <MaterialIcons name="menu" size={28} color={"red"} />
+            </Pressable>
+          )}
 
-        {showLogo && <Text style={{ color: "white" }}>Logo Here</Text>}
+          {showLogo && <Text style={styles.logo}>Logo Here</Text>}
+        </View>
       </View>
 
-      {/* Full-Screen Side Menu */}
+      {/* ✅ Full-Screen Side Menu - Rendered Outside the Header */}
       {showMenu && (
         <MotiView
-          from={{ translateX: -300 }} // Start off-screen
-          animate={{ translateX: showMenu ? 0 : -300 }} // Slide in/out
-          transition={{ type: "timing", duration: 270 }} // Smooth timing transition
-          style={styles.sideMenu}
+          from={{ translateX: -300 }}
+          animate={{ translateX: 0 }}
+          transition={{ type: "timing", duration: 270 }}
+          style={[styles.sideMenu, { height: screenHeight }]} // ✅ Full screen height
         >
-          <SafeAreaView style={styles.menuContent}>
-            <View style={styles.menuContent}>
-              <Text style={styles.menuTitle}>Menu</Text>
+          <View style={styles.menuContent}>
+            <Text style={styles.menuTitle}>Menu</Text>
 
-              {/* Close Menu Button */}
-              <Pressable
-                style={styles.closeButton}
-                onPress={() => setShowMenu(false)}
-              >
-                <MaterialIcons name="close" size={28} color={"white"} />
-              </Pressable>
-            </View>
-          </SafeAreaView>
+            {/* Close Menu Button */}
+            <Pressable
+              style={styles.closeButton}
+              onPress={() => setShowMenu(false)}
+            >
+              <MaterialIcons name="close" size={28} color={"white"} />
+            </Pressable>
+          </View>
         </MotiView>
       )}
-    </SafeAreaView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    position: "absolute", // ✅ Keeps it at the top
-    // backgroundColor: "red",
-    top: 0,
-    height: "100%",
+  container: {
     width: "100%",
-    zIndex: 200, // ✅ Certifica que está acima de tudo
+    backgroundColor: "#1E1E1E",
+    zIndex: 200, // ✅ Keeps it above other elements
   },
   header: {
     width: "100%",
-    backgroundColor: "#1E1E1E",
-    paddingVertical: 15, // ✅ Adds some padding inside the header
+    paddingVertical: 15,
     justifyContent: "space-between",
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 20,
   },
-  headerText: {
+  logo: {
     color: "white",
     fontSize: 18,
     fontWeight: "bold",
   },
-
   /** ✅ FULL-SCREEN MENU **/
   sideMenu: {
     position: "absolute",
-    bottom: 0,
+    top: 0,
     left: 0,
     width: "100%",
-    height: "100%",
-    backgroundColor: "rgb(0, 0, 0)", // ✅ Dark overlay
-    zIndex: 200, // ✅ Above everything
+    backgroundColor: "rgba(0, 0, 0, 0.9)", // ✅ Semi-transparent overlay
+    zIndex: 300, // ✅ Ensure it's on top
     justifyContent: "center",
     alignItems: "center",
   },
@@ -106,7 +102,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     backgroundColor: "#333",
-    
     padding: 20,
     alignItems: "center",
   },

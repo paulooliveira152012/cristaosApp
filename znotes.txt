@@ -18,3 +18,7 @@ user navigates to settings page and sees options for:
 Implement login
 Display user info on profile
 
+
+Shortcut to creating a new screen structure:
+rnfe
+

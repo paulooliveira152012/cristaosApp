@@ -1,51 +1,36 @@
-import { SafeAreaView, StyleSheet, Platform } from 'react-native';
-
-// import { HelloWave } from 'components/HelloWave';
-import { HelloWave } from '../../components/HelloWave';
-import ParallaxScrollView from '../../components/ParallaxScrollView';
-import { ThemedText } from '../../components/ThemedText';
-import { ThemedView } from '../../components/ThemedView';
+import { SafeAreaView, StyleSheet, ScrollView } from 'react-native';
+import React from 'react';
 import { useUser } from 'context/UserContext';
 import Header from '../../components/components/Header';
 import Rooms from '../../components/components/Rooms';
+import { ThemedText } from '../../components/ThemedText';
 
 export default function HomeScreen() {
+  const user = useUser();
 
-  const user = useUser()
+  console.log("User in the home page:", user);
 
-  console.log("user in the home page is:", user)
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Header/>
-      <Rooms />
-      <ThemedText>
-        Cristãos
-      </ThemedText>
+      {/* ✅ Wrap everything in ScrollView */}
+      <ScrollView 
+        contentContainerStyle={styles.scrollContainer}
+        showsVerticalScrollIndicator={true} // ✅ Show scroll for debugging
+      >
+        <Header />
+        <Rooms />
+        <ThemedText>Cristãos</ThemedText>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
   safeArea: {
-    flex: 1,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    flex: 1, // ✅ Allows screen to expand properly
+  },
+  scrollContainer: {
+    flexGrow: 1, // ✅ Ensures ScrollView expands beyond screen
+    paddingBottom: 50, // ✅ Prevents bottom cut-off issue
   }
 });
