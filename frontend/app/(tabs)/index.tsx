@@ -7,6 +7,7 @@ import { ThemedText } from '../../components/ThemedText';
 import { ThemedView } from '../../components/ThemedView';
 import { useUser } from 'context/UserContext';
 import Header from '../../components/components/Header';
+import Rooms from '../../components/components/Rooms';
 
 export default function HomeScreen() {
 
@@ -16,6 +17,7 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header/>
+      <Rooms />
       <ThemedText>
         Cristãos
       </ThemedText>

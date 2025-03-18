@@ -1,15 +1,27 @@
 import { View, Text, StyleSheet, SafeAreaView, Pressable } from "react-native";
 import React, { useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
-import { MotiView } from "moti"
+import { MotiView } from "moti";
+import { useFocusEffect } from "expo-router";
+import { useCallback } from "react";
 
-const Header = ({ showMenuIcon = true, showBackIcon = false, showLogo=true }) => {
-  const [showMenu, setShowMenu] = useState(true); // ✅ Start with menu closed
+const Header = ({
+  showMenuIcon = true,
+  showBackIcon = false,
+  showLogo = true,
+}) => {
+  const [showMenu, setShowMenu] = useState(false); // ✅ Start with menu closed
+
+  // whenever screen looses focus setShowMenu to false
+  useFocusEffect(
+    useCallback(() => {
+      setShowMenu(false)
+    },[])
+  )
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-        
         {/* Back Icon */}
         {showBackIcon && (
           <Pressable>
@@ -19,34 +31,33 @@ const Header = ({ showMenuIcon = true, showBackIcon = false, showLogo=true }) =>
 
         {/* Menu Icon */}
         {showMenuIcon && (
-          <Pressable onPress={() => setShowMenu(true)}> 
+          <Pressable onPress={() => setShowMenu(true)}>
             <MaterialIcons name="menu" size={28} color={"red"} />
           </Pressable>
         )}
 
-        {showLogo && (
-            <Text style={{color: "white"}}>
-                Logo Here
-            </Text>
-        )}
+        {showLogo && <Text style={{ color: "white" }}>Logo Here</Text>}
       </View>
 
       {/* Full-Screen Side Menu */}
       {showMenu && (
-            <MotiView 
-            from={{ translateX: -300 }} // Start off-screen
-            animate={{ translateX: showMenu ? 0 : -300 }} // Slide in/out
-            transition={{ type: "timing", duration: 270 }} // Smooth timing transition
-            style={styles.sideMenu}
-          >
+        <MotiView
+          from={{ translateX: -300 }} // Start off-screen
+          animate={{ translateX: showMenu ? 0 : -300 }} // Slide in/out
+          transition={{ type: "timing", duration: 270 }} // Smooth timing transition
+          style={styles.sideMenu}
+        >
           <SafeAreaView style={styles.menuContent}>
             <View style={styles.menuContent}>
-            <Text style={styles.menuTitle}>Menu</Text>
+              <Text style={styles.menuTitle}>Menu</Text>
 
-            {/* Close Menu Button */}
-            <Pressable style={styles.closeButton} onPress={() => setShowMenu(false)}>
-              <MaterialIcons name="close" size={28} color={"white"} />
-            </Pressable>
+              {/* Close Menu Button */}
+              <Pressable
+                style={styles.closeButton}
+                onPress={() => setShowMenu(false)}
+              >
+                <MaterialIcons name="close" size={28} color={"white"} />
+              </Pressable>
             </View>
           </SafeAreaView>
         </MotiView>
@@ -58,10 +69,11 @@ const Header = ({ showMenuIcon = true, showBackIcon = false, showLogo=true }) =>
 const styles = StyleSheet.create({
   safeArea: {
     position: "absolute", // ✅ Keeps it at the top
+    // backgroundColor: "red",
     top: 0,
     height: "100%",
     width: "100%",
-    zIndex: 10, // ✅ Ensures it stays above other elements
+    zIndex: 200, // ✅ Certifica que está acima de tudo
   },
   header: {
     width: "100%",
@@ -71,7 +83,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 20,
-
   },
   headerText: {
     color: "white",
@@ -82,12 +93,12 @@ const styles = StyleSheet.create({
   /** ✅ FULL-SCREEN MENU **/
   sideMenu: {
     position: "absolute",
-    bottom:0,
+    bottom: 0,
     left: 0,
     width: "100%",
     height: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.9)", // ✅ Dark overlay
-    zIndex: 20, // ✅ Above everything
+    backgroundColor: "rgb(0, 0, 0)", // ✅ Dark overlay
+    zIndex: 200, // ✅ Above everything
     justifyContent: "center",
     alignItems: "center",
   },
@@ -95,10 +106,9 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     backgroundColor: "#333",
-    borderRadius: 10,
+    
     padding: 20,
     alignItems: "center",
-    
   },
   menuTitle: {
     color: "white",
