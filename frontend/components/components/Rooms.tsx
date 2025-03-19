@@ -1,5 +1,7 @@
-import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, Pressable } from 'react-native';
 import React, {useState, useEffect} from 'react';
+import { MaterialIcons } from '@expo/vector-icons';
+
 
 const rooms = [
   { title: "Estudo de Romanos", coverImage: require("../../assets/placeholder.jpg") },
@@ -25,9 +27,13 @@ const roomMembers = [
   { username: "Lulu", profileImage: require("../../assets/profile2.jpg") },
 ];
 
+
+
 const Rooms = () => {
 
   const [roomMembersCount, setRoomMembersCount] = useState("")
+  const [showRooms, setShowRooms] = useState(true)
+  
 
   const checkMembersCount = () => {
     console.log("Room members count is:", roomMembers.length)
@@ -40,8 +46,14 @@ const Rooms = () => {
     checkMembersCount()
   })
 
+  const toggleShowRooms = () => {
+    setShowRooms((prev) => (!prev))
+  }
+
   return (
     <View style={styles.container}>
+      {showRooms && (
+
       <ScrollView 
         horizontal 
         showsHorizontalScrollIndicator={false} 
@@ -63,15 +75,22 @@ const Rooms = () => {
           </View>
         ))}
       </ScrollView>
+      )}
+      <View style={styles.toggleButtonContainer}>
+        <Pressable onPress={toggleShowRooms}>
+          <MaterialIcons name= {showRooms ? "arrow-upward" : "arrow-downward" } size={28} color={"blue"} />
+        </Pressable>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "green",
+        // backgroundColor: "green",
         width: "100%", 
-        height: 150,
+        // height: 150,
+        maxHeight: 150,
         paddingVertical: 10,
     },
     scrollContainer: {
@@ -138,6 +157,11 @@ const styles = StyleSheet.create({
     roomMembersContainer: {
       display: "flex",
       flexDirection: "row",
+    },
+
+    toggleButtonContainer: {
+      alignItems: "center",
+      marginTop: 10,
     }
 });
 

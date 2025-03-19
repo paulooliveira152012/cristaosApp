@@ -3,6 +3,7 @@ import React from 'react';
 import { useUser } from 'context/UserContext';
 import Header from '../../components/components/Header';
 import Rooms from '../../components/components/Rooms';
+import Listings from '../../components/components/Listings';
 import { ThemedText } from '../../components/ThemedText';
 
 export default function HomeScreen() {
@@ -13,14 +14,15 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       {/* ✅ Wrap everything in ScrollView */}
-      <ScrollView 
+      {/* <ScrollView 
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={true} // ✅ Show scroll for debugging
-      >
+      > */}
         <Header />
         <Rooms />
+        <Listings />
         <ThemedText>Cristãos</ThemedText>
-      </ScrollView>
+      {/* </ScrollView> */}
     </SafeAreaView>
   );
 }
