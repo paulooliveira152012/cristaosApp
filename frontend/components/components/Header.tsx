@@ -22,6 +22,29 @@ const Header = ({
 
   return (
     <>
+
+        {/* ✅ Full-Screen Side Menu - Rendered Outside the Header */}
+        {showMenu && (
+        <MotiView
+          from={{ translateX: -300 }}
+          animate={{ translateX: 0 }}
+          transition={{ type: "timing", duration: 270 }}
+          style={[styles.sideMenu, { height: screenHeight }]} // ✅ Full screen height
+        >
+          <View style={styles.menuContent}>
+            <Text style={styles.menuTitle}>Menu</Text>
+
+            {/* Close Menu Button */}
+            <Pressable
+              style={styles.closeButton}
+              onPress={() => setShowMenu(false)}
+            >
+              <MaterialIcons name="close" size={28} color={"white"} />
+            </Pressable>
+          </View>
+        </MotiView>
+      )}
+
       {/* ✅ Header Bar */}
       <View style={styles.container}>
         <View style={styles.header}>
@@ -42,28 +65,6 @@ const Header = ({
           {showLogo && <Text style={styles.logo}>Logo Here</Text>}
         </View>
       </View>
-
-      {/* ✅ Full-Screen Side Menu - Rendered Outside the Header */}
-      {showMenu && (
-        <MotiView
-          from={{ translateX: -300 }}
-          animate={{ translateX: 0 }}
-          transition={{ type: "timing", duration: 270 }}
-          style={[styles.sideMenu, { height: screenHeight }]} // ✅ Full screen height
-        >
-          <View style={styles.menuContent}>
-            <Text style={styles.menuTitle}>Menu</Text>
-
-            {/* Close Menu Button */}
-            <Pressable
-              style={styles.closeButton}
-              onPress={() => setShowMenu(false)}
-            >
-              <MaterialIcons name="close" size={28} color={"white"} />
-            </Pressable>
-          </View>
-        </MotiView>
-      )}
     </>
   );
 };
@@ -89,7 +90,7 @@ const styles = StyleSheet.create({
   },
   /** ✅ FULL-SCREEN MENU **/
   sideMenu: {
-    position: "absolute",
+    // position: "absolute",
     top: 0,
     left: 0,
     width: "100%",
