@@ -52,6 +52,7 @@ const Rooms = () => {
 
   return (
     <View style={styles.container}>
+      <Text>Salas de conversa</Text>
       {showRooms && (
 
       <ScrollView 
@@ -83,14 +84,16 @@ const Rooms = () => {
       </View>
     </View>
   );
-}
+};
+
+
 
 const styles = StyleSheet.create({
     container: {
         // backgroundColor: "green",
         width: "100%", 
         // height: 150,
-        maxHeight: 150,
+        maxHeight: 170,
         paddingVertical: 10,
     },
     scrollContainer: {
@@ -99,11 +102,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
     },
     roomContainer: {
-      width: 200,
+      width: 150,
       height: "100%",
       justifyContent: "center",
       alignItems: "center",
-      borderRadius: 50,
+      borderRadius: 30,
       overflow: "hidden",
       backgroundColor: "black",
       marginRight: 10, 
@@ -131,17 +134,17 @@ const styles = StyleSheet.create({
       marginTop: 5,
     },
     userImage: {
-      width: 50,
+      width: 30,
       // height: 50,
       aspectRatio: 1.1,
       borderRadius: 20,
     },
 
     userImageOverlaping: {
-      width: 50,
+      width: 30,
       // height: 50,
       aspectRatio: 1.1,
-      borderRadius: 20,
+      borderRadius: 10,
       // position: "absolute",
       left: 10,
       zIndex: 2
