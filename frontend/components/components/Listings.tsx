@@ -1,5 +1,7 @@
-import { View, Text, Image, FlatList, StyleSheet } from 'react-native';
+import { View, Text, Image, FlatList, StyleSheet, Pressable } from 'react-native';
 import React from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 /* 
     Type of listings:
@@ -11,15 +13,21 @@ import React from 'react';
 
 // ✅ Define TypeScript interface for listings
 interface ListingItemType {
-    type: "Blog" | "Image" | "Video" | "Poll"; // ✅ Restrict possible values
+    type: "Blog" | "Image" | "Video" | "Poll";
     title: string;
-    image?: any; // ✅ Type for require() images
+    image?: any;
     content?: string;
     videoUrl?: string;
     options?: string[];
 }
 
-// ✅ Define listing data with proper typing
+// ✅ Define navigation type
+type RootStackParamList = {
+    Listings: undefined;
+    ListingDetails: { item: ListingItemType };
+};
+
+// ✅ Define listing data
 const ListingsList: ListingItemType[] = [
     { 
         type: "Blog",
@@ -46,10 +54,15 @@ const ListingsList: ListingItemType[] = [
     }
 ];
 
-// ✅ Define ListingItem component with proper typing
+// ✅ Define ListingItem component
 const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
+    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
     return (
-        <View style={styles.listingContainer}>
+        <Pressable 
+            onPress={() => navigation.navigate("ListingDetails", { item })}
+            style={styles.listingContainer}
+        >
             <Text style={styles.title}>{item.title}</Text>
             
             {item.type === "Blog" && item.image && (
@@ -77,7 +90,7 @@ const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
                     ))}
                 </View>
             )}
-        </View>
+        </Pressable>
     );
 };
 
@@ -100,11 +113,6 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 20,
         backgroundColor: "#f5f5f5"
-    },
-    header: {
-        fontSize: 24,
-        fontWeight: "bold",
-        marginBottom: 10
     },
     listingContainer: {
         backgroundColor: "#fff",
