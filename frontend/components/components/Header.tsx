@@ -1,15 +1,17 @@
-import { View, Text, StyleSheet, Pressable, Dimensions } from "react-native";
+import { View, Text, StyleSheet, Pressable, Dimensions, Image } from "react-native";
 import React, { useState, useCallback } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { MotiView } from "moti";
 import { useFocusEffect } from "expo-router";
 
 const screenHeight = Dimensions.get("window").height; // ✅ Get full screen height
+const profilePicture = require("../../assets/profile.jpg")
 
 const Header = ({
   showMenuIcon = true,
   showBackIcon = false,
   showLogo = true,
+  profileImage = true
 }) => {
   const [showMenu, setShowMenu] = useState(false); // ✅ Start with menu closed
 
@@ -55,14 +57,27 @@ const Header = ({
             </Pressable>
           )}
 
+          {showLogo && <Text style={styles.logo}>Logo Here</Text>}
+
           {/* Menu Icon */}
-          {showMenuIcon && (
+          {/* {showMenuIcon && (
             <Pressable onPress={() => setShowMenu(true)}>
               <MaterialIcons name="menu" size={28} color={"red"} />
             </Pressable>
+          )} */}
+          
+
+          {/* show profile picture/menu icon*/}
+          {profileImage && (
+            <Pressable onPress={() => setShowMenu(true)}>
+            <Image 
+              source={profilePicture} 
+              style={styles.profileMenuImage}
+            />
+          </Pressable>
           )}
 
-          {showLogo && <Text style={styles.logo}>Logo Here</Text>}
+          
         </View>
       </View>
     </>
@@ -117,6 +132,12 @@ const styles = StyleSheet.create({
     top: 15,
     right: 15,
   },
+  profileMenuImage: {
+    objectFit: "cover",
+    height: 50,
+    width: 50,
+    borderRadius: 50
+  }
 });
 
 export default Header;
