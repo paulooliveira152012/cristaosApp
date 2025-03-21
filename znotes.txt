@@ -22,3 +22,10 @@ Display user info on profile
 Shortcut to creating a new screen structure:
 rnfe
 
+
+
+issues:
+side menu not respecting safe area View
+need to Implement tailwind css
+room title not scrollable in one line
+

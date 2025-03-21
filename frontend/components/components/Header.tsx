@@ -12,6 +12,7 @@ import React, { useState, useCallback } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { MotiView } from "moti";
 import { useFocusEffect, Link } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const screenHeight = Dimensions.get("window").height; // ✅ Get full screen height
 const profilePicture = require("../../assets/profile.jpg");
@@ -73,15 +74,19 @@ const Header = ({
                 </Link>
               </View>
               <View style={styles.menuContentTopLeft}>
-                <Text>Amigos</Text>
-                <Text>Salvos</Text>
-                <Text>Configurações</Text>
+                <Text style={styles.textStyle}>
+                  <Text>Amigos</Text>
+                  {"\n"}
+                  <Text>Salvos</Text>
+                  {"\n"}
+                  <Text>Configurações</Text>
+                </Text>
               </View>
             </View>
 
             {/* Child */}
             <View style={styles.menuContentBottom}>
-              <Text>Sair</Text>
+              <Text style={styles.logoutBtn}>Sair</Text>
             </View>
           </View>
         </MotiView>
@@ -102,9 +107,9 @@ const Header = ({
           {/* Menu Icon */}
           {/* {showMenuIcon && (
             <Pressable onPress={() => setShowMenu(true)}>
-              <MaterialIcons name="menu" size={28} color={"red"} />
+            <MaterialIcons name="menu" size={28} color={"red"} />
             </Pressable>
-          )} */}
+            )} */}
 
           {/* show profile picture/menu icon*/}
           {profileImage && (
@@ -139,24 +144,26 @@ const styles = StyleSheet.create({
   },
   /** ✅ FULL-SCREEN MENU **/
   sideMenu: {
-    // position: "absolute",
+    position: "absolute",
     top: 0,
-    left: 0,
+    right: 0,
     width: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.9)", // ✅ Semi-transparent overlay
+    backgroundColor: "rgba(0, 0, 0, 0.6)", // ✅ Semi-transparent overlay
+    // backgroundColor: "white",
     zIndex: 300, // ✅ Ensure it's on top
     justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-    paddingBottom: 100,
+    alignItems: "flex-end",
+    // padding: 20,
+    // paddingBottom: 100,
   },
   menuContent: {
-    width: "100%",
+    width: "90%",
     height: "100%",
     backgroundColor: "white",
     padding: 20,
     // alignItems: "center",
     justifyContent: "space-between",
+    flex: 1
   },
   menuContentTop: {
     // backgroundColor: "red"
@@ -165,7 +172,6 @@ const styles = StyleSheet.create({
   username: {
     fontSize: 23,
     fontWeight: "500",
-    
   },
 
   about: {
@@ -192,6 +198,12 @@ const styles = StyleSheet.create({
 
   menuContentTopLeft: {
     marginTop: 30,
+    fontSize: 50,
+  },
+
+  textStyle: {
+    fontSize: 16,
+    lineHeight: 30,
   },
 
   openMenuProfile: {
@@ -200,9 +212,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
 
-  menuContentBottom: {
-    backgroundColor: "green",
-  },
+  menuContentBottom: {},
 
   menuTitle: {
     color: "white",
@@ -222,6 +232,11 @@ const styles = StyleSheet.create({
     width: 50,
     borderRadius: 50,
   },
+
+  logoutBtn: {
+    color: "red",
+    fontWeight: "bold"
+  }
 });
 
 export default Header;
