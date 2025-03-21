@@ -42,47 +42,49 @@ const Header = ({
     <>
       {/* ✅ Full-Screen Side Menu - Rendered Outside the Header */}
       {showMenu && (
-   <MotiView
-   from={{ translateX: 300 }}
-   animate={{ translateX: 0 }}
-   transition={{ type: "timing", duration: 270 }}
-   style={styles.sideMenu}
- >
-   <SafeAreaView style={styles.safeAreaMenu}>
-     <View style={styles.menuContent}>
-       {/* Close Button */}
-       <Pressable style={styles.closeButton} onPress={() => setShowMenu(false)}>
-         <MaterialIcons name="close" size={28} color={"black"} />
-       </Pressable>
- 
-       {/* Top */}
-       <View style={styles.menuContentTop}>
-         <View style={styles.menuContentTopCenter}>
-           <Image source={User.profilePicture} style={styles.openMenuProfile} />
-           <Text style={styles.username}>{User.name}</Text>
-           <Text style={styles.about}>{User.about}</Text>
-           <Link href={"/profile"}>
-             <Pressable style={styles.profileButton}>
-               <Text style={styles.profileButtonText}>Ver perfil</Text>
-             </Pressable>
-           </Link>
-         </View>
-         <View style={styles.menuContentTopLeft}>
-           <Text style={styles.textStyle}>
-             Amigos{"\n"}Salvos{"\n"}Configurações
-           </Text>
-         </View>
-       </View>
- 
-       {/* Bottom */}
-       <View style={styles.menuContentBottom}>
-         <Text style={styles.logoutBtn}>Sair</Text>
-       </View>
-     </View>
-   </SafeAreaView>
- </MotiView>
- 
-      )}
+  <SafeAreaView style={styles.fullScreenSafeArea}>
+    <MotiView
+      from={{ translateX: 300 }}
+      animate={{ translateX: 0 }}
+      transition={{ type: "timing", duration: 270 }}
+      style={styles.sideMenu}
+    >
+      <View style={styles.menuWrapper}>
+        <View style={styles.menuContent}>
+          {/* Close Button */}
+          <Pressable style={styles.closeButton} onPress={() => setShowMenu(false)}>
+            <MaterialIcons name="close" size={28} color={"black"} />
+          </Pressable>
+
+          {/* Top */}
+          <View style={styles.menuContentTop}>
+            <View style={styles.menuContentTopCenter}>
+              <Image source={User.profilePicture} style={styles.openMenuProfile} />
+              <Text style={styles.username}>{User.name}</Text>
+              <Text style={styles.about}>{User.about}</Text>
+              <Link href={"/profile"}>
+                <Pressable style={styles.profileButton}>
+                  <Text style={styles.profileButtonText}>Ver perfil</Text>
+                </Pressable>
+              </Link>
+            </View>
+            <View style={styles.menuContentTopLeft}>
+              <Text style={styles.textStyle}>
+                Amigos{"\n"}Salvos{"\n"}Configurações
+              </Text>
+            </View>
+          </View>
+
+          {/* Bottom */}
+          <View style={styles.menuContentBottom}>
+            <Text style={styles.logoutBtn}>Sair</Text>
+          </View>
+        </View>
+      </View>
+    </MotiView>
+  </SafeAreaView>
+)}
+
 
       {/* ✅ Header Bar */}
       <View style={styles.container}>
@@ -116,13 +118,29 @@ const Header = ({
 };
 
 const styles = StyleSheet.create({
+
+  fullScreenSafeArea: {
+    flex: 1,
+    backgroundColor: "transparent", // deixa o fundo intacto
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 300,
+  },
+
   safeAreaMenu: {
     flex: 1,
-    width: "100%", // ← ESSENCIAL! Pra manter o menu colado à direita
+    width: "100%",
     flexDirection: "row",
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
   },
-  
+
+  menuWrapper: {
+    flex: 0.9, // 90% da tela
+    backgroundColor: "white",
+  },
 
   container: {
     width: "100%",
@@ -143,16 +161,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   /** ✅ FULL-SCREEN MENU **/
-  sideMenu: {
-    position: "absolute", // ESSENCIAL
-    top: 20,
-    right: 0,
-    bottom: 0,
-    width: "100%", // a overlay cobre tudo, mas...
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    zIndex: 300,
-    alignItems: "flex-end", // joga o menu pro lado direito
-  },
+sideMenu: {
+  flex: 1,
+  flexDirection: "row", // divide 90%/10%
+  backgroundColor: "rgba(0,0,0,0.5)", // overlay
+  width: "100%",
+  justifyContent: "flex-end"
+},
   menuContent: {
     width: "90%", // ✅ só 90% da tela
     height: "100%",
@@ -160,7 +175,7 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: "space-between",
   },
-  
+
   menuContentTop: {
     // backgroundColor: "red"
   },
@@ -231,8 +246,8 @@ const styles = StyleSheet.create({
 
   logoutBtn: {
     color: "red",
-    fontWeight: "bold"
-  }
+    fontWeight: "bold",
+  },
 });
 
 export default Header;
