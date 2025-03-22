@@ -13,6 +13,10 @@ import { UserProvider } from "context/UserContext";
 
 import { useColorScheme } from "hooks/useColorScheme";
 
+import Header from "../components/components/Header";
+
+import { SafeAreaView } from "react-native";
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -21,6 +25,7 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
+  
 
   useEffect(() => {
     if (loaded) {
@@ -35,12 +40,15 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <UserProvider>
+        <Header />
         <Stack>
+
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
       </UserProvider>
       <StatusBar style="auto" />
     </ThemeProvider>
+        
   );
 }

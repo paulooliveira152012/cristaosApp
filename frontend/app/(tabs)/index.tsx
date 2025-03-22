@@ -18,7 +18,7 @@ export default function HomeScreen() {
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={true} // ✅ Show scroll for debugging
       > */}
-        <Header />
+        {/* <Header /> */}
         <Rooms />
         <Listings />
         <ThemedText>Cristãos</ThemedText>
