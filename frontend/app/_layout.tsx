@@ -15,7 +15,8 @@ import { useColorScheme } from "hooks/useColorScheme";
 
 import Header from "../components/components/Header";
 
-import { SafeAreaView } from "react-native";
+import { SafeAreaView, Text } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -38,17 +39,21 @@ export default function RootLayout() {
   }
 
   return (
+    <SafeAreaProvider>
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <UserProvider>
+        <SafeAreaView style={{ flex:1, position: "relative"}}>
+          {/* <Text>Test</Text> */}
         <Header />
         <Stack>
 
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
+        </SafeAreaView>
       </UserProvider>
       <StatusBar style="auto" />
     </ThemeProvider>
-        
+    </SafeAreaProvider>
   );
 }

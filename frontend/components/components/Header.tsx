@@ -14,6 +14,8 @@ import { MotiView } from "moti";
 import { useFocusEffect, Link } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 const screenHeight = Dimensions.get("window").height; // ✅ Get full screen height
 const profilePicture = require("../../assets/profile.jpg");
 
@@ -30,6 +32,8 @@ const Header = ({
   profileImage = true,
 }) => {
   const [showMenu, setShowMenu] = useState(false); // ✅ Start with menu closed
+  const insets = useSafeAreaInsets();
+
 
   // Close menu when screen loses focus
   useFocusEffect(
@@ -42,7 +46,8 @@ const Header = ({
     <>
       {/* ✅ Full-Screen Side Menu - Rendered Outside the Header */}
       {showMenu && (
-        <SafeAreaView style={styles.fullScreenSafeArea}>
+        <View style={[styles.fullScreenSafeArea, { paddingTop: insets.top }]}>
+
           <View style={styles.sideMenu}>
             {/* Static Overlay Area (left 10%) */}
             <View style={{ flex: 0.1 }} />
@@ -54,7 +59,7 @@ const Header = ({
               transition={{ type: "timing", duration: 270 }}
               style={styles.menuWrapper}
             >
-              <View style={styles.menuContent}>
+              <View style={[styles.menuContent, { paddingTop: insets.top }]}>
                 <Pressable
                   style={styles.closeButton}
                   onPress={() => setShowMenu(false)}
@@ -91,7 +96,7 @@ const Header = ({
               </View>
             </MotiView>
           </View>
-        </SafeAreaView>
+        </View>
       )}
 
       {/* ✅ Header Bar */}
