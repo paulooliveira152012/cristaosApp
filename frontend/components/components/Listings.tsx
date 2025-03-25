@@ -10,6 +10,8 @@ import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
+import InteractionBox from "./InteractionBox";
+
 /* 
     Type of listings:
     - Blog
@@ -26,11 +28,11 @@ interface ListingItemType {
   content?: string;
   videoUrl?: string;
   options?: string[];
-  name?: String;
-  username?: String;
-  createdAt?: String;
-  likes?: Number;
-  comments?: Object;
+  name?: string;
+  username?: string;
+  createdAt?: string;
+  likes?: number;
+  comments?: any[];
 }
 
 // ✅ Define navigation type
@@ -156,6 +158,14 @@ const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
           ))}
         </View>
       )}
+        <InteractionBox
+        liked={!!item.likes && item.likes > 0}
+        commented={!!item.comments && item.comments.length > 0}
+        likesCount={item.likes || 0}
+        commentsCount={item.comments?.length || 0}
+        />
+
+
     </Pressable>
   );
 };
@@ -210,6 +220,7 @@ const styles = StyleSheet.create({
   content: {
     fontSize: 14,
     color: "#333",
+    marginBottom: 10
   },
 
   listedByName: {
