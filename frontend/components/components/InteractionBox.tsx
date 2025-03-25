@@ -3,10 +3,13 @@ import React from 'react';
 import { IconSymbol } from '../../components/ui/IconSymbol';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
+import { StyleSheet } from 'react-native';
+
 // ✅ Props definition
 type InteractionBoxProps = {
   liked: boolean;             // whether the user has liked
   commented: boolean;         // whether the user has commented
+  saved: boolean,
   likesCount?: number;        // total likes
   commentsCount?: number;     // total comments
 };
@@ -14,15 +17,28 @@ type InteractionBoxProps = {
 const InteractionBox = ({
   liked,
   commented,
+  saved,
   likesCount = 0,
   commentsCount = 0,
 }: InteractionBoxProps) => {
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
+    <View style={{ ...styles.container }}>
       {/* ❤️ Likes */}
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
         {liked ? (
-          <IconSymbol size={28} name="heart.fill" color="red" />
+          <IconSymbol
+          size={28}
+          name="heart.fill"
+          color="red"
+          style={{
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.3,
+            shadowRadius: 3,
+            elevation: 5, // needed for Android
+          }}
+        />
+        
         ) : (
           <IconSymbol size={28} name="heart" color="gray" />
         )}
@@ -38,8 +54,30 @@ const InteractionBox = ({
         />
         {commentsCount > 0 && <Text>{commentsCount}</Text>}
       </View>
+
+      <View style={styles.bookmark}>
+        {/* BookmarkOutline */}
+        <MaterialCommunityIcons 
+        name="bookmark"
+        size={28}
+        color={saved ? 'blue' : 'gray'}
+        />
+      </View>
+
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row', alignItems: 'center', 
+    gap: 20
+  },
+
+  bookmark: {
+    position: "absolute",
+    right: 0,
+  }
+})
 
 export default InteractionBox;

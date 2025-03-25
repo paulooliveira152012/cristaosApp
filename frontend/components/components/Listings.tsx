@@ -161,6 +161,7 @@ const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
         <InteractionBox
         liked={!!item.likes && item.likes > 0}
         commented={!!item.comments && item.comments.length > 0}
+        saved={true}
         likesCount={item.likes || 0}
         commentsCount={item.comments?.length || 0}
         />
