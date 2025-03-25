@@ -156,7 +156,8 @@ const styles = StyleSheet.create({
 
   container: {
     width: "100%",
-    backgroundColor: "#1E1E1E",
+    // backgroundColor: "#1E1E1E",
+    backgroundColor: "#fff",
     zIndex: 200, // ✅ Keeps it above other elements
   },
   header: {
@@ -168,7 +169,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   logo: {
-    color: "white",
+    color: "black",
     fontSize: 18,
     fontWeight: "bold",
   },

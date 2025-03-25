@@ -1,28 +1,96 @@
-import { View, Text, StyleSheet, Image, ScrollView, Pressable } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import { MaterialIcons } from '@expo/vector-icons';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ScrollView,
+  Pressable,
+  Animated,
+} from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import { MaterialIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+
+import TextTicker from "react-native-text-ticker";
 
 const rooms = [
-  { title: "Estudo de Romanos", coverImage: require("../../assets/placeholder.jpg") },
-  { title: "Outro Estudo Muito Muito Longo Que Precisa Rolar Automaticamente", coverImage: require("../../assets/placeholder.jpg") },
-  { title: "Mais um Estudo", coverImage: require("../../assets/placeholder.jpg") }
+  {
+    title: "Estudo de Romanos",
+    coverImage: require("../../assets/placeholder.jpg"),
+  },
+  {
+    title: "Outro Estudo Muito Muito Longo Que Precisa Rolar Automaticamente",
+    coverImage: require("../../assets/placeholder.jpg"),
+  },
+  {
+    title: "Mais um Estudo",
+    coverImage: require("../../assets/placeholder.jpg"),
+  },
 ];
 
 const roomMembers = [
   { username: "Paulo", profileImage: require("../../assets/profile.jpg") },
-  { username: "Lulu", profileImage: require("../../assets/profile2.jpg") }
+  { username: "Lulu", profileImage: require("../../assets/profile2.jpg") },
+  { username: "Paulo", profileImage: require("../../assets/profile.jpg") },
+  { username: "Lulu", profileImage: require("../../assets/profile2.jpg") },
+  { username: "Paulo", profileImage: require("../../assets/profile.jpg") },
+  { username: "Lulu", profileImage: require("../../assets/profile2.jpg") },
+  { username: "Paulo", profileImage: require("../../assets/profile.jpg") },
+  { username: "Lulu", profileImage: require("../../assets/profile2.jpg") },
+  { username: "Paulo", profileImage: require("../../assets/profile.jpg") },
+  { username: "Lulu", profileImage: require("../../assets/profile2.jpg") },
+  { username: "Paulo", profileImage: require("../../assets/profile.jpg") },
+  { username: "Lulu", profileImage: require("../../assets/profile2.jpg") },
+  { username: "Paulo", profileImage: require("../../assets/profile.jpg") },
+  { username: "Lulu", profileImage: require("../../assets/profile2.jpg") },
 ];
 
 const Rooms = () => {
   const [roomMembersCount, setRoomMembersCount] = useState("");
   const [showRooms, setShowRooms] = useState(true);
+  const router = useRouter()
 
   useEffect(() => {
-    setRoomMembersCount(roomMembers.length > 13 ? "+13" : roomMembers.length.toString());
+    setRoomMembersCount(
+      roomMembers.length > 13 ? "+13" : roomMembers.length.toString()
+    );
   }, []);
 
   const toggleShowRooms = () => {
     setShowRooms((prev) => !prev);
+  };
+
+  const scrollAnimRefs = useRef<Animated.Value[]>([]);
+  const textWidths = useRef<number[]>([]);
+  const containerWidths = useRef<number[]>([]);
+
+  const animateScroll = (index: number) => {
+    const scrollX = scrollAnimRefs.current[index] || new Animated.Value(0);
+    scrollAnimRefs.current[index] = scrollX;
+
+    const textW = textWidths.current[index];
+    const containerW = containerWidths.current[index];
+
+    if (textW && containerW && textW > containerW) {
+      const distance = textW - containerW;
+
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(scrollX, {
+            toValue: -distance,
+            duration: 4000,
+            useNativeDriver: true,
+          }),
+          Animated.delay(1000),
+          Animated.timing(scrollX, {
+            toValue: 0,
+            duration: 0,
+            useNativeDriver: true,
+          }),
+          Animated.delay(1000),
+        ])
+      ).start();
+    }
   };
 
   return (
@@ -37,30 +105,64 @@ const Rooms = () => {
       {/* ✅ Hide Entirely When showRooms is false */}
       {showRooms && (
         <View style={styles.container}>
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false} 
-            contentContainerStyle={[styles.scrollContainer, { minWidth: rooms.length * 200 }]}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={[
+              styles.scrollContainer,
+              { minWidth: rooms.length * 200 },
+            ]}
           >
             {rooms.map((room, index) => (
-              <View key={index} style={styles.roomContainer}> 
+              <View key={index} style={styles.roomContainer}>
                 <Image source={room.coverImage} style={styles.roomImage} />
                 <View style={styles.usersPreview}>
                   <View style={styles.roomMembersContainer}>
-                    <Image source={roomMembers[0].profileImage} style={styles.userImageOverlapping} />
-                    <Image source={roomMembers[1].profileImage} style={styles.userImage} />
+                    <Image
+                      source={roomMembers[0].profileImage}
+                      style={styles.userImageOverlapping}
+                    />
+                    <Image
+                      source={roomMembers[1].profileImage}
+                      style={styles.userImage}
+                    />
                     <Text style={styles.roomCount}>{roomMembersCount}</Text>
                   </View>
                 </View>
-                <Text style={styles.roomTitle}>{room.title}</Text>
+                <Text 
+                  style={styles.roomTitle}
+                  numberOfLines={1}
+                >
+                  {room.title}
+                </Text>
+
+                {/* <View style={{ width: 120, overflow: "hidden" }}>
+                  <TextTicker
+                    style={styles.roomTitle}
+                    duration={5000}
+                    loop
+                    bounce={false}
+                    repeatSpacer={50}
+                    marqueeDelay={1000}
+                  >
+                    {room.title}
+                  </TextTicker>
+                </View> */}
+
               </View>
             ))}
           </ScrollView>
+
+          
 
           {/* ✅ Button Inside Container When Rooms Are Shown */}
           <View style={styles.toggleButtonContainer}>
             <Pressable onPress={toggleShowRooms}>
               <MaterialIcons name="arrow-upward" size={28} color={"blue"} />
+            </Pressable>
+
+            <Pressable onPress={() => router.push("/RoomsScreen")}>
+              <Text>Ver todas</Text>
             </Pressable>
           </View>
         </View>
@@ -71,10 +173,10 @@ const Rooms = () => {
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%", 
+    width: "100%",
     maxHeight: 170,
     paddingVertical: 10,
-    backgroundColor: "white"
+    backgroundColor: "white",
   },
   scrollContainer: {
     flexDirection: "row",
@@ -84,13 +186,14 @@ const styles = StyleSheet.create({
   roomContainer: {
     width: 150,
     height: "100%",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
-    borderRadius: 30,
+    borderRadius: 35.32,
     overflow: "hidden",
     backgroundColor: "black",
-    marginRight: 10, 
+    marginRight: 10,
   },
+
   roomImage: {
     width: "100%",
     height: "100%",
@@ -102,40 +205,53 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
-    zIndex: 2, 
+    zIndex: 2,
+    marginBottom: 30,
+    padding: 2
   },
   usersPreview: {
-    width: "60%",
+    width: "100%",
     height: 50,
     justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 15,
-    marginTop: 5,
+    // marginTop: 5,
+    // backgroundColor: "green"
   },
+  roomMembersContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    // backgroundColor: "red",
+    top: 0
+  },
+
   userImage: {
     width: 30,
     aspectRatio: 1.1,
     borderRadius: 20,
+    marginRight: -5
   },
   userImageOverlapping: {
     width: 30,
     aspectRatio: 1.1,
     borderRadius: 10,
     left: 10,
-    zIndex: 2
+    zIndex: 2,
   },
   roomCount: {
     color: "white",
     fontSize: 14,
-    marginLeft: 10
+    marginLeft: 10,
+    fontWeight: 600
   },
-  roomMembersContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
+  
   toggleButtonContainer: {
     alignItems: "center",
     marginTop: 10,
+    // backgroundColor: "red",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingLeft: 10,
+    paddingRight: 10
   },
   toggleButtonHidden: {
     position: "absolute",
@@ -151,8 +267,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-    zIndex: 200
-  }
+    zIndex: 200,
+  },
 });
 
 export default Rooms;
