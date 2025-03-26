@@ -74,21 +74,20 @@ export default function TabLayout() {
 />
 
       <Tabs.Screen 
-        name="profile"
+        name="notification"
         options={{
-          title: "Profile",
+          title: "Notification",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="person.fill" color={color} />
+            <IconSymbol size={28} name="bell.fill" color={color} />
           )
         }}
       />
       <Tabs.Screen 
-        name="menu"
+        name="chat"
         options={{
-          title: "menu",
+          title: "Chat",
           tabBarIcon: ({ color }) => (
-            // <IconSymbol size={28} name="cat.fill" color={color} />
-            <MaterialIcons name="menu" size={28} color={color}/>
+            <MaterialIcons name="wechat" size={28} color={color}/>
           )
         }}
       />

@@ -1,9 +1,9 @@
 import React from "react";
 import { SafeAreaView, View, Text, Image, StyleSheet, Pressable, Linking, ScrollView } from "react-native";
-import { ThemedText } from "../../components/ThemedText";
+import { ThemedText } from "../components/ThemedText";
 import { useUser } from "context/UserContext";
 
-import Header from "../../components/components/Header";
+import Header from "../components/components/Header";
 
 export default function Profile() {
     const { currentUser, logout } = useUser(); // ✅ Extract `currentUser` & `logout`
@@ -12,7 +12,7 @@ export default function Profile() {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Header />
+            {/* <Header /> */}
             <ThemedText style={styles.title}>Profile</ThemedText>
 
             {currentUser ? (
@@ -24,7 +24,7 @@ export default function Profile() {
                         source={
                             currentUser.profileImage 
                             ? { uri: currentUser.profileImage } 
-                            : require("../../assets/default-avatar.png") // ✅ Default Avatar
+                            : require("../assets/default-avatar.png") // ✅ Default Avatar
                         } 
                         style={styles.avatar} 
                     />

@@ -34,8 +34,7 @@ const Header = ({
 }) => {
   const [showMenu, setShowMenu] = useState(false); // ✅ Start with menu closed
   const insets = useSafeAreaInsets();
-  const router = useRouter()
-
+  const router = useRouter();
 
   // Close menu when screen loses focus
   useFocusEffect(
@@ -49,7 +48,6 @@ const Header = ({
       {/* ✅ Full-Screen Side Menu - Rendered Outside the Header */}
       {showMenu && (
         <View style={[styles.fullScreenSafeArea, { paddingTop: insets.top }]}>
-
           <View style={styles.sideMenu}>
             {/* Static Overlay Area (left 10%) */}
             <View style={{ flex: 0.1 }} />
@@ -79,7 +77,13 @@ const Header = ({
                     <Text style={styles.username}>{User.name}</Text>
                     <Text style={styles.about}>{User.about}</Text>
                     <Link href={"/profile"}>
-                      <Pressable style={styles.profileButton}>
+                      <Pressable
+                        style={styles.profileButton}
+                        onPress={() => {
+                          setShowMenu(false);
+                          router.push("/profile");
+                        }}
+                      >
                         <Text style={styles.profileButtonText}>Ver perfil</Text>
                       </Pressable>
                     </Link>
@@ -93,7 +97,12 @@ const Header = ({
                       <Text style={styles.textStyle}>Salvos</Text>
                     </Pressable>
 
-                    <Pressable onPress={() => router.push("/settings")}>
+                    <Pressable
+                      onPress={() => {
+                        setShowMenu(false);
+                        router.push("/SettingsMain");
+                      }}
+                    >
                       <Text style={styles.textStyle}>Settings</Text>
                     </Pressable>
                   </View>

@@ -8,9 +8,9 @@ import {
   ScrollView,
 } from "react-native";
 import { Link } from "expo-router";
-import { ThemedText } from "../../components/ThemedText";
+import { ThemedText } from "../components/ThemedText";
 // import functions
-import { handleLogin, handleSignup } from "../../functions/menu";
+import { handleLogin, handleSignup } from "../functions/menu";
 import { useRouter } from "expo-router";
 
 import { useUser } from "context/UserContext";
