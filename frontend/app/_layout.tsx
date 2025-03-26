@@ -49,7 +49,7 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="profile" options={{ headerShown: false }} />
           <Stack.Screen name="SettingsMain" options={{ headerShown: false }} />
-
+          <Stack.Screen name="ListingDetails" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
         </SafeAreaView>

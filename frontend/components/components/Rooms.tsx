@@ -98,7 +98,7 @@ const Rooms = () => {
       {/* ✅ Only Show This When Rooms Are Hidden */}
       {!showRooms && (
         <Pressable style={styles.toggleButtonHidden} onPress={toggleShowRooms}>
-          <MaterialIcons name="arrow-downward" size={28} color={"blue"} />
+          <MaterialIcons name="arrow-downward" size={23} color={"#539DF3"} />
         </Pressable>
       )}
 
@@ -158,7 +158,7 @@ const Rooms = () => {
           {/* ✅ Button Inside Container When Rooms Are Shown */}
           <View style={styles.toggleButtonContainer}>
             <Pressable onPress={toggleShowRooms}>
-              <MaterialIcons name="arrow-upward" size={28} color={"blue"} />
+              <MaterialIcons name="arrow-upward" size={28} color={"#539DF3"} />
             </Pressable>
 
             <Pressable onPress={() => router.push("/RoomsScreen")}>
@@ -253,12 +253,13 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10
   },
+
   toggleButtonHidden: {
     position: "absolute",
     top: 0, // Overlapping at the top
 
-    left: "90%",
-    transform: [{ translateX: -14 }],
+    right: 20,
+    // transform: [{ translateX: -14 }],
     backgroundColor: "white",
     padding: 5,
     borderRadius: 20,

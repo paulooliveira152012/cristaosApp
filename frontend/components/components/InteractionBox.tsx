@@ -27,7 +27,7 @@ const InteractionBox = ({
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
         {liked ? (
           <IconSymbol
-          size={28}
+          size={23}
           name="heart.fill"
           color="red"
           style={{
@@ -40,7 +40,7 @@ const InteractionBox = ({
         />
         
         ) : (
-          <IconSymbol size={28} name="heart" color="gray" />
+          <IconSymbol size={23} name="heart" color="gray" />
         )}
         {likesCount > 0 && <Text>{likesCount}</Text>}
       </View>
@@ -49,8 +49,8 @@ const InteractionBox = ({
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
         <MaterialCommunityIcons
           name="comment-processing"
-          size={28}
-          color={commented ? 'blue' : 'gray'}
+          size={23}
+          color={commented ? 'gray' : 'gray'}
         />
         {commentsCount > 0 && <Text>{commentsCount}</Text>}
       </View>
@@ -59,8 +59,8 @@ const InteractionBox = ({
         {/* BookmarkOutline */}
         <MaterialCommunityIcons 
         name="bookmark"
-        size={28}
-        color={saved ? 'blue' : 'gray'}
+        size={23}
+        color={saved ? '#539DF3' : 'gray'}
         />
       </View>
 

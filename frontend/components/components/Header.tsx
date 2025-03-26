@@ -13,9 +13,9 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { MotiView } from "moti";
 import { useFocusEffect, Link } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
+import { useRouter, usePathname } from "expo-router";
+
 
 const screenHeight = Dimensions.get("window").height; // ✅ Get full screen height
 const profilePicture = require("../../assets/profile.jpg");
@@ -28,13 +28,21 @@ const User = {
 
 const Header = ({
   showMenuIcon = true,
-  showBackIcon = false,
+  showBackIcon = true,
   showLogo = true,
   profileImage = true,
 }) => {
   const [showMenu, setShowMenu] = useState(false); // ✅ Start with menu closed
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const pathname = usePathname()
+
+
+  // display go back icon only if not in one of these screens: "/", "/explore", "/chat", "/newListing", "/notification"
+  const displayGoBack = pathname !== "/" && pathname !== "/explore" && pathname !== "/newListing" && pathname !== "/notification" && pathname !== "/chat"
+
+  // display logo on specific pages
+  const displayLogo = pathname == "/" || pathname == "/explore" || pathname == "/newListing" || pathname == "/notification" || pathname == "/chat"
 
   // Close menu when screen loses focus
   useFocusEffect(
@@ -122,13 +130,13 @@ const Header = ({
       <View style={styles.container}>
         <View style={styles.header}>
           {/* Back Icon */}
-          {showBackIcon && (
-            <Pressable>
+          { displayGoBack && showBackIcon && (
+            <Pressable onPress={() => router.push("/")}>
               <MaterialIcons name="arrow-back-ios" size={28} color={"red"} />
             </Pressable>
           )}
 
-          {showLogo && <Text style={styles.logo}>Logo Here</Text>}
+          {showLogo && displayLogo && <Text style={styles.logo}>Logo Here</Text>}
 
           {/* Menu Icon */}
           {/* {showMenuIcon && (
@@ -178,6 +186,9 @@ const styles = StyleSheet.create({
     // backgroundColor: "#1E1E1E",
     backgroundColor: "#fff",
     zIndex: 200, // ✅ Keeps it above other elements
+    borderBottomColor: "#E9E9E9",
+    borderBottomWidth: 0.5
+
   },
   header: {
     width: "100%",
@@ -271,8 +282,8 @@ const styles = StyleSheet.create({
   },
   profileMenuImage: {
     objectFit: "cover",
-    height: 50,
-    width: 50,
+    height: 35,
+    width: 35,
     borderRadius: 50,
   },
 

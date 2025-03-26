@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
   listingContainer: {
     backgroundColor: "#f5f5f5",
     padding: 15,
-    borderRadius: 10,
+    borderRadius: 20,
     marginBottom: 15,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
