@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 import InteractionBox from "./InteractionBox";
+import ListingHeader from "./ListingHeader";
 
 /* 
     Type of listings:
@@ -111,21 +112,16 @@ const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
       onPress={() => navigation.navigate("ListingDetails", { item })}
       style={styles.listingContainer}
     >
-      {item.title && <Text style={styles.title}>{item.title}</Text>}
+      {/* {item.title && <Text style={styles.title}>{item.title}</Text>} */}
 
       {item.type === "String" && (
         <>
           {/* listing header */}
-          <View style={styles.listingHeader}>
-            {/* name of the user */}
-            <Text style={styles.listedByName}>{[item.name, " "]}</Text>
-            {/* username @ */}
-            <Pressable onPress={() => console.log("hey")}>
-              <Text style={styles.listedByLinkDate}>@{item.name} </Text>
-            </Pressable>
-            {/* date listed */}
-            <Text style={styles.listedByLinkDate}>· {item.createdAt}</Text>
-          </View>
+         <ListingHeader 
+           name={item.name}
+           username={item.username}
+           createdAt={item.createdAt}
+         />
           {/* listing content */}
           <Text style={styles.content}>{item.content}</Text>
         </>
@@ -133,6 +129,13 @@ const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
 
       {item.type === "Blog" && item.image && (
         <>
+          {/* listing header */}
+       {/* listing header */}
+       <ListingHeader 
+           name={item.name}
+           username={item.username}
+           createdAt={item.createdAt}
+         />
           <Image source={item.image} style={styles.image} />
           <Text style={styles.content}>{item.content}</Text>
         </>
@@ -140,17 +143,39 @@ const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
 
       {item.type === "Image" && item.image && (
         <>
+          {/* listing header */}
+       {/* listing header */}
+       <ListingHeader 
+           name={item.name}
+           username={item.username}
+           createdAt={item.createdAt}
+         />
           <Image source={item.image} style={styles.image} />
           <Text style={styles.content}>{item.content}</Text>
         </>
       )}
 
       {item.type === "Video" && item.videoUrl && (
-        <Text style={styles.content}>🎥 Video: {item.videoUrl}</Text>
+        <>
+       {/* listing header */}
+       <ListingHeader 
+           name={item.name}
+           username={item.username}
+           createdAt={item.createdAt}
+         />
+          <Text style={styles.content}>🎥 Video: {item.videoUrl}</Text>
+        </>
       )}
 
       {item.type === "Poll" && item.options && (
         <View>
+          {/* listing header */}
+        {/* listing header */}
+        <ListingHeader 
+           name={item.name}
+           username={item.username}
+           createdAt={item.createdAt}
+         />
           {item.options.map((option: string, index: number) => (
             <Text key={index} style={styles.pollOption}>
               🔹 {option}
@@ -158,15 +183,13 @@ const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
           ))}
         </View>
       )}
-        <InteractionBox
+      <InteractionBox
         liked={!!item.likes && item.likes > 0}
         commented={!!item.comments && item.comments.length > 0}
         saved={true}
         likesCount={item.likes || 0}
         commentsCount={item.comments?.length || 0}
-        />
-
-
+      />
     </Pressable>
   );
 };
@@ -210,7 +233,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10
+    marginBottom: 10,
   },
 
   title: {
@@ -221,7 +244,7 @@ const styles = StyleSheet.create({
   content: {
     fontSize: 14,
     color: "#333",
-    marginBottom: 10
+    marginBottom: 10,
   },
 
   listedByName: {
