@@ -15,6 +15,7 @@ import { useFocusEffect, Link } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
 
 const screenHeight = Dimensions.get("window").height; // ✅ Get full screen height
 const profilePicture = require("../../assets/profile.jpg");
@@ -33,6 +34,7 @@ const Header = ({
 }) => {
   const [showMenu, setShowMenu] = useState(false); // ✅ Start with menu closed
   const insets = useSafeAreaInsets();
+  const router = useRouter()
 
 
   // Close menu when screen loses focus
@@ -83,9 +85,17 @@ const Header = ({
                     </Link>
                   </View>
                   <View style={styles.menuContentTopLeft}>
-                    <Text style={styles.textStyle}>
-                      Amigos{"\n"}Salvos{"\n"}Configurações
-                    </Text>
+                    <Pressable>
+                      <Text style={styles.textStyle}>Amigos</Text>
+                    </Pressable>
+
+                    <Pressable>
+                      <Text style={styles.textStyle}>Salvos</Text>
+                    </Pressable>
+
+                    <Pressable onPress={() => router.push("/settings")}>
+                      <Text style={styles.textStyle}>Settings</Text>
+                    </Pressable>
                   </View>
                 </View>
 

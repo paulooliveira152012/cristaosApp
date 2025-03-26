@@ -44,10 +44,35 @@ export default function TabLayout() {
         options={{
           title: "Explore",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
+            <IconSymbol size={28} name="magnifyingglass" color={color} />
           ),
         }}
       />
+
+
+{/* I want to style this one differently */}
+<Tabs.Screen
+  name="newListing"
+  options={{
+    title: "",
+    tabBarIcon: ({ color, focused }) => (
+      <IconSymbol
+        size={46}
+        name="plus"
+        color="white"
+        style={{
+          backgroundColor: "#539DF3",
+          borderRadius: 50,
+          padding: 14,
+          marginBottom: Platform.OS === "ios" ? 30 : 0,
+          elevation: 5,
+        }}
+      />
+    ),
+    tabBarLabel: () => null, // Hide label
+  }}
+/>
+
       <Tabs.Screen 
         name="profile"
         options={{
