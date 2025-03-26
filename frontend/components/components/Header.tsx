@@ -132,7 +132,7 @@ const Header = ({
           {/* Back Icon */}
           { displayGoBack && showBackIcon && (
             <Pressable onPress={() => router.push("/")}>
-              <MaterialIcons name="arrow-back-ios" size={28} color={"red"} />
+              <MaterialIcons name="arrow-back-ios" size={28} color={"#539DF3"} />
             </Pressable>
           )}
 

@@ -7,6 +7,7 @@ import TabBarBackground from "../../components/ui/TabBarBackground";
 import { Colors } from "constants/Colors";
 import { useColorScheme } from "hooks/useColorScheme.web";
 import { MaterialIcons } from "@expo/vector-icons";
+import { getBackgroundColorAsync } from "expo-system-ui";
 
 // import { UserProvider } from "context/UserContext";
 
@@ -27,6 +28,7 @@ export default function TabLayout() {
           ios: {
             // Use a transparent background on iOS to show the blur effect
             position: "absolute",
+            
           },
           default: {},
         }),
@@ -65,6 +67,7 @@ export default function TabLayout() {
                 backgroundColor: "#539DF3",
                 borderRadius: 50,
                 padding: 14,
+                
                 marginBottom: Platform.OS === "ios" ? 30 : 0,
                 elevation: 5,
               }}
