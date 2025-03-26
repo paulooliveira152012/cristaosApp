@@ -12,7 +12,7 @@ export default function Profile() {
 
     return (
         <SafeAreaView style={styles.container}>
-            {/* <Header /> */}
+            {/* <Header showBackIcon={true}/> */}
             <ThemedText style={styles.title}>Profile</ThemedText>
 
             {currentUser ? (

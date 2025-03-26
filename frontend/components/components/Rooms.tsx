@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
   },
   toggleButtonHidden: {
     position: "absolute",
-    top: 100, // Overlapping at the top
+    top: 0, // Overlapping at the top
 
     left: "90%",
     transform: [{ translateX: -14 }],

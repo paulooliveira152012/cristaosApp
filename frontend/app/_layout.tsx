@@ -46,8 +46,10 @@ export default function RootLayout() {
           {/* <Text>Test</Text> */}
         <Header />
         <Stack>
-
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="profile" options={{ headerShown: false }} />
+          <Stack.Screen name="SettingsMain" options={{ headerShown: false }} />
+
           <Stack.Screen name="+not-found" />
         </Stack>
         </SafeAreaView>

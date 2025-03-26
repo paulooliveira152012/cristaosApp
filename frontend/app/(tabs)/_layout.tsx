@@ -33,7 +33,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: "",
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="house.fill" color={color} />
           ),
@@ -42,53 +42,52 @@ export default function TabLayout() {
       <Tabs.Screen
         name="explore"
         options={{
-          title: "Explore",
+          title: "",
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="magnifyingglass" color={color} />
           ),
         }}
       />
 
-
-{/* I want to style this one differently */}
-<Tabs.Screen
-  name="newListing"
-  options={{
-    title: "",
-    tabBarIcon: ({ color, focused }) => (
-      <IconSymbol
-        size={46}
-        name="plus"
-        color="white"
-        style={{
-          backgroundColor: "#539DF3",
-          borderRadius: 50,
-          padding: 14,
-          marginBottom: Platform.OS === "ios" ? 30 : 0,
-          elevation: 5,
+      {/* I want to style this one differently */}
+      <Tabs.Screen
+        name="newListing"
+        options={{
+          title: "",
+          tabBarIcon: ({ color, focused }) => (
+            <IconSymbol
+              size={46}
+              name="plus"
+              color="white"
+              style={{
+                backgroundColor: "#539DF3",
+                borderRadius: 50,
+                padding: 14,
+                marginBottom: Platform.OS === "ios" ? 30 : 0,
+                elevation: 5,
+              }}
+            />
+          ),
+          tabBarLabel: () => null, // Hide label
         }}
       />
-    ),
-    tabBarLabel: () => null, // Hide label
-  }}
-/>
 
-      <Tabs.Screen 
+      <Tabs.Screen
         name="notification"
         options={{
-          title: "Notification",
+          title: "",
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="bell.fill" color={color} />
-          )
+          ),
         }}
       />
-      <Tabs.Screen 
+      <Tabs.Screen
         name="chat"
         options={{
-          title: "Chat",
+          title: "",
           tabBarIcon: ({ color }) => (
-            <MaterialIcons name="wechat" size={28} color={color}/>
-          )
+            <MaterialIcons name="wechat" size={28} color={color} />
+          ),
         }}
       />
     </Tabs>
