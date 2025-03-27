@@ -193,8 +193,43 @@ const ExploreScreen = () => {
     });
   };
 
+  const categoryMap: { [key: string]: ListingItemType["category"] } = {
+    Users: "User",
+    Posts: "Post",
+    Groups: "Group",
+    Rooms: "Room",
+  };
+
+  let filteredList = ListingsList;
+
+  // Aplica filtro de categoria primeiro (se houver)
+  if (selectedCategory && selectedCategory !== "All") {
+    filteredList = filteredList.filter(
+      (item) => item.category === categoryMap[selectedCategory]
+    );
+  }
+  
+
+
+// Aplica filtro de busca depois (se houver)
+if (search.trim() !== "") {
+  const lower = search.toLowerCase();
+  filteredList = filteredList.filter((item) => {
+    return (
+      item.title?.toLowerCase().includes(lower) ||
+      item.content?.toLowerCase().includes(lower) ||
+      item.name?.toLowerCase().includes(lower) ||
+      item.username?.toLowerCase().includes(lower)
+    );
+  });
+}
+  
+
   // Se tiver algo no search, aplica filtro, senão mostra tudo
-  const itemsToDisplay = search ? searchListings(search) : ListingsList;
+  const itemsToDisplay = filteredList;
+
+
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -216,6 +251,13 @@ const ExploreScreen = () => {
         </View>
 
         <View style={styles.searchCategoriesContainer}>
+        <Pressable 
+            style={ selectedCategory === "All" ? styles.selected : styles.categoryButtonContainer}
+            onPress={() => setSelectedCategory("All")}
+          >
+            <Text style={selectedCategory === "All" ? styles.buttonTextSelected : styles.buttonText }>All</Text>
+          </Pressable>
+
           <Pressable 
             style={ selectedCategory === "Users" ? styles.selected : styles.categoryButtonContainer}
             onPress={() => setSelectedCategory("Users")}
