@@ -30,19 +30,19 @@ const rooms = [
 
 const roomMembers = [
   { username: "Paulo", profileImage: require("../../assets/profile.jpg") },
-  { username: "Lulu", profileImage: require("../../assets/profile2.jpg") },
+  { username: "Lulu", profileImage: require("../../assets/Lulu.jpg") },
   { username: "Paulo", profileImage: require("../../assets/profile.jpg") },
-  { username: "Lulu", profileImage: require("../../assets/profile2.jpg") },
+  { username: "Lulu", profileImage: require("../../assets/Lulu.jpg") },
   { username: "Paulo", profileImage: require("../../assets/profile.jpg") },
-  { username: "Lulu", profileImage: require("../../assets/profile2.jpg") },
+  { username: "Lulu", profileImage: require("../../assets/Lulu.jpg") },
   { username: "Paulo", profileImage: require("../../assets/profile.jpg") },
-  { username: "Lulu", profileImage: require("../../assets/profile2.jpg") },
+  { username: "Lulu", profileImage: require("../../assets/Lulu.jpg") },
   { username: "Paulo", profileImage: require("../../assets/profile.jpg") },
-  { username: "Lulu", profileImage: require("../../assets/profile2.jpg") },
+  { username: "Lulu", profileImage: require("../../assets/Lulu.jpg") },
   { username: "Paulo", profileImage: require("../../assets/profile.jpg") },
-  { username: "Lulu", profileImage: require("../../assets/profile2.jpg") },
+  { username: "Lulu", profileImage: require("../../assets/Lulu.jpg") },
   { username: "Paulo", profileImage: require("../../assets/profile.jpg") },
-  { username: "Lulu", profileImage: require("../../assets/profile2.jpg") },
+  { username: "Lulu", profileImage: require("../../assets/Lulu.jpg") },
 ];
 
 const Rooms = () => {
