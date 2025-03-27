@@ -144,7 +144,7 @@ const ExploreScreen = () => {
           ))}
         </View>
 
-        <View>
+        <View style={{flex: 1, paddingBottom: 100}}>
           {filteredList.length === 0 && (
             <Text style={{ textAlign: "center", marginTop: 20 }}>
               Nenhum resultado encontrado.
