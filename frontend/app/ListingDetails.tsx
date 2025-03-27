@@ -9,7 +9,7 @@ import InteractionBox from "../components/components/InteractionBox";
 
 // ✅ Define TypeScript interface for listings
 interface ListingItemType {
-  type: "Blog" | "Image" | "Video" | "Poll";
+  type: "Blog" | "Image" | "Video" | "Poll" | "String";
   title: string;
   image?: any;
   content?: string;
@@ -35,6 +35,18 @@ const ListingDetails: React.FC = () => {
     <ScrollView style={styles.container}>
       <Text style={styles.title}>{item.title}</Text>
 
+      {item.type === "String" && (
+        <>
+          <Text style={styles.content}>{item.content}</Text>
+          <InteractionBox
+            liked={item.liked ?? false}
+            commented={item.commented ?? false}
+            saved={item.saved ?? false}
+          />
+        </>
+        
+      )}
+
       {item.type === "Blog" && item.image && (
         <>
           <Image source={item.image} style={styles.image} />
@@ -51,11 +63,23 @@ const ListingDetails: React.FC = () => {
         <>
           <Image source={item.image} style={styles.image} />
           <Text style={styles.content}>{item.content}</Text>
+          <InteractionBox
+            liked={item.liked ?? false}
+            commented={item.commented ?? false}
+            saved={item.saved ?? false}
+          />
         </>
       )}
 
       {item.type === "Video" && item.videoUrl && (
+        <>
         <Text style={styles.content}>🎥 Video: {item.videoUrl}</Text>
+        <InteractionBox
+            liked={item.liked ?? false}
+            commented={item.commented ?? false}
+            saved={item.saved ?? false}
+          />
+          </>
       )}
 
       {item.type === "Poll" && item.options && (
@@ -65,6 +89,11 @@ const ListingDetails: React.FC = () => {
               🔹 {option}
             </Text>
           ))}
+          <InteractionBox
+            liked={item.liked ?? false}
+            commented={item.commented ?? false}
+            saved={item.saved ?? false}
+          />
         </View>
       )}
     </ScrollView>
