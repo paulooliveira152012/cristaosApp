@@ -16,15 +16,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter, usePathname } from "expo-router";
 
+import { useUser } from "context/UserContext";
 
 const screenHeight = Dimensions.get("window").height; // ✅ Get full screen height
-const profilePicture = require("../../assets/profile.jpg");
-
-const User = {
-  profilePicture: require("../../assets/profile.jpg"),
-  name: "Paulo",
-  about: "Busquem conhecimento",
-};
 
 const Header = ({
   showMenuIcon = true,
@@ -35,14 +29,38 @@ const Header = ({
   const [showMenu, setShowMenu] = useState(false); // ✅ Start with menu closed
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const pathname = usePathname()
+  const pathname = usePathname();
 
+  // 1 access to user in context
+  const user = useUser();
+  console.log("user in header:", user);
+  // 2 have a default image when no user is online
+
+  const placeholder = require("../../assets/images/placeholder.png");
+
+  // 3 have defined profile picture (if existent)
+
+  // const profilePicture = user?.currentUser.profileImage
+
+  // const profilePicture = user?.currentUser.profileImage
+
+  // console.log("LoggedIn user's profile", profilePicture)
 
   // display go back icon only if not in one of these screens: "/", "/explore", "/chat", "/newListing", "/notification"
-  const displayGoBack = pathname !== "/" && pathname !== "/explore" && pathname !== "/newListing" && pathname !== "/notification" && pathname !== "/chat"
+  const displayGoBack =
+    pathname !== "/" &&
+    pathname !== "/explore" &&
+    pathname !== "/newListing" &&
+    pathname !== "/notification" &&
+    pathname !== "/chat";
 
   // display logo on specific pages
-  const displayLogo = pathname == "/" || pathname == "/explore" || pathname == "/newListing" || pathname == "/notification" || pathname == "/chat"
+  const displayLogo =
+    pathname == "/" ||
+    pathname == "/explore" ||
+    pathname == "/newListing" ||
+    pathname == "/notification" ||
+    pathname == "/chat";
 
   // Close menu when screen loses focus
   useFocusEffect(
@@ -54,7 +72,7 @@ const Header = ({
   return (
     <>
       {/* ✅ Full-Screen Side Menu - Rendered Outside the Header */}
-      {showMenu && (
+      {showMenu && user?.currentUser && (
         <View style={[styles.fullScreenSafeArea, { paddingTop: insets.top }]}>
           <View style={styles.sideMenu}>
             {/* Static Overlay Area (left 10%) */}
@@ -79,11 +97,16 @@ const Header = ({
                 <View style={styles.menuContentTop}>
                   <View style={styles.menuContentTopCenter}>
                     <Image
-                      source={User.profilePicture}
+                      source={
+                        user?.currentUser?.profileImage
+                          ? { uri: user.currentUser.profileImage }
+                          : placeholder
+                      }
                       style={styles.openMenuProfile}
                     />
-                    <Text style={styles.username}>{User.name}</Text>
-                    <Text style={styles.about}>{User.about}</Text>
+
+                    <Text style={styles.username}>{user?.currentUser.firstName}</Text>
+                    <Text style={styles.about}>{user?.currentUser.bio}</Text>
                     <Link href={"/profile"}>
                       <Pressable
                         style={styles.profileButton}
@@ -126,17 +149,60 @@ const Header = ({
         </View>
       )}
 
+      {showMenu && !user?.currentUser && (
+  <View style={[styles.fullScreenSafeArea, { paddingTop: insets.top }]}>
+    <View style={styles.sideMenu}>
+      <MotiView
+        from={{ translateX: 300 }}
+        animate={{ translateX: 0 }}
+        transition={{ type: "timing", duration: 270 }}
+        style={styles.menuWrapper}
+      >
+        <View style={[styles.menuContent, { paddingTop: insets.top }]}>
+          <Pressable
+            style={styles.closeButton}
+            onPress={() => setShowMenu(false)}
+          >
+            <MaterialIcons name="close" size={28} color={"black"} />
+          </Pressable>
+
+          <View style={styles.menuContentTopCenter}>
+            <Text style={styles.username}>Olá!</Text>
+              <Pressable 
+                style={styles.profileButton}
+                onPress={() =>{
+                  router.push("/login")
+                  setShowMenu(false)
+                }
+                } 
+              >
+                <Text style={styles.profileButtonText}>Login</Text>
+              </Pressable>
+          </View>
+        </View>
+      </MotiView>
+    </View>
+  </View>
+)}
+
+
       {/* ✅ Header Bar */}
       <View style={styles.container}>
         <View style={styles.header}>
           {/* Back Icon */}
-          { displayGoBack && showBackIcon && (
+          {displayGoBack && showBackIcon && (
             <Pressable onPress={() => router.push("/")}>
-              <MaterialIcons name="arrow-back-ios" size={28} color={"#539DF3"} />
+              <MaterialIcons
+                name="arrow-back-ios"
+                size={28}
+                color={"#539DF3"}
+              />
             </Pressable>
           )}
 
-          {showLogo && displayLogo && <Text style={styles.logo}>Logo Here</Text>}
+          {showLogo && displayLogo && (
+            <Text style={styles.logo}>Logo Here</Text>
+          )}
 
           {/* Menu Icon */}
           {/* {showMenuIcon && (
@@ -148,7 +214,14 @@ const Header = ({
           {/* show profile picture/menu icon*/}
           {profileImage && (
             <Pressable onPress={() => setShowMenu(true)}>
-              <Image source={profilePicture} style={styles.profileMenuImage} />
+              <Image
+                source={
+                  user?.currentUser?.profileImage
+                    ? { uri: user.currentUser.profileImage }
+                    : placeholder
+                }
+                style={styles.profileMenuImage}
+              />
             </Pressable>
           )}
         </View>
@@ -187,8 +260,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     zIndex: 200, // ✅ Keeps it above other elements
     borderBottomColor: "#E9E9E9",
-    borderBottomWidth: 0.5
-
+    borderBottomWidth: 0.5,
   },
   header: {
     width: "100%",
