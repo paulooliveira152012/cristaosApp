@@ -48,7 +48,7 @@ const roomMembers = [
 const Rooms = () => {
   const [roomMembersCount, setRoomMembersCount] = useState("");
   const [showRooms, setShowRooms] = useState(true);
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     setRoomMembersCount(
@@ -113,6 +113,14 @@ const Rooms = () => {
               { minWidth: rooms.length * 200 },
             ]}
           >
+            <Pressable onPress={() => router.push("/newRoom")}>
+            <View style={{...styles.roomContainer, display: "flex", justifyContent: "center"}}>
+              <Text style={{...styles.roomTitle, marginBottom: 0}} numberOfLines={1}>
+                Crie uma sala
+              </Text>
+            </View>
+            </Pressable>
+
             {rooms.map((room, index) => (
               <View key={index} style={styles.roomContainer}>
                 <Image source={room.coverImage} style={styles.roomImage} />
@@ -129,10 +137,7 @@ const Rooms = () => {
                     <Text style={styles.roomCount}>{roomMembersCount}</Text>
                   </View>
                 </View>
-                <Text 
-                  style={styles.roomTitle}
-                  numberOfLines={1}
-                >
+                <Text style={styles.roomTitle} numberOfLines={1}>
                   {room.title}
                 </Text>
 
@@ -148,12 +153,9 @@ const Rooms = () => {
                     {room.title}
                   </TextTicker>
                 </View> */}
-
               </View>
             ))}
           </ScrollView>
-
-          
 
           {/* ✅ Button Inside Container When Rooms Are Shown */}
           <View style={styles.toggleButtonContainer}>
@@ -207,7 +209,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     zIndex: 2,
     marginBottom: 30,
-    padding: 2
+    padding: 2,
   },
   usersPreview: {
     width: "100%",
@@ -220,14 +222,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     // backgroundColor: "red",
-    top: 0
+    top: 0,
   },
 
   userImage: {
     width: 30,
     aspectRatio: 1.1,
     borderRadius: 20,
-    marginRight: -5
+    marginRight: -5,
   },
   userImageOverlapping: {
     width: 30,
@@ -240,9 +242,9 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 14,
     marginLeft: 10,
-    fontWeight: 600
+    fontWeight: 600,
   },
-  
+
   toggleButtonContainer: {
     alignItems: "center",
     marginTop: 10,
@@ -251,7 +253,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingLeft: 10,
-    paddingRight: 10
+    paddingRight: 10,
   },
 
   toggleButtonHidden: {
