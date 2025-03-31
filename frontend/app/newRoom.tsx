@@ -11,23 +11,44 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import { useUser } from "context/UserContext";
 
 const NewRoom = () => {
   const [title, setTitle] = useState("");
   const [coverUrl, setCoverUrl] = useState("");
   const placeholderImage = "https://via.placeholder.com/300x150.png?text=Room+Cover";
+  const user = useUser()
 
-  const handleCreateRoom = () => {
+
+  console.log("user in the create new room page:", user)
+  console.log("username:", user.currentUser.username)
+
+  const handleCreateRoom = async () => {
     if (!title.trim()) {
       return Alert.alert("Título obrigatório", "Por favor, insira o nome da sala.");
     }
+
+    const api = "http://localhost:5001/api/rooms/newRoom"
 
     const newRoom = {
       title,
       coverImage: coverUrl || placeholderImage,
       createdAt: new Date().toISOString(),
-      createdBy: "Paulinho", // Você pode trocar isso pelo ID do usuário logado
+      createdBy: user.currentUser._id
     };
+
+    try {
+        const response = await fetch(api, {
+            method: "post",
+            headers: {"Content-Type" : "application/json"},
+            body: JSON.stringify(newRoom)
+        })
+
+        console.log("response:" ,response)
+
+    } catch (error) {
+        console.log(error)
+    }
 
     console.log("✅ Nova sala criada:", newRoom);
     Alert.alert("Sala criada com sucesso!", `Nome: ${title}`);
