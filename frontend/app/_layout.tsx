@@ -10,6 +10,7 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import { UserProvider } from "context/UserContext";
+import { RoomProvider } from "context/RoomContext";
 
 import { useColorScheme } from "hooks/useColorScheme";
 
@@ -42,6 +43,7 @@ export default function RootLayout() {
     <SafeAreaProvider>
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <UserProvider>
+        <RoomProvider>
         <SafeAreaView style={{ flex:1, position: "relative"}}>
           {/* <Text>Test</Text> */}
         <Header />
@@ -58,6 +60,7 @@ export default function RootLayout() {
           <Stack.Screen name="+not-found" />
         </Stack>
         </SafeAreaView>
+        </RoomProvider>
       </UserProvider>
       <StatusBar style="auto" />
     </ThemeProvider>

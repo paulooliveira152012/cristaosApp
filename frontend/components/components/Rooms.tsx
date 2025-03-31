@@ -147,7 +147,14 @@ const Rooms = () => {
               
               <Pressable 
                 key={index}
-                onPress={() => router.push(`/room/${room._id}`)}
+                onPress={() =>
+                  router.push({
+                    pathname: "/room/[id]",
+                    params: { id: room._id, title: room.title },
+                  } as const)
+                }
+                
+                
               >
               <View  style={styles.roomContainer}>
                 <Image source={{ uri: room.coverImage }} style={styles.roomImage} />

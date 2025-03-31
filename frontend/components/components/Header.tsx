@@ -11,12 +11,13 @@ import {
 import React, { useState, useCallback } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { MotiView } from "moti";
-import { useFocusEffect, Link } from "expo-router";
+import { useFocusEffect, Link, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter, usePathname } from "expo-router";
 
 import { useUser } from "context/UserContext";
+import { useRoom } from "context/RoomContext";
 
 const screenHeight = Dimensions.get("window").height; // ✅ Get full screen height
 
@@ -26,11 +27,18 @@ const Header = ({
   showLogo = true,
   profileImage = true,
   showRoomTitle = true,
+  roomMock = null,
 }) => {
   const [showMenu, setShowMenu] = useState(false); // ✅ Start with menu closed
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const pathname = usePathname();
+  const { currentRoomTitle } = useRoom();
+
+  // optional mock fallback title
+  const fallbackRoomTitle = "Sala sem nome";
+
+  console.log("log dos parametros", useLocalSearchParams());
 
   // 1 access to user in context
   const user = useUser();
@@ -205,6 +213,12 @@ const Header = ({
             <Text style={styles.logo}>Logo Here</Text>
           )}
 
+          {pathname.startsWith("/room/") && (
+            <Text style={styles.logo}>
+              {currentRoomTitle || fallbackRoomTitle}
+            </Text>
+          )}
+
           {/* Menu Icon */}
           {/* {showMenuIcon && (
             <Pressable onPress={() => setShowMenu(true)}>
@@ -227,8 +241,6 @@ const Header = ({
           )}
         </View>
       </View>
-
-      {showRoomTitle && <Text>Room title</Text>}
     </>
   );
 };

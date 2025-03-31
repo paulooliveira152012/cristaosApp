@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import {
   View,
   Text,
@@ -12,11 +12,15 @@ import {
 import { useEffect, useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { MicOff, Send, Image as ImageIcon, X } from "lucide-react-native";
+import { useRoom } from "context/RoomContext";
+
 
 export default function RoomScreen() {
-  const { id } = useLocalSearchParams();
+  const { id, title } = useLocalSearchParams();
+  const router = useRouter()
   const [room, setRoom] = useState<any>(null);
   const [showMembers, setShowMembers] = useState(true);
+  const { setCurrentRoomTitle } = useRoom();
 
   const roomMock = {
     title: "Quem sofreu mais, Naruto ou Jó?",
@@ -264,13 +268,15 @@ export default function RoomScreen() {
         const res = await fetch(`http://localhost:5001/api/rooms/${id}`);
         const data = await res.json();
         setRoom(data);
+        setCurrentRoomTitle(data.title); // Atualiza o contexto
       } catch (error) {
         console.error("❌ Erro ao buscar sala:", error);
       }
     };
-
+  
     if (id) fetchRoom();
   }, [id]);
+  
 
   if (!room) {
     return <Text>Carregando sala...</Text>;
@@ -294,7 +300,6 @@ export default function RoomScreen() {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.title}>{roomMock.title}</Text>
         <Pressable onPress={() => setShowMembers(!showMembers)}>
           {showMembers ? (
             <MaterialIcons name="arrow-upward" size={28} color={"#539DF3"} />
