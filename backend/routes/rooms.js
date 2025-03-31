@@ -37,6 +37,24 @@ router.get("/getRooms", async (req, res) => {
       res.status(500).json({ error: "Erro ao buscar as salas. Tente novamente." });
     }
   });
+
+//   get one specific room
+// Get specific room by ID
+router.get("/:id", async (req, res) => {
+    const { id } = req.params;
+  
+    try {
+      const room = await Room.findById(id).populate("createdBy", "username");
+      if (!room) {
+        return res.status(404).json({ message: "Sala não encontrada" });
+      }
+      res.status(200).json(room);
+    } catch (error) {
+      console.error("❌ Erro ao buscar sala:", error);
+      res.status(500).json({ error: "Erro interno ao buscar sala" });
+    }
+  });
+  
   
 
 module.exports = router;

@@ -17,6 +17,7 @@ import { getRooms } from "./functions/functions"
 import TextTicker from "react-native-text-ticker";
 
 interface Room {
+  _id: string;
   title: string;
   coverImage: string; // vai vir como uma URL do backend
   createdBy?: any;
@@ -143,7 +144,12 @@ const Rooms = () => {
             </Pressable>
 
             {roomsList.map((room, index) => (
-              <View key={index} style={styles.roomContainer}>
+              
+              <Pressable 
+                key={index}
+                onPress={() => router.push(`/room/${room._id}`)}
+              >
+              <View  style={styles.roomContainer}>
                 <Image source={{ uri: room.coverImage }} style={styles.roomImage} />
                 <View style={styles.usersPreview}>
                   <View style={styles.roomMembersContainer}>
@@ -175,6 +181,7 @@ const Rooms = () => {
                   </TextTicker>
                 </View> */}
               </View>
+              </Pressable>
             ))}
           </ScrollView>
 
