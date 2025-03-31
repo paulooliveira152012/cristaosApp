@@ -11,22 +11,34 @@ import React, { useState, useEffect, useRef } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
+// importing external functions
+import { getRooms } from "./functions/functions"
+
 import TextTicker from "react-native-text-ticker";
 
-const rooms = [
-  {
-    title: "Estudo de Romanos",
-    coverImage: require("../../assets/placeholder.jpg"),
-  },
-  {
-    title: "Outro Estudo Muito Muito Longo Que Precisa Rolar Automaticamente",
-    coverImage: require("../../assets/placeholder.jpg"),
-  },
-  {
-    title: "Mais um Estudo",
-    coverImage: require("../../assets/placeholder.jpg"),
-  },
-];
+interface Room {
+  title: string;
+  coverImage: string; // vai vir como uma URL do backend
+  createdBy?: any;
+  createdAt?: string;
+}
+
+
+
+// const rooms = [
+//   {
+//     title: "Estudo de Romanos",
+//     coverImage: require("../../assets/placeholder.jpg"),
+//   },
+//   {
+//     title: "Outro Estudo Muito Muito Longo Que Precisa Rolar Automaticamente",
+//     coverImage: require("../../assets/placeholder.jpg"),
+//   },
+//   {
+//     title: "Mais um Estudo",
+//     coverImage: require("../../assets/placeholder.jpg"),
+//   },
+// ];
 
 const roomMembers = [
   { username: "Paulo", profileImage: require("../../assets/profile.jpg") },
@@ -45,9 +57,12 @@ const roomMembers = [
   { username: "Lulu", profileImage: require("../../assets/Lulu.jpg") },
 ];
 
+
 const Rooms = () => {
   const [roomMembersCount, setRoomMembersCount] = useState("");
   const [showRooms, setShowRooms] = useState(true);
+  const [roomsList, setRoomsList] = useState<Room[]>([]);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -55,6 +70,12 @@ const Rooms = () => {
       roomMembers.length > 13 ? "+13" : roomMembers.length.toString()
     );
   }, []);
+
+  // call function for fetching all rooms
+  useEffect(() => {
+    getRooms(setRoomsList)
+    console.log("rooms fetched:", roomsList)
+  }, [])
 
   const toggleShowRooms = () => {
     setShowRooms((prev) => !prev);
@@ -110,7 +131,7 @@ const Rooms = () => {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={[
               styles.scrollContainer,
-              { minWidth: rooms.length * 200 },
+              { minWidth: roomsList.length * 200 },
             ]}
           >
             <Pressable onPress={() => router.push("/newRoom")}>
@@ -121,9 +142,9 @@ const Rooms = () => {
             </View>
             </Pressable>
 
-            {rooms.map((room, index) => (
+            {roomsList.map((room, index) => (
               <View key={index} style={styles.roomContainer}>
-                <Image source={room.coverImage} style={styles.roomImage} />
+                <Image source={{ uri: room.coverImage }} style={styles.roomImage} />
                 <View style={styles.usersPreview}>
                   <View style={styles.roomMembersContainer}>
                     <Image
