@@ -25,6 +25,7 @@ const Header = ({
   showBackIcon = true,
   showLogo = true,
   profileImage = true,
+  showRoomTitle = true,
 }) => {
   const [showMenu, setShowMenu] = useState(false); // ✅ Start with menu closed
   const insets = useSafeAreaInsets();
@@ -105,7 +106,9 @@ const Header = ({
                       style={styles.openMenuProfile}
                     />
 
-                    <Text style={styles.username}>{user?.currentUser.firstName}</Text>
+                    <Text style={styles.username}>
+                      {user?.currentUser.firstName}
+                    </Text>
                     <Text style={styles.about}>{user?.currentUser.bio}</Text>
                     <Link href={"/profile"}>
                       <Pressable
@@ -150,41 +153,39 @@ const Header = ({
       )}
 
       {showMenu && !user?.currentUser && (
-  <View style={[styles.fullScreenSafeArea, { paddingTop: insets.top }]}>
-    <View style={styles.sideMenu}>
-      <MotiView
-        from={{ translateX: 300 }}
-        animate={{ translateX: 0 }}
-        transition={{ type: "timing", duration: 270 }}
-        style={styles.menuWrapper}
-      >
-        <View style={[styles.menuContent, { paddingTop: insets.top }]}>
-          <Pressable
-            style={styles.closeButton}
-            onPress={() => setShowMenu(false)}
-          >
-            <MaterialIcons name="close" size={28} color={"black"} />
-          </Pressable>
+        <View style={[styles.fullScreenSafeArea, { paddingTop: insets.top }]}>
+          <View style={styles.sideMenu}>
+            <MotiView
+              from={{ translateX: 300 }}
+              animate={{ translateX: 0 }}
+              transition={{ type: "timing", duration: 270 }}
+              style={styles.menuWrapper}
+            >
+              <View style={[styles.menuContent, { paddingTop: insets.top }]}>
+                <Pressable
+                  style={styles.closeButton}
+                  onPress={() => setShowMenu(false)}
+                >
+                  <MaterialIcons name="close" size={28} color={"black"} />
+                </Pressable>
 
-          <View style={styles.menuContentTopCenter}>
-            <Text style={styles.username}>Olá!</Text>
-              <Pressable 
-                style={styles.profileButton}
-                onPress={() =>{
-                  router.push("/login")
-                  setShowMenu(false)
-                }
-                } 
-              >
-                <Text style={styles.profileButtonText}>Login</Text>
-              </Pressable>
+                <View style={styles.menuContentTopCenter}>
+                  <Text style={styles.username}>Olá!</Text>
+                  <Pressable
+                    style={styles.profileButton}
+                    onPress={() => {
+                      router.push("/login");
+                      setShowMenu(false);
+                    }}
+                  >
+                    <Text style={styles.profileButtonText}>Login</Text>
+                  </Pressable>
+                </View>
+              </View>
+            </MotiView>
           </View>
         </View>
-      </MotiView>
-    </View>
-  </View>
-)}
-
+      )}
 
       {/* ✅ Header Bar */}
       <View style={styles.container}>
@@ -226,6 +227,8 @@ const Header = ({
           )}
         </View>
       </View>
+
+      {showRoomTitle && <Text>Room title</Text>}
     </>
   );
 };
