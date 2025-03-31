@@ -10,6 +10,7 @@ import {
   Button,
 } from "react-native";
 import { useEffect, useState } from "react";
+import { MaterialIcons } from "@expo/vector-icons";
 import { MicOff, Send, Image as ImageIcon, X } from "lucide-react-native";
 
 export default function RoomScreen() {
@@ -295,32 +296,35 @@ export default function RoomScreen() {
       <View style={styles.header}>
         <Text style={styles.title}>{roomMock.title}</Text>
         <Pressable onPress={() => setShowMembers(!showMembers)}>
-          <X color="#C00" size={24} />
+          {showMembers ? (
+            <MaterialIcons name="arrow-upward" size={28} color={"#539DF3"} />
+          ) : (
+            <MaterialIcons name="arrow-downward" size={28} color={"#539DF3"} />
+          )}
         </Pressable>
       </View>
 
       {/* Members */}
       {showMembers && (
         <View style={{ maxHeight: 250 }}>
-      <ScrollView contentContainerStyle={styles.members}>
-        {roomMock.members?.map((member: Member, i: number) => (
-          <View key={i} style={styles.avatarContainer}>
-            <Image
-              source={{ uri: member.profileImage }}
-              style={styles.avatar}
-            />
-            <Text style={styles.username}>{member.username}</Text>
+          <ScrollView contentContainerStyle={styles.members}>
+            {roomMock.members?.map((member: Member, i: number) => (
+              <View key={i} style={styles.avatarContainer}>
+                <Image
+                  source={{ uri: member.profileImage }}
+                  style={styles.avatar}
+                />
+                <Text style={styles.username}>{member.username}</Text>
 
-            {member.isMuted && (
-              <MicOff color="crimson" size={12} style={styles.mutedIcon} />
-            )}
+                {member.isMuted && (
+                  <MicOff color="crimson" size={12} style={styles.mutedIcon} />
+                )}
 
-            {member.isHost && <Text style={styles.hostLabel}>Host</Text>}
-          </View>
-        ))}
-
-      </ScrollView>
-      </View>
+                {member.isHost && <Text style={styles.hostLabel}>Host</Text>}
+              </View>
+            ))}
+          </ScrollView>
+        </View>
       )}
 
       {/* Voice Button */}
@@ -391,9 +395,8 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     gap: 10,
     paddingVertical: 10,
-    
   },
-  
+
   avatarContainer: {
     alignItems: "center",
     width: 60,
