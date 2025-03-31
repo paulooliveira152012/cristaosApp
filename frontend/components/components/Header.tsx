@@ -28,6 +28,7 @@ const Header = ({
   profileImage = true,
   showRoomTitle = true,
   roomMock = null,
+  exitRoom = true
 }) => {
   const [showMenu, setShowMenu] = useState(false); // ✅ Start with menu closed
   const insets = useSafeAreaInsets();
@@ -70,6 +71,10 @@ const Header = ({
     pathname == "/newListing" ||
     pathname == "/notification" ||
     pathname == "/chat";
+
+    // display profile image / menu icon on all but pages except...
+    const displayProfileImage = !pathname.startsWith("/room/");
+
 
   // Close menu when screen loses focus
   useFocusEffect(
@@ -213,10 +218,18 @@ const Header = ({
             <Text style={styles.logo}>Logo Here</Text>
           )}
 
+          {/* room title only on chat room */}
           {pathname.startsWith("/room/") && (
             <Text style={styles.logo}>
               {currentRoomTitle || fallbackRoomTitle}
             </Text>
+          )}
+
+          {/* exit room (only on room) */}
+          {pathname.startsWith("/room/") && (
+            <View>
+                <Text>Sair</Text>
+            </View>
           )}
 
           {/* Menu Icon */}
@@ -227,7 +240,7 @@ const Header = ({
             )} */}
 
           {/* show profile picture/menu icon*/}
-          {profileImage && (
+          {profileImage && displayProfileImage && (
             <Pressable onPress={() => setShowMenu(true)}>
               <Image
                 source={
