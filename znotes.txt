@@ -23,9 +23,40 @@ Shortcut to creating a new screen structure:
 rnfe
 
 
-
 issues:
 side menu not respecting safe area View
 need to Implement tailwind css
 room title not scrollable in one line
+
+1 - mostrar os ouvintes nas salas
+    - participantes minimizados: mostrar participantes no topo ao lado da seta
+    - participantes expandido: mostrar ouvintes no topo
+
+2 - Implementar listagens, edição e deletar
+    - Posts
+    - Imagens
+    - Enquetes
+    - Links
+    - Chats
+    - grupos
+
+3 - concluir dinamização da caixa de interação
+
+4 - implementar notificação
+
+5 - implementarmensagem de texto em cada salas
+
+6 - implementar chamada de audio em cada salas com contexto para minimizar
+
+7 - implementar mensagens no direct
+
+8 - implementar amizades
+
+9 - implementar tela de perfil
+
+10 - dinamizar busca com items do banco de dados
+
+
+
+
 
