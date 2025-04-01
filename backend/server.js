@@ -17,8 +17,10 @@ app.use(express.json())
 
 const authRoutes = require('./routes/auth')
 const roomRoutes = require('./routes/rooms')
+const listingRoutes = require('./routes/listings')
 app.use('/api/auth', authRoutes)
 app.use('/api/rooms', roomRoutes)
+app.use('/api/listings', listingRoutes)
 
 
 // Connect to MongoDB using Mongoose

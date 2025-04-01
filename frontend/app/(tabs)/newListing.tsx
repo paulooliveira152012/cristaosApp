@@ -5,9 +5,12 @@ import {
   TouchableOpacity,
   Pressable,
   Image,
+  Button
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Feather } from "@expo/vector-icons";
+import { handleSubmitNewListing } from "./functions/functions"
+import { useUser } from "context/UserContext";
 
 const tabs = ["Post", "Imagem", "Enquete", "Link", "Chat", "Grupo"];
 
@@ -16,6 +19,14 @@ const NewListing = () => {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const user = useUser()
+
+
+  useEffect(() => {
+    console.log("user in submit new listing:", user.currentUser._id)
+  })
+
+
 
   return (
     <View style={{ flex: 1, backgroundColor: "#fff", paddingHorizontal: 16, paddingTop: 16 }}>
@@ -215,6 +226,18 @@ const NewListing = () => {
           </View>
         </View>
       )}
+
+<Button 
+  title="submit"
+  onPress={() => handleSubmitNewListing({
+    type: activeTab,
+    title,
+    content,
+    createdBy: user?.currentUser?._id
+  })}
+/>
+
+        
     </View>
   );
 };
