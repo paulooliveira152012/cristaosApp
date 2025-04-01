@@ -5,20 +5,39 @@ import {
   TouchableOpacity,
   Pressable,
   Image,
-  Button
+  Button,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Feather } from "@expo/vector-icons";
-import { handleSubmitNewListing } from "./functions/functions"
+import { 
+  handleSubmitNewListing, 
+  handleSelectImage 
+} from "./functions/functions"
 import { useUser } from "context/UserContext";
 
 const tabs = ["Post", "Imagem", "Enquete", "Link", "Chat", "Grupo"];
 
 const NewListing = () => {
   const [activeTab, setActiveTab] = useState("Post");
-
+  // Post
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  // Image
+  const [image, setImage] = useState("");
+  const [imageDescription, setImageDescription] = useState("");
+  // enquete
+  const [question, setQuestion] = useState("");
+  const [poolOptions, setPoolOptions] = useState([])
+  // link
+  const [link, setLink] = useState("");
+  const [linkDescription, setLinkDescription] = useState("");
+  // chat
+  const [chatTitle, setChatTitle] = useState("");
+  const [coverUrl, setCoverUrl] = useState("");
+  const placeholderImage = "https://via.placeholder.com/300x150.png?text=Room+Cover";
+  // group
+  const [group, setGroup] = useState([])
+
   const user = useUser()
 
 
@@ -70,36 +89,51 @@ const NewListing = () => {
       )}
 
       {/* Imagem */}
-      {activeTab === "Imagem" && (
-        <View style={{ alignItems: "center", marginTop: 20 }}>
-          <View
-            style={{
-              width: 200,
-              height: 200,
-              backgroundColor: "#f2f2f2",
-              borderWidth: 1,
-              borderColor: "#ccc",
-              borderRadius: 12,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Feather name="image" size={48} color="#ccc" />
-          </View>
-          <TextInput
-            placeholder="Insira uma legenda"
-            placeholderTextColor="#aaa"
-            style={{
-              marginTop: 12,
-              fontSize: 16,
-              borderBottomWidth: 1,
-              borderBottomColor: "#eee",
-              width: "100%",
-              textAlign: "center",
-            }}
+      {/* Imagem */}
+{activeTab === "Imagem" && (
+  <View style={{ alignItems: "center", marginTop: 20 }}>
+    <Pressable onPress={() => handleSelectImage(setImage)}>
+      <View
+        style={{
+          width: 200,
+          height: 200,
+          backgroundColor: "#f2f2f2",
+          borderWidth: 1,
+          borderColor: "#ccc",
+          borderRadius: 12,
+          justifyContent: "center",
+          alignItems: "center",
+          overflow: "hidden",
+        }}
+      >
+        {image ? (
+          <Image 
+            source={{ uri: image }}
+            style={{ width: "100%", height: "100%" }}
+            resizeMode="cover"
           />
-        </View>
-      )}
+        ) : (
+          <Feather name="image" size={48} color="#ccc" />
+        )}
+      </View>
+    </Pressable>
+
+    <TextInput
+      placeholder="Insira uma legenda"
+      placeholderTextColor="#aaa"
+      value={imageDescription}
+      onChangeText={setImageDescription}
+      style={{
+        marginTop: 12,
+        fontSize: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: "#eee",
+        width: "100%",
+        textAlign: "center",
+      }}
+    />
+  </View>
+)}
 
       {/* Enquete */}
       {activeTab === "Enquete" && (
@@ -229,13 +263,25 @@ const NewListing = () => {
 
 <Button 
   title="submit"
-  onPress={() => handleSubmitNewListing({
-    type: activeTab,
-    title,
-    content,
-    createdBy: user?.currentUser?._id
-  })}
+  onPress={() =>
+    handleSubmitNewListing({
+      type: activeTab,
+      title,
+      content,
+      image,
+      imageDescription,
+      question,
+      poolOptions,
+      link,
+      linkDescription,
+      chatTitle,
+      groupTitle: chatTitle, // se for usar o mesmo
+      groupDescription: content,
+      createdBy: user?.currentUser?._id,
+    })
+  }
 />
+
 
         
     </View>
