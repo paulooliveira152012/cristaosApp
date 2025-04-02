@@ -5,7 +5,7 @@ const listingSchema = new mongoose.Schema(
     type: {
       type: String,
       required: true,
-      enum: ["Post", "Imagem", "Enquete", "Link", "Chat", "Grupo"],
+      enum: ["Post", "Imagem", "Poll", "Link", "Chat", "Grupo"],
     },
 
     // Common fields

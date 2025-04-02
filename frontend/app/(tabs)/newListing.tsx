@@ -17,6 +17,9 @@ import { useUser } from "context/UserContext";
 
 const tabs = ["Post", "Imagem", "Enquete", "Link", "Chat", "Grupo"];
 
+
+
+
 const NewListing = () => {
   const [activeTab, setActiveTab] = useState("Post");
   // Post
@@ -26,7 +29,7 @@ const NewListing = () => {
   const [image, setImage] = useState("");
   const [imageDescription, setImageDescription] = useState("");
   // enquete
-  const [question, setQuestion] = useState("");
+  const [question, setPoolQuestion] = useState("");
   const [poolOptions, setPoolOptions] = useState(["", ""]); // começa com 2 opções vazias
 
   // link
@@ -42,6 +45,16 @@ const NewListing = () => {
   const [groupName, setGroupName] = useState("");
   const [groupDescription, setGroupDescription] = useState("");
   const [group, setGroup] = useState([]);
+
+  const tabToTypeMap: { [key: string]: string } = {
+    Post: "Post",
+    Imagem: "Image",
+    Enquete: "Poll",
+    Link: "Link",
+    Chat: "Chat",
+    Grupo: "Group",
+  };
+  
 
   const user = useUser();
 
@@ -174,6 +187,7 @@ const NewListing = () => {
           <TextInput
             placeholder="Pergunta da Enquete"
             placeholderTextColor="#aaa"
+            onChangeText={setPoolQuestion}
             style={{
               borderBottomWidth: 1,
               borderBottomColor: "#ccc",
@@ -332,12 +346,13 @@ const NewListing = () => {
         title="submit"
         onPress={() => {
           const listingPayload = {
-            type: activeTab,
+            type: tabToTypeMap[activeTab] || activeTab, // Mapeia o nome da aba para o tipo correspondente
             title,
             content,
             image,
             imageDescription,
             question,
+            poolOptions: poolOptions.map((text) => ({ text })), // importante!
             link,
             linkDescription,
             chatTitle,
@@ -345,8 +360,8 @@ const NewListing = () => {
             groupTitle: groupName,
             groupDescription,
             createdBy: user?.currentUser?._id,
-            poolOptions: poolOptions.map((text) => ({ text })), // importante!
           };
+          
 
           handleSubmitNewListing(listingPayload);
         }}

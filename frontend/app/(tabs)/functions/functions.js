@@ -20,7 +20,7 @@ export const handleSubmitNewListing = async (listingData) => {
         };
         break;
   
-      case "Imagem":
+      case "Image":
         finalListing = {
           ...finalListing,
           image: listingData.image,
@@ -28,7 +28,7 @@ export const handleSubmitNewListing = async (listingData) => {
         };
         break;
   
-      case "Enquete":
+      case "Poll":
         finalListing = {
           ...finalListing,
           question: listingData.question?.trim(),
@@ -57,7 +57,7 @@ export const handleSubmitNewListing = async (listingData) => {
         };
         break;
   
-        case "Grupo":
+        case "Group":
           finalListing = {
             ...finalListing,
             title: listingData.groupTitle?.trim(),

@@ -47,7 +47,7 @@ router.post("/newListing", async (req, res) => {
         newListingData.caption = caption || "";
         break;
 
-      case "Enquete":
+      case "Poll":
         newListingData.question = question;
         newListingData.options = options || [];
         break;

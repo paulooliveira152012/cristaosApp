@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Pressable,
 } from "react-native";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -24,14 +24,21 @@ import { useSafeAreaFrame } from "react-native-safe-area-context";
     - Poll
 */
 
+interface PollOption {
+  _id: string;
+  text: string;
+}
+
 // ✅ Define TypeScript interface for listings
 interface ListingItemType {
-  type: "Blog" | "Image" | "Video" | "Poll" | "String";
+  type: "Blog" | "Image" | "Video" | "Poll" | "Thought" | "Chat" | "Group";
   title?: string;
+  question?: string; // ✅ adiciona isso
   image?: any;
+  caption?: string;
   content?: string;
   videoUrl?: string;
-  options?: string[];
+  options?: PollOption[]; // <- aqui
   name?: string;
   username?: string;
   createdAt?: string;
@@ -48,7 +55,7 @@ type RootStackParamList = {
 // ✅ Define listing data
 const ListingsList: ListingItemType[] = [
   {
-    type: "String",
+    type: "Thought",
     content: "Bom dia!!!!",
     name: "gabi",
     username: "gabi",
@@ -102,16 +109,18 @@ const ListingsList: ListingItemType[] = [
   {
     type: "Poll",
     title: "What's your favorite programming language?",
-    options: ["JavaScript", "Python", "C++", "Go"],
+    options: [
+      { _id: "1", text: "JavaScript" },
+      { _id: "2", text: "Python" },
+      { _id: "3", text: "C++" },
+      { _id: "4", text: "Go" },
+    ],
   },
 ];
-
-
 
 // ✅ Define ListingItem component
 const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  
 
   return (
     <Pressable
@@ -120,14 +129,14 @@ const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
     >
       {/* {item.title && <Text style={styles.title}>{item.title}</Text>} */}
 
-      {item.type === "String" && (
+      {item.type === "Thought" && (
         <>
           {/* listing header */}
-         <ListingHeader 
-           name={item.name}
-           username={item.username}
-           createdAt={item.createdAt}
-         />
+          <ListingHeader
+            name={item.name}
+            username={item.username}
+            createdAt={item.createdAt}
+          />
           {/* listing content */}
           <Text style={styles.content}>{item.content}</Text>
         </>
@@ -136,13 +145,13 @@ const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
       {item.type === "Blog" && item.image && (
         <>
           {/* listing header */}
-       {/* listing header */}
-       <ListingHeader 
-           name={item.name}
-           username={item.username}
-           createdAt={item.createdAt}
-         />
-          <Image source={item.image} style={styles.image} />
+          {/* listing header */}
+          <ListingHeader
+            name={item.name}
+            username={item.username}
+            createdAt={item.createdAt}
+          />
+          <Image source={{ uri: item.image }} style={styles.image} />
           <Text style={styles.content}>{item.content}</Text>
         </>
       )}
@@ -150,45 +159,58 @@ const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
       {item.type === "Image" && item.image && (
         <>
           {/* listing header */}
-       {/* listing header */}
-       <ListingHeader 
-           name={item.name}
-           username={item.username}
-           createdAt={item.createdAt}
-         />
-          <Image source={item.image} style={styles.image} />
-          <Text style={styles.content}>{item.content}</Text>
+          {/* listing header */}
+          <ListingHeader
+            name={item.name}
+            username={item.username}
+            createdAt={item.createdAt}
+          />
+          <Image
+            source={
+              typeof item.image === "string" ? { uri: item.image } : item.image
+            }
+            style={styles.image}
+          />
+
+          <Text style={styles.content}>{item.caption}</Text>
         </>
       )}
 
       {item.type === "Video" && item.videoUrl && (
         <>
-       {/* listing header */}
-       <ListingHeader 
-           name={item.name}
-           username={item.username}
-           createdAt={item.createdAt}
-         />
+          {/* listing header */}
+          <ListingHeader
+            name={item.name}
+            username={item.username}
+            createdAt={item.createdAt}
+          />
           <Text style={styles.content}>🎥 Video: {item.videoUrl}</Text>
         </>
       )}
 
       {item.type === "Poll" && item.options && (
         <View>
-          {/* listing header */}
-        {/* listing header */}
-        <ListingHeader 
-           name={item.name}
-           username={item.username}
-           createdAt={item.createdAt}
-         />
-          {item.options.map((option: string, index: number) => (
-            <Text key={index} style={styles.pollOption}>
-              🔹 {option}
+          <ListingHeader
+            name={item.name}
+            username={item.username}
+            createdAt={item.createdAt}
+          />
+
+          {/* Aqui é onde a pergunta deve aparecer */}
+          {item.question && (
+            <Text style={[styles.content, { fontWeight: "bold" }]}>
+              🗳️ {item.question}
+            </Text>
+          )}
+
+          {item.options.map((option, index) => (
+            <Text key={option._id || index} style={styles.pollOption}>
+              🔹 {option.text}
             </Text>
           ))}
         </View>
       )}
+
       <InteractionBox
         liked={!!item.likes && item.likes > 0}
         commented={!!item.comments && item.comments.length > 0}
@@ -202,7 +224,6 @@ const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
 
 // ✅ Main Listings Component
 const Listings: React.FC = () => {
-
   const [listings, setListings] = useState<ListingItemType[]>([]);
 
   useEffect(() => {
@@ -216,11 +237,11 @@ const Listings: React.FC = () => {
   useEffect(() => {
     console.log("📦 Listings ready to display:", listings);
   }, [listings]);
-  
+
   return (
     <View style={styles.container}>
       <FlatList
-        data={ListingsList}
+        data={listings}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => <ListingItem item={item} />}
       />
