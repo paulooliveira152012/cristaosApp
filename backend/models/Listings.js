@@ -10,7 +10,7 @@ const listingSchema = new mongoose.Schema(
 
     // Common fields
     title: { type: String },
-    
+
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -26,19 +26,19 @@ const listingSchema = new mongoose.Schema(
 
     // Poll type
     question: { type: String },
-    options: [
-      {
-        text: String,
-        votes: {
-          type: Number,
-          default: 0,
-        },
+    options: {
+        type: [
+          {
+            text: { type: String, required: true },
+          },
+        ],
+        default: [],
       },
-    ],
+      
 
     // Link type
     link: { type: String },
-    linkComment: { type: String },
+    linkDescription: { type: String },
 
     // Chat type
     chat: {
@@ -65,4 +65,3 @@ const listingSchema = new mongoose.Schema(
 const Listing = mongoose.model("Listing", listingSchema);
 
 module.exports = Listing;
-

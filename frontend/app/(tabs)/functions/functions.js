@@ -3,55 +3,79 @@ import * as ImagePicker from "expo-image-picker";
 export const handleSubmitNewListing = async (listingData) => {
     console.log("Submitting new listing", listingData);
   
-    let listing = {
+    const baseListing = {
       createdAt: new Date().toISOString(),
       createdBy: listingData.createdBy,
       type: listingData.type,
     };
   
+    let finalListing = { ...baseListing };
+  
     switch (listingData.type) {
       case "Post":
-        listing.title = listingData.title;
-        listing.content = listingData.content;
+        finalListing = {
+          ...finalListing,
+          title: listingData.title?.trim(),
+          content: listingData.content?.trim(),
+        };
         break;
   
       case "Imagem":
-        listing.image = listingData.image;
-        listing.title = listingData.imageDescription;
+        finalListing = {
+          ...finalListing,
+          image: listingData.image,
+          caption: listingData.imageDescription?.trim(),
+        };
         break;
   
       case "Enquete":
-        listing.question = listingData.question;
-        listing.options = listingData.poolOptions || [];
+        finalListing = {
+          ...finalListing,
+          question: listingData.question?.trim(),
+          options: listingData.poolOptions || [],
+        };
         break;
   
       case "Link":
-        listing.link = listingData.link;
-        listing.content = listingData.linkDescription;
+        finalListing = {
+          ...finalListing,
+          link: listingData.link?.trim(),
+          linkDescription: listingData.linkDescription?.trim(),
+        };
         break;
   
       case "Chat":
-        listing.title = listingData.chatTitle;
-        listing.chat = {
-          supportsText: true,
-          supportsAudio: true, // ou false, dependendo da lógica do app
+        finalListing = {
+          ...finalListing,
+          title: listingData.chatTitle?.trim(),
+          chat: {
+            supportsText: true,
+            supportsAudio: true,
+            description: listingData.chatDescription?.trim(), // ✅ Correct field
+          },
+          description: groupDescription
         };
         break;
   
-      case "Grupo":
-        listing.title = listingData.groupTitle;
-        listing.content = listingData.groupDescription;
-        listing.group = {
-          chatType: "text", // ou "audio", ou ambos
-          members: [], // adiciona se necessário
-        };
-        break;
+        case "Grupo":
+          finalListing = {
+            ...finalListing,
+            title: listingData.groupTitle?.trim(),
+            group: {
+              name: listingData.groupTitle?.trim(),
+              description: listingData.groupDescription?.trim(), // Ensure this is included
+              chatType: "text",
+            },
+          };
+          break;
+        
   
       default:
         console.warn("Tipo de listagem não reconhecido:", listingData.type);
+        return;
     }
   
-    console.log("📦 Listing to be submitted:", listing);
+    console.log("📦 Listing to be submitted:", finalListing);
   
     try {
       const api = "http://localhost:5001/api/listings/newListing";
@@ -61,7 +85,7 @@ export const handleSubmitNewListing = async (listingData) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(listing),
+        body: JSON.stringify(finalListing),
       });
   
       const data = await response.json();
@@ -75,6 +99,7 @@ export const handleSubmitNewListing = async (listingData) => {
       console.error("❌ Error submitting listing:", error);
     }
   };
+  
   
 export const handleSelectImage = async (setImage) => {
     console.log("selecting image");
