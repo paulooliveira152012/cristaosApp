@@ -22,3 +22,26 @@ export const getRooms = async (setRooms) => {
     }
   };
   
+  export const getListings = async (setListings) => {
+    console.log("get listings function reached")
+    try {
+      const api = "http://localhost:5001/api/listings/getListings"
+      const response = await fetch(api, {
+        method: "GET",
+        headers: {"Content-Type" : "application/json"},
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error fetching listings, ${error}`)
+      }
+
+      const data = await response.json();
+      console.log("fetched listings:", data)
+
+      setListings(data)
+      return(data)
+    } catch (error) {
+      console.log("❌ error fetching listings", error)
+      return null
+    }
+  }

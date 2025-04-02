@@ -6,12 +6,15 @@ import {
   StyleSheet,
   Pressable,
 } from "react-native";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 import InteractionBox from "./InteractionBox";
 import ListingHeader from "./ListingHeader";
+
+import { getListings } from "./functions/functions";
+import { useSafeAreaFrame } from "react-native-safe-area-context";
 
 /* 
     Type of listings:
@@ -103,9 +106,17 @@ const ListingsList: ListingItemType[] = [
   },
 ];
 
+
+
 // ✅ Define ListingItem component
 const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const [listings, setListings] = useState([])
+
+  useEffect(() => {
+    getListings(setListings)
+    console.log("Listings ready to display:", listings)
+  }, [])
 
   return (
     <Pressable
