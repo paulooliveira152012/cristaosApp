@@ -36,7 +36,7 @@ export const getRooms = async (setRooms) => {
       }
 
       const data = await response.json();
-      console.log("fetched listings:", data)
+      console.log("1️⃣ fetched listings:", data)
 
       setListings(data)
       return(data)

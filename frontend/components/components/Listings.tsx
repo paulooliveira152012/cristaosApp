@@ -111,12 +111,7 @@ const ListingsList: ListingItemType[] = [
 // ✅ Define ListingItem component
 const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const [listings, setListings] = useState([])
-
-  useEffect(() => {
-    getListings(setListings)
-    console.log("Listings ready to display:", listings)
-  }, [])
+  
 
   return (
     <Pressable
@@ -207,6 +202,21 @@ const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
 
 // ✅ Main Listings Component
 const Listings: React.FC = () => {
+
+  const [listings, setListings] = useState<ListingItemType[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await getListings(setListings);
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    console.log("📦 Listings ready to display:", listings);
+  }, [listings]);
+  
   return (
     <View style={styles.container}>
       <FlatList
