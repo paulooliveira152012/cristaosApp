@@ -28,6 +28,8 @@ router.post("/newListing", async (req, res) => {
   console.log("link:", link)
   console.log("Caption:", caption)
 
+  console.log(req.body)
+
   try {
     let newListingData = {
       type,
@@ -37,12 +39,12 @@ router.post("/newListing", async (req, res) => {
 
     // Montar o objeto com base no tipo
     switch (type) {
-      case "Post":
+      case "Thought":
         newListingData.title = title;
         newListingData.content = content;
         break;
 
-      case "Imagem":
+      case "Image":
         newListingData.image = image;
         newListingData.caption = caption || "";
         break;
@@ -62,7 +64,7 @@ router.post("/newListing", async (req, res) => {
         newListingData.title = title;
         break;
 
-      case "Grupo":
+      case "Group":
         newListingData.group = {
           name: group?.name || title,
           description: group?.description || "",

@@ -31,13 +31,23 @@ interface PollOption {
 
 // ✅ Define TypeScript interface for listings
 interface ListingItemType {
-  type: "Blog" | "Image" | "Video" | "Poll" | "Thought" | "Chat" | "Group";
+  type:
+    | "Blog"
+    | "Image"
+    | "Link"
+    | "Poll"
+    | "Thought"
+    | "Chat"
+    | "Group"
+    | "Video";
   title?: string;
   question?: string; // ✅ adiciona isso
   image?: any;
   caption?: string;
   content?: string;
   videoUrl?: string;
+  link?: string;
+  linkDescription?: string;
   options?: PollOption[]; // <- aqui
   name?: string;
   username?: string;
@@ -138,6 +148,7 @@ const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
             createdAt={item.createdAt}
           />
           {/* listing content */}
+          <Text style={styles.content}>{item.title}</Text>
           <Text style={styles.content}>{item.content}</Text>
         </>
       )}
@@ -176,7 +187,7 @@ const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
         </>
       )}
 
-      {item.type === "Video" && item.videoUrl && (
+      {item.type === "Link" && item.link && (
         <>
           {/* listing header */}
           <ListingHeader
@@ -184,7 +195,12 @@ const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
             username={item.username}
             createdAt={item.createdAt}
           />
-          <Text style={styles.content}>🎥 Video: {item.videoUrl}</Text>
+          {item.linkDescription && (
+            <Text style={styles.content}>{item.linkDescription}</Text>
+          )}
+          <Text style={[styles.content, { color: "#1e90ff" }]}>
+            🔗 {item.link}
+          </Text>
         </>
       )}
 

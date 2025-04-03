@@ -12,7 +12,7 @@ export const handleSubmitNewListing = async (listingData) => {
     let finalListing = { ...baseListing };
   
     switch (listingData.type) {
-      case "Post":
+      case "Thought":
         finalListing = {
           ...finalListing,
           title: listingData.title?.trim(),

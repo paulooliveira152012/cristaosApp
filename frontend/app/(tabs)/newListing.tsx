@@ -47,7 +47,7 @@ const NewListing = () => {
   const [group, setGroup] = useState([]);
 
   const tabToTypeMap: { [key: string]: string } = {
-    Post: "Post",
+    Post: "Thought",
     Imagem: "Image",
     Enquete: "Poll",
     Link: "Link",
