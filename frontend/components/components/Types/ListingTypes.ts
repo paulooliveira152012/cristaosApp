@@ -26,7 +26,11 @@ export interface ListingItemType {
       name?: string;
     };
     likedBy?: string[];
-    commentedBy?: { user: string; comment: string; createdAt?: string }[];
+    commentedBy?: { 
+      user: string; 
+      comment: string; 
+      createdAt?: string;
+     }[];
     savedBy?: string[];
   }
   

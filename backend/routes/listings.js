@@ -99,13 +99,19 @@ router.get("/getListings", async (req, res) => {
         path: "createdBy",
         select: "_id username profileImage",
       })
-      .sort({ createdAt: -1 }); // opcional: mais recente primeiro
+      .populate({
+        path: "commentedBy.user", // 👈 isso popula o user dos comentários
+        select: "username profileImage",
+      })
+      .sort({ createdAt: -1 });
+
     res.status(200).json(listings);
   } catch (error) {
     console.error("❌ Error fetching listings:", error);
     res.status(500).json({ message: "Server error getting listings" });
   }
 });
+
 
 router.post("/likeListing", async (req, res) => {
   console.log("liking a listing");

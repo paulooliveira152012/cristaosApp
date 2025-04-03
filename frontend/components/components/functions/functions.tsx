@@ -50,6 +50,7 @@ export const getListings = async (setListings: (listings: any[]) => void) => {
   }
 };
 
+
 // interaction funcitons
 export const handleLike = async (
   listingId: string,

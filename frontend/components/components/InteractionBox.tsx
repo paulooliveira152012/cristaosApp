@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ListingItemType } from "./Types/ListingTypes";
 import { handleComment, handleLike, handleSave } from "./functions/functions";
+import ListingDetails from "@/ListingDetails";
 
 type InteractionBoxProps = {
   liked: boolean;
@@ -12,6 +13,11 @@ type InteractionBoxProps = {
   commentsCount?: number;
   listingId: string;
   userId: string;
+  commentedBy?: {
+    user: string;
+    commentText: string;
+    createdAt?: string;
+  }[];
   setListings: React.Dispatch<React.SetStateAction<ListingItemType[]>>;
 };
 
@@ -24,8 +30,10 @@ const InteractionBox = ({
   listingId,
   userId,
   setListings,
+  commentedBy, // 👈 ADICIONA ISSO AQUI
 }: InteractionBoxProps) => {
   const [showCommentingBox, setShowCommentingBox] = useState(false);
+  const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState("");
 
   const submitComment = async () => {
@@ -33,7 +41,7 @@ const InteractionBox = ({
 
     // ✍️ Aqui você vai implementar a lógica real depois
     console.log("📝 Enviando comentário:", commentText);
-    handleComment( commentText, listingId, userId)
+    handleComment(commentText, listingId, userId);
     setCommentText("");
     setShowCommentingBox(false);
   };
@@ -55,7 +63,11 @@ const InteractionBox = ({
 
         {/* 💬 Comment */}
         <View style={styles.iconGroup}>
-          <Pressable onPress={() => setShowCommentingBox(!showCommentingBox)}>
+          <Pressable
+            onPress={() => {
+              setShowCommentingBox(!showCommentingBox);
+            }}
+          >
             <MaterialCommunityIcons
               name="comment-processing"
               size={23}
@@ -89,6 +101,30 @@ const InteractionBox = ({
           <Pressable onPress={submitComment} style={styles.submitButton}>
             <Text style={styles.submitText}>Enviar</Text>
           </Pressable>
+
+          <View>
+            {commentedBy && commentedBy.length > 0 ? (
+              commentedBy.map((comment, index) => (
+                <View key={index} style={{ marginBottom: 8 }}>
+                  <Text style={{ fontWeight: "600" }}>
+                    {typeof comment.user === "string"
+                      ? comment.user
+                      : (comment.user as any).username}
+                  </Text>
+
+                  <Text>{comment.commentText}</Text>
+
+                  {comment.createdAt && (
+                    <Text style={{ fontSize: 12, color: "gray" }}>
+                      {new Date(comment.createdAt).toLocaleDateString()}
+                    </Text>
+                  )}
+                </View>
+              ))
+            ) : (
+              <Text style={{ color: "gray" }}>Nenhum comentário ainda.</Text>
+            )}
+          </View>
         </View>
       )}
     </View>

@@ -295,6 +295,12 @@ const ListingItem: React.FC<{ item: ListingItemType; setListings: React.Dispatch
         listingId={item._id}
         userId={currentUser?._id}
         setListings={setListings}
+        commentedBy={
+          item.commentedBy?.map((comment: any) => ({
+            ...comment,
+            commentText: comment.commentText || comment.comment,
+          }))
+        }        
       />
     </Pressable>
   );
