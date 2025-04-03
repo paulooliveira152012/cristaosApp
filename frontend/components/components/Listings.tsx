@@ -49,11 +49,18 @@ interface ListingItemType {
   link?: string;
   linkDescription?: string;
   options?: PollOption[]; // <- aqui
-  name?: string;
-  username?: string;
+  // name?: string;
+  // username?: string;
   createdAt?: string;
   likes?: number;
   comments?: any[];
+
+  createdBy?: {
+    _id: string;
+    username: string;
+    profileImage?: string;
+    name?: string;
+  };
 }
 
 // ✅ Define navigation type
@@ -67,8 +74,8 @@ const ListingsList: ListingItemType[] = [
   {
     type: "Thought",
     content: "Bom dia!!!!",
-    name: "gabi",
-    username: "gabi",
+    // name: "gabi",
+    // username: "gabi",
     createdAt: "1/21/20",
     likes: 2,
     comments: [
@@ -89,8 +96,8 @@ const ListingsList: ListingItemType[] = [
     image: require("../../assets/profile.jpg"),
     content:
       "My name is Paulo Oliveira. I am a programmer and entrepreneur based in Linden, NJ. I run Nova, a digital agency creating high-quality websites. I also work on a delivery app, explore APIs, and trade. My girlfriend, Gabriella, is a designer, and we are in the K1 visa process. We share a love for tech, business, and our dog Lua.",
-    name: "gabi",
-    username: "gabi",
+    // name: "gabi",
+    // username: "gabi",
     createdAt: "1/21/20",
     likes: 2,
     comments: [
@@ -143,10 +150,16 @@ const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
         <>
           {/* listing header */}
           <ListingHeader
-            name={item.name}
-            username={item.username}
-            createdAt={item.createdAt}
+            name={item.createdBy?.name || item.createdBy?.username}
+            username={item.createdBy?.username}
+            profileImage={item.createdBy?.profileImage}
+            createdAt={
+              item.createdAt
+                ? new Date(item.createdAt).toLocaleDateString()
+                : ""
+            }
           />
+
           {/* listing content */}
           <Text style={styles.content}>{item.title}</Text>
           <Text style={styles.content}>{item.content}</Text>
@@ -158,10 +171,16 @@ const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
           {/* listing header */}
           {/* listing header */}
           <ListingHeader
-            name={item.name}
-            username={item.username}
-            createdAt={item.createdAt}
+            name={item.createdBy?.name || item.createdBy?.username}
+            username={item.createdBy?.username}
+            profileImage={item.createdBy?.profileImage}
+            createdAt={
+              item.createdAt
+                ? new Date(item.createdAt).toLocaleDateString()
+                : ""
+            }
           />
+
           <Image source={{ uri: item.image }} style={styles.image} />
           <Text style={styles.content}>{item.content}</Text>
         </>
@@ -172,10 +191,16 @@ const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
           {/* listing header */}
           {/* listing header */}
           <ListingHeader
-            name={item.name}
-            username={item.username}
-            createdAt={item.createdAt}
+            name={item.createdBy?.name || item.createdBy?.username}
+            username={item.createdBy?.username}
+            profileImage={item.createdBy?.profileImage}
+            createdAt={
+              item.createdAt
+                ? new Date(item.createdAt).toLocaleDateString()
+                : ""
+            }
           />
+
           <Image
             source={
               typeof item.image === "string" ? { uri: item.image } : item.image
@@ -191,10 +216,16 @@ const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
         <>
           {/* listing header */}
           <ListingHeader
-            name={item.name}
-            username={item.username}
-            createdAt={item.createdAt}
+            name={item.createdBy?.name || item.createdBy?.username}
+            username={item.createdBy?.username}
+            profileImage={item.createdBy?.profileImage}
+            createdAt={
+              item.createdAt
+                ? new Date(item.createdAt).toLocaleDateString()
+                : ""
+            }
           />
+
           {item.linkDescription && (
             <Text style={styles.content}>{item.linkDescription}</Text>
           )}
@@ -206,10 +237,15 @@ const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
 
       {item.type === "Poll" && item.options && (
         <View>
-          <ListingHeader
-            name={item.name}
-            username={item.username}
-            createdAt={item.createdAt}
+        <ListingHeader
+            name={item.createdBy?.name || item.createdBy?.username}
+            username={item.createdBy?.username}
+            profileImage={item.createdBy?.profileImage}
+            createdAt={
+              item.createdAt
+                ? new Date(item.createdAt).toLocaleDateString()
+                : ""
+            }
           />
 
           {/* Aqui é onde a pergunta deve aparecer */}

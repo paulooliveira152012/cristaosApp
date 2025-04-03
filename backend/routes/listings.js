@@ -93,6 +93,11 @@ router.get("/getListings", async (req, res) => {
   console.log("Route to get listings reached")
   try {
    const listings = await Listing.find()
+   .populate({
+    path: "createdBy",
+    select: "_id username profileImage"
+  })
+  .sort({ createdAt: -1 }) // opcional: mais recente primeiro
    res.status(200).json(listings)
   } catch (error) {
     console.error("❌ Error fetching listings:", error);

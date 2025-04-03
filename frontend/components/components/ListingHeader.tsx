@@ -1,17 +1,28 @@
 // components/ListingHeader.tsx
 import React from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text, Image, Pressable, StyleSheet } from "react-native";
 
 interface Props {
   name?: string;
   username?: string;
   createdAt?: string;
+  profileImage?: string;
 }
 
-const ListingHeader: React.FC<Props> = ({ name, username, createdAt }) => {
+const ListingHeader: React.FC<Props> = ({
+  name,
+  username,
+  profileImage,
+  createdAt,
+}) => {
   return (
     <View style={styles.listingHeader}>
-      <Text style={styles.listedByName}>{name} </Text>
+      {profileImage && (
+        <Image source={{ uri: profileImage }} style={styles.avatar} />
+      )}
+
+      {/* <Text style={styles.listedByName}>{name} </Text> */}
+
       <Pressable onPress={() => console.log("hey")}>
         <Text style={styles.listedByLinkDate}>@{username} </Text>
       </Pressable>
@@ -32,6 +43,13 @@ const styles = StyleSheet.create({
   listedByLinkDate: {
     color: "#687684",
   },
+  avatar: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    marginRight: 8,
+  }
+  
 });
 
 export default ListingHeader;
