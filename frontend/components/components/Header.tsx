@@ -8,7 +8,7 @@ import {
   Button,
 } from "react-native";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { MotiView } from "moti";
 import { useFocusEffect, Link, useLocalSearchParams } from "expo-router";
@@ -44,6 +44,11 @@ const Header = ({
   // 1 access to user in context
   const user = useUser();
   console.log("user in header:", user);
+  console.log("current user in header:", user?.currentUser)
+  if (user?.currentUser) {
+    console.log("profile image:", user.currentUser.profileImage);
+  }
+  
   // 2 have a default image when no user is online
 
   const placeholder = require("../../assets/images/placeholder.png");
@@ -117,6 +122,7 @@ const Header = ({
                           : placeholder
                       }
                       style={styles.openMenuProfile}
+                       resizeMode="cover" // ✅ Aqui!
                     />
 
                     <Text style={styles.username}>
@@ -385,6 +391,7 @@ const styles = StyleSheet.create({
     height: 35,
     width: 35,
     borderRadius: 50,
+    backgroundColor: "#eee"
   },
 
   logoutBtn: {
