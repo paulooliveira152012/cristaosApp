@@ -144,4 +144,29 @@ router.post("/likeListing", async (req, res) => {
   }
 });
 
+router.post("/addComment", async (req, res) => {
+  const { listingId, userId, comment } = req.body;
+
+  if (!listingId || !userId || !comment) {
+    return res.status(400).json({ message: "Dados incompletos" });
+  }
+
+  try {
+    const listing = await Listing.findById(listingId);
+    if (!listing) return res.status(404).json({ message: "Listing não encontrado" });
+
+    listing.commentedBy.push({
+      user: userId,
+      comment,
+    });
+
+    await listing.save();
+    res.status(200).json({ message: "Comentário adicionado", commentedBy: listing.commentedBy });
+  } catch (error) {
+    console.error("Erro ao adicionar comentário:", error);
+    res.status(500).json({ message: "Erro do servidor" });
+  }
+});
+
+
 module.exports = router;
