@@ -145,11 +145,17 @@ router.post("/likeListing", async (req, res) => {
 });
 
 router.post("/addComment", async (req, res) => {
-  const { listingId, userId, comment } = req.body;
+  console.log("Rota de adicionar comentario encontrada!")
+  const { listingId, userId, commentText } = req.body;
 
-  if (!listingId || !userId || !comment) {
+  console.log("listingId:", listingId, "userId:", userId, "comment:", commentText)
+
+  if (!listingId || !userId || !commentText) {
+    console.log("esta faltando dados para fazer o comentario")
     return res.status(400).json({ message: "Dados incompletos" });
   }
+
+  console.log("progurando listagem para colocar o comentario ...")
 
   try {
     const listing = await Listing.findById(listingId);
@@ -157,7 +163,7 @@ router.post("/addComment", async (req, res) => {
 
     listing.commentedBy.push({
       user: userId,
-      comment,
+      commentText,
     });
 
     await listing.save();

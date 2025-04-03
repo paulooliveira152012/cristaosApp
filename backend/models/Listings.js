@@ -63,7 +63,7 @@ const listingSchema = new mongoose.Schema(
           type: mongoose.Schema.Types.ObjectId,
           ref: "User"
         },
-        comment: {
+        commentText: {
           type: String,
           required: true
         },
