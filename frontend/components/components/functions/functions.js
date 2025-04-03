@@ -45,3 +45,19 @@ export const getRooms = async (setRooms) => {
       return null
     }
   }
+
+  // interaction funcitons
+  export const handleLike = () => {
+    console.log("liking/unliking listing")
+  }
+
+  export const handleComment = () => {
+    console.log("commenting listing")
+  }
+
+  export const handleSave = () => {
+    console.log("saving/unsaving listing")
+  }
+
+
+
