@@ -1,3 +1,5 @@
+import { ListingItemType } from "../Types/ListingTypes";
+
 export const getRooms = async (setRooms: (rooms: any[]) => void) => {
     console.log("📡 Fetching all rooms...");
   
@@ -50,20 +52,42 @@ export const getRooms = async (setRooms: (rooms: any[]) => void) => {
   }
 
   // interaction funcitons
-  export const handleLike = async (listingId: string, userId: string) => {
-    console.log("liking/unliking listing");
+  export const handleLike = async (
+    listingId: string,
+    userId: string,
+    setListings: React.Dispatch<React.SetStateAction<ListingItemType[]>>
+  ) => {
+    console.log("🧠 liking/unliking listing");
   
-    await fetch("http://localhost:5001/api/listings/likeListing", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        listingId,
-        userId,
-      }),
-    });
+    try {
+      const response = await fetch("http://localhost:5001/api/listings/likeListing", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ listingId, userId }),
+      });
+  
+      const data = await response.json();
+      console.log("🔁 API like response:", data);
+  
+      if (response.ok && data.likedBy) {
+        // Atualiza o estado local
+        setListings((prevListings) =>
+          prevListings.map((listing) =>
+            listing._id === listingId
+              ? { ...listing, likedBy: data.likedBy }
+              : listing
+          )
+        );
+      } else {
+        console.warn("❌ Failed to like listing:", data.message);
+      }
+    } catch (error) {
+      console.error("❌ Error liking listing:", error);
+    }
   };
+  
   
 
   export const handleComment = () => {

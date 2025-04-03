@@ -3,12 +3,9 @@ import React from "react";
 import { IconSymbol } from "../../components/ui/IconSymbol";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
+import { ListingItemType } from "./Types/ListingTypes";
 
-import { 
-  handleComment,
-  handleLike,
-  handleSave
- } from "./functions/functions";
+import { handleComment, handleLike, handleSave } from "./functions/functions";
 
 // ✅ Props definition
 type InteractionBoxProps = {
@@ -19,6 +16,7 @@ type InteractionBoxProps = {
   commentsCount?: number;
   listingId: string;
   userId: string;
+  setListings: React.Dispatch<React.SetStateAction<ListingItemType[]>>;
 };
 
 const InteractionBox = ({
@@ -29,28 +27,18 @@ const InteractionBox = ({
   commentsCount = 0,
   listingId,
   userId, // ✅ agora estão no escopo
+  setListings, // 👈 agora está disponível
 }: InteractionBoxProps) => {
   return (
     <View style={{ ...styles.container }}>
       {/* ❤️ Likes */}
       <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
-        <Pressable onPress={() => handleLike(listingId, userId)}>
-          {liked ? (
-            <IconSymbol
-              size={23}
-              name="heart.fill"
-              color="red"
-              style={{
-                shadowColor: "#000",
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.3,
-                shadowRadius: 3,
-                elevation: 5, // needed for Android
-              }}
-            />
-          ) : (
-            <IconSymbol size={23} name="heart" color="gray" />
-          )}
+        <Pressable onPress={() => handleLike(listingId, userId, setListings)}>
+          <MaterialCommunityIcons
+            name={liked ? "heart" : "heart-outline"}
+            size={23}
+            color={liked ? "red" : "gray"}
+          />
         </Pressable>
         {likesCount > 0 && <Text>{likesCount}</Text>}
       </View>
@@ -58,11 +46,11 @@ const InteractionBox = ({
       {/* 💬 Comments */}
       <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
         <Pressable onPress={handleComment}>
-        <MaterialCommunityIcons
-          name="comment-processing"
-          size={23}
-          color={commented ? "gray" : "gray"}
-        />
+          <MaterialCommunityIcons
+            name="comment-processing"
+            size={23}
+            color={commented ? "gray" : "gray"}
+          />
         </Pressable>
         {commentsCount > 0 && <Text>{commentsCount}</Text>}
       </View>
@@ -70,11 +58,11 @@ const InteractionBox = ({
       <View style={styles.bookmark}>
         {/* BookmarkOutline */}
         <Pressable onPress={handleSave}>
-        <MaterialCommunityIcons
-          name="bookmark"
-          size={23}
-          color={saved ? "#539DF3" : "gray"}
-        />
+          <MaterialCommunityIcons
+            name="bookmark"
+            size={23}
+            color={saved ? "#539DF3" : "gray"}
+          />
         </Pressable>
       </View>
     </View>

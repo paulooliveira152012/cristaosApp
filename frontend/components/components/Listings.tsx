@@ -152,7 +152,7 @@ const ListingsList: ListingItemType[] = [
 ];
 
 // ✅ Define ListingItem component
-const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
+const ListingItem: React.FC<{ item: ListingItemType; setListings: React.Dispatch<React.SetStateAction<ListingItemType[]>> }> = ({ item, setListings }) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const { currentUser } = useUser(); // ✅ Nome correto
 
@@ -287,13 +287,14 @@ const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
       )}
 
       <InteractionBox
-        liked={!!item.likedBy && item.likedBy.includes(currentUser?.currentUser?._id)}
+        liked={!!item.likedBy && item.likedBy.includes(currentUser?._id)}
         commented={!!item.commentedBy && item.commentedBy.length > 0}
-        saved={!!item.savedBy && item.savedBy.includes(currentUser?.currentUser?._id)}
+        saved={!!item.savedBy && item.savedBy.includes(currentUser?._id)}
         likesCount={item.likedBy?.length || 0}
         commentsCount={item.commentedBy?.length || 0}
         listingId={item._id}
         userId={currentUser?._id}
+        setListings={setListings}
       />
     </Pressable>
   );
@@ -320,7 +321,10 @@ const Listings: React.FC = () => {
       <FlatList
         data={listings}
         keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => <ListingItem item={item} />}
+        renderItem={({ item }) => (
+          <ListingItem item={item} setListings={setListings} />
+        )}
+        
       />
     </View>
   );
