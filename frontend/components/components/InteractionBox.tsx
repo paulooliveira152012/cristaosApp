@@ -1,13 +1,9 @@
-import { View, Text, Pressable } from "react-native";
-import React from "react";
-import { IconSymbol } from "../../components/ui/IconSymbol";
+import { View, Text, Pressable, TextInput, StyleSheet } from "react-native";
+import React, { useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { StyleSheet } from "react-native";
 import { ListingItemType } from "./Types/ListingTypes";
-
 import { handleComment, handleLike, handleSave } from "./functions/functions";
 
-// ✅ Props definition
 type InteractionBoxProps = {
   liked: boolean;
   commented: boolean;
@@ -26,45 +22,74 @@ const InteractionBox = ({
   likesCount = 0,
   commentsCount = 0,
   listingId,
-  userId, // ✅ agora estão no escopo
-  setListings, // 👈 agora está disponível
+  userId,
+  setListings,
 }: InteractionBoxProps) => {
+  const [showCommentingBox, setShowCommentingBox] = useState(false);
+  const [commentText, setCommentText] = useState("");
+
+  const submitComment = () => {
+    if (commentText.trim() === "") return;
+
+    // ✍️ Aqui você vai implementar a lógica real depois
+    console.log("📝 Enviando comentário:", commentText);
+    setCommentText("");
+    setShowCommentingBox(false);
+  };
+
   return (
-    <View style={{ ...styles.container }}>
-      {/* ❤️ Likes */}
-      <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
-        <Pressable onPress={() => handleLike(listingId, userId, setListings)}>
-          <MaterialCommunityIcons
-            name={liked ? "heart" : "heart-outline"}
-            size={23}
-            color={liked ? "red" : "gray"}
-          />
-        </Pressable>
-        {likesCount > 0 && <Text>{likesCount}</Text>}
+    <View style={{ marginTop: 10 }}>
+      <View style={styles.container}>
+        {/* ❤️ Like */}
+        <View style={styles.iconGroup}>
+          <Pressable onPress={() => handleLike(listingId, userId, setListings)}>
+            <MaterialCommunityIcons
+              name={liked ? "heart" : "heart-outline"}
+              size={23}
+              color={liked ? "red" : "gray"}
+            />
+          </Pressable>
+          {likesCount > 0 && <Text>{likesCount}</Text>}
+        </View>
+
+        {/* 💬 Comment */}
+        <View style={styles.iconGroup}>
+          <Pressable onPress={() => setShowCommentingBox(!showCommentingBox)}>
+            <MaterialCommunityIcons
+              name="comment-processing"
+              size={23}
+              color={"gray"}
+            />
+          </Pressable>
+          {commentsCount > 0 && <Text>{commentsCount}</Text>}
+        </View>
+
+        {/* 📌 Save */}
+        <View style={styles.bookmark}>
+          <Pressable onPress={handleSave}>
+            <MaterialCommunityIcons
+              name="bookmark"
+              size={23}
+              color={saved ? "#539DF3" : "gray"}
+            />
+          </Pressable>
+        </View>
       </View>
 
-      {/* 💬 Comments */}
-      <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
-        <Pressable onPress={handleComment}>
-          <MaterialCommunityIcons
-            name="comment-processing"
-            size={23}
-            color={commented ? "gray" : "gray"}
+      {/* ✍️ Comment Box */}
+      {showCommentingBox && (
+        <View style={styles.commentingBoxContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Escreva um comentário..."
+            value={commentText}
+            onChangeText={setCommentText}
           />
-        </Pressable>
-        {commentsCount > 0 && <Text>{commentsCount}</Text>}
-      </View>
-
-      <View style={styles.bookmark}>
-        {/* BookmarkOutline */}
-        <Pressable onPress={handleSave}>
-          <MaterialCommunityIcons
-            name="bookmark"
-            size={23}
-            color={saved ? "#539DF3" : "gray"}
-          />
-        </Pressable>
-      </View>
+          <Pressable onPress={submitComment} style={styles.submitButton}>
+            <Text style={styles.submitText}>Enviar</Text>
+          </Pressable>
+        </View>
+      )}
     </View>
   );
 };
@@ -75,10 +100,39 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 20,
   },
-
+  iconGroup: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+  },
   bookmark: {
     position: "absolute",
     right: 0,
+  },
+  commentingBoxContainer: {
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: "#f2f2f2",
+    borderRadius: 10,
+  },
+  input: {
+    backgroundColor: "white",
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    marginBottom: 8,
+  },
+  submitButton: {
+    backgroundColor: "#539DF3",
+    paddingVertical: 8,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  submitText: {
+    color: "white",
+    fontWeight: "bold",
   },
 });
 
