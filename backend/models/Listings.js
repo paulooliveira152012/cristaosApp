@@ -5,7 +5,7 @@ const listingSchema = new mongoose.Schema(
     type: {
       type: String,
       required: true,
-      enum: ["Thought", "Image", "Poll", "Link", "Chat", "Group"],
+      enum: ["Thought", "Image", "Poll", "Link", "Chat"],
     },
 
     // Common fields
@@ -48,16 +48,6 @@ const listingSchema = new mongoose.Schema(
       supportsAudio: { type: Boolean, default: false },
     },
 
-    // Group type
-    group: {
-      name: String,
-      description: String,
-      chatType: {
-        type: String,
-        enum: ["text", "audio"],
-        default: "text",
-      },
-    },
   },
   { timestamps: true }
 );
