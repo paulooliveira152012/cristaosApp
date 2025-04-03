@@ -20,15 +20,15 @@ router.post("/newListing", async (req, res) => {
     content,
     createdBy,
     createdAt,
-    caption
+    caption,
   } = req.body;
 
   console.log("🧾 Listing type:", type);
   console.log("👤 Created by:", createdBy);
-  console.log("link:", link)
-  console.log("Caption:", caption)
+  console.log("link:", link);
+  console.log("Caption:", caption);
 
-  console.log(req.body)
+  console.log(req.body);
 
   try {
     let newListingData = {
@@ -60,7 +60,10 @@ router.post("/newListing", async (req, res) => {
         break;
 
       case "Chat":
-        newListingData.chat = chat || { supportsText: true, supportsAudio: false };
+        newListingData.chat = chat || {
+          supportsText: true,
+          supportsAudio: false,
+        };
         newListingData.title = title;
         break;
 
@@ -88,21 +91,57 @@ router.post("/newListing", async (req, res) => {
   }
 });
 
-
 router.get("/getListings", async (req, res) => {
-  console.log("Route to get listings reached")
+  console.log("Route to get listings reached");
   try {
-   const listings = await Listing.find()
-   .populate({
-    path: "createdBy",
-    select: "_id username profileImage"
-  })
-  .sort({ createdAt: -1 }) // opcional: mais recente primeiro
-   res.status(200).json(listings)
+    const listings = await Listing.find()
+      .populate({
+        path: "createdBy",
+        select: "_id username profileImage",
+      })
+      .sort({ createdAt: -1 }); // opcional: mais recente primeiro
+    res.status(200).json(listings);
   } catch (error) {
     console.error("❌ Error fetching listings:", error);
-    res.status(500).json({ message: "Server error creating listing" });
+    res.status(500).json({ message: "Server error getting listings" });
   }
-})
+});
+
+router.post("/likeListing", async (req, res) => {
+  console.log("liking a listing");
+
+  const { listingId, userId } = req.body;
+
+  console.log("user liking listing:", userId, "listingId:", listingId);
+
+  try {
+    const listing = await Listing.findById(listingId);
+
+    if (!listing) {
+      return res.status(404).json({ message: "Listing not found" });
+    }
+
+    const alreadyLiked = listing.likedBy.includes(userId);
+
+    if (alreadyLiked) {
+      // unlike
+      listing.likedBy = listing.likedBy.filter(
+        (id) => id.toString() !== userId
+      );
+    } else {
+      listing.likedBy.push(userId);
+    }
+
+    await listing.save();
+
+    res.status(200).json({
+      message: alreadyLiked ? "Like removed" : "Listing Liked",
+      likedBy: listing.likedBy,
+    });
+  } catch (error) {
+    console.log("❌ Error liking listing");
+    res.status(500).json({ message: "Server error liking listing" });
+  }
+});
 
 module.exports = router;

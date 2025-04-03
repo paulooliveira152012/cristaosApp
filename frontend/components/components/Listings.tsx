@@ -15,6 +15,8 @@ import ListingHeader from "./ListingHeader";
 
 import { getListings } from "./functions/functions";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
+import { useUser } from "context/UserContext";
+
 
 /* 
     Type of listings:
@@ -31,6 +33,7 @@ interface PollOption {
 
 // ✅ Define TypeScript interface for listings
 interface ListingItemType {
+  _id: string;
   type:
     | "Blog"
     | "Image"
@@ -61,6 +64,14 @@ interface ListingItemType {
     profileImage?: string;
     name?: string;
   };
+
+  likedBy?: string[]; // ✅ usuários que curtiram
+  commentedBy?: {
+    user: string;
+    comment: string;
+    createdAt?: string;
+  }[];
+  savedBy?: string[]; // ✅ usuários que salvaram
 }
 
 // ✅ Define navigation type
@@ -72,6 +83,7 @@ type RootStackParamList = {
 // ✅ Define listing data
 const ListingsList: ListingItemType[] = [
   {
+    _id: "thought-1", // ✅ resolvido
     type: "Thought",
     content: "Bom dia!!!!",
     // name: "gabi",
@@ -91,6 +103,7 @@ const ListingsList: ListingItemType[] = [
   },
 
   {
+    _id: "blog-1", // ✅ resolvido
     type: "Blog",
     title: "My Photo",
     image: require("../../assets/profile.jpg"),
@@ -112,18 +125,21 @@ const ListingsList: ListingItemType[] = [
     ],
   },
   {
+    _id: "image-1", // ✅ resolvido
     type: "Image",
     title: "Beautiful Sunset",
     image: require("../../assets/sunset.jpg"),
     content: "Captured this amazing sunset in São Paulo! 🌅",
   },
   {
+    _id: "video-1", // ✅ resolvido
     type: "Video",
     title: "React Native Tips",
     videoUrl: "https://www.example.com/video.mp4",
     content: "Check out my latest tips on React Native development! 🚀",
   },
   {
+    _id: "poll-1", // ✅ resolvido
     type: "Poll",
     title: "What's your favorite programming language?",
     options: [
@@ -138,6 +154,13 @@ const ListingsList: ListingItemType[] = [
 // ✅ Define ListingItem component
 const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const { currentUser } = useUser(); // ✅ Nome correto
+
+
+  useEffect(()=> {
+    console.log("✅ ✅ ✅ user in Listing component:", currentUser)
+  })
+
 
   return (
     <Pressable
@@ -237,7 +260,7 @@ const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
 
       {item.type === "Poll" && item.options && (
         <View>
-        <ListingHeader
+          <ListingHeader
             name={item.createdBy?.name || item.createdBy?.username}
             username={item.createdBy?.username}
             profileImage={item.createdBy?.profileImage}
@@ -264,11 +287,13 @@ const ListingItem: React.FC<{ item: ListingItemType }> = ({ item }) => {
       )}
 
       <InteractionBox
-        liked={!!item.likes && item.likes > 0}
-        commented={!!item.comments && item.comments.length > 0}
-        saved={true}
-        likesCount={item.likes || 0}
-        commentsCount={item.comments?.length || 0}
+        liked={!!item.likedBy && item.likedBy.includes(currentUser?.currentUser?._id)}
+        commented={!!item.commentedBy && item.commentedBy.length > 0}
+        saved={!!item.savedBy && item.savedBy.includes(currentUser?.currentUser?._id)}
+        likesCount={item.likedBy?.length || 0}
+        commentsCount={item.commentedBy?.length || 0}
+        listingId={item._id}
+        userId={currentUser?._id}
       />
     </Pressable>
   );

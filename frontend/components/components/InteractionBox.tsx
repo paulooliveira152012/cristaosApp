@@ -12,11 +12,13 @@ import {
 
 // ✅ Props definition
 type InteractionBoxProps = {
-  liked: boolean; // whether the user has liked
-  commented: boolean; // whether the user has commented
+  liked: boolean;
+  commented: boolean;
   saved: boolean;
-  likesCount?: number; // total likes
-  commentsCount?: number; // total comments
+  likesCount?: number;
+  commentsCount?: number;
+  listingId: string;
+  userId: string;
 };
 
 const InteractionBox = ({
@@ -25,12 +27,14 @@ const InteractionBox = ({
   saved,
   likesCount = 0,
   commentsCount = 0,
+  listingId,
+  userId, // ✅ agora estão no escopo
 }: InteractionBoxProps) => {
   return (
     <View style={{ ...styles.container }}>
       {/* ❤️ Likes */}
       <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
-        <Pressable onPress={handleLike}>
+        <Pressable onPress={() => handleLike(listingId, userId)}>
           {liked ? (
             <IconSymbol
               size={23}

@@ -1,4 +1,4 @@
-export const getRooms = async (setRooms) => {
+export const getRooms = async (setRooms: (rooms: any[]) => void) => {
     console.log("📡 Fetching all rooms...");
   
     try {
@@ -22,7 +22,7 @@ export const getRooms = async (setRooms) => {
     }
   };
   
-  export const getListings = async (setListings) => {
+  export const getListings = async (setListings: (listings: any[]) => void) => {
     console.log("get listings function reached")
     try {
       const api = "http://localhost:5001/api/listings/getListings"
@@ -32,7 +32,10 @@ export const getRooms = async (setRooms) => {
       });
 
       if (!response.ok) {
-        throw new Error(`Error fetching listings, ${error}`)
+        if (!response.ok) {
+          throw new Error(`Error fetching listings, status ${response.status}`)
+        }
+        
       }
 
       const data = await response.json();
@@ -47,9 +50,21 @@ export const getRooms = async (setRooms) => {
   }
 
   // interaction funcitons
-  export const handleLike = () => {
-    console.log("liking/unliking listing")
-  }
+  export const handleLike = async (listingId: string, userId: string) => {
+    console.log("liking/unliking listing");
+  
+    await fetch("http://localhost:5001/api/listings/likeListing", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        listingId,
+        userId,
+      }),
+    });
+  };
+  
 
   export const handleComment = () => {
     console.log("commenting listing")
