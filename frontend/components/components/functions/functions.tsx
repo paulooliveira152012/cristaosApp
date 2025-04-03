@@ -91,11 +91,13 @@ export const handleLike = async (
   }
 };
 
-export const handleComment = async (commentText: string, listingId: string, userId: string,) => {
-  console.log("commenting listing");
-  console.log("commentText", commentText);
-  console.log("listingId:", listingId)
-  console.log("userId:", userId);
+export const handleComment = async (
+  commentText: string,
+  listingId: string,
+  userId: string,
+  setListings: React.Dispatch<React.SetStateAction<ListingItemType[]>>
+) => {
+  console.log("✍️ commenting listing", { commentText, listingId, userId });
 
   try {
     const api = "http://localhost:5001/api/listings/addComment";
@@ -105,24 +107,33 @@ export const handleComment = async (commentText: string, listingId: string, user
       headers: {
         "Content-Type": "application/json",
       },
-
-      body: JSON.stringify({ 
-        commentText,
-        listingId,
-        userId, 
-      }),
+      body: JSON.stringify({ commentText, listingId, userId }),
     });
 
     if (!response.ok) {
       throw new Error(`Error commenting listings, status ${response.status}`);
     }
 
-    const data = await response.json();
-    console.log("1️⃣ comment:", data);
+    const newComment = await response.json(); // comentário populado
+    console.log("✅ Novo comentário:", newComment);
+
+    // Atualiza listagem com novo comentário
+    setListings((prevListings) =>
+      prevListings.map((listing) => {
+        if (listing._id === listingId) {
+          return {
+            ...listing,
+            commentedBy: [...(listing.commentedBy || []), newComment],
+          };
+        }
+        return listing;
+      })
+    );
   } catch (error) {
-    console.log("error:", error);
+    console.log("❌ Erro ao comentar:", error);
   }
 };
+
 
 export const handleSave = () => {
   console.log("saving/unsaving listing");

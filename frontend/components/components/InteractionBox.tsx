@@ -41,7 +41,7 @@ const InteractionBox = ({
 
     // ✍️ Aqui você vai implementar a lógica real depois
     console.log("📝 Enviando comentário:", commentText);
-    handleComment(commentText, listingId, userId);
+    await handleComment(commentText, listingId, userId, setListings);
     setCommentText("");
     setShowCommentingBox(false);
   };

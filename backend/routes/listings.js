@@ -151,31 +151,43 @@ router.post("/likeListing", async (req, res) => {
 });
 
 router.post("/addComment", async (req, res) => {
-  console.log("Rota de adicionar comentario encontrada!")
+  console.log("📩 Rota de adicionar comentário chamada!");
   const { listingId, userId, commentText } = req.body;
 
-  console.log("listingId:", listingId, "userId:", userId, "comment:", commentText)
-
   if (!listingId || !userId || !commentText) {
-    console.log("esta faltando dados para fazer o comentario")
+    console.log("❌ Dados incompletos para adicionar comentário");
     return res.status(400).json({ message: "Dados incompletos" });
   }
 
-  console.log("progurando listagem para colocar o comentario ...")
-
   try {
+    // 1. Busca a listagem
     const listing = await Listing.findById(listingId);
     if (!listing) return res.status(404).json({ message: "Listing não encontrado" });
 
-    listing.commentedBy.push({
+    // 2. Cria o comentário
+    const newComment = {
       user: userId,
       commentText,
+      createdAt: new Date(),
+    };
+
+    // 3. Adiciona e salva
+    listing.commentedBy.push(newComment);
+    await listing.save();
+
+    // 4. Busca o comentário populado
+    const updatedListing = await Listing.findById(listingId).populate({
+      path: "commentedBy.user",
+      select: "username profileImage", // adicione profileImage se quiser
     });
 
-    await listing.save();
-    res.status(200).json({ message: "Comentário adicionado", commentedBy: listing.commentedBy });
+    const populatedComment = updatedListing.commentedBy.at(-1); // último comentário
+
+    console.log("✅ Comentário populado retornado:", populatedComment);
+
+    res.status(200).json(populatedComment);
   } catch (error) {
-    console.error("Erro ao adicionar comentário:", error);
+    console.error("❌ Erro ao adicionar comentário:", error);
     res.status(500).json({ message: "Erro do servidor" });
   }
 });
