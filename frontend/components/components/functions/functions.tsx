@@ -50,39 +50,56 @@ export const getListings = async (setListings: (listings: any[]) => void) => {
   }
 };
 
-
 // interaction funcitons
 export const handleLike = async (
   listingId: string,
   userId: string,
-  setListings: React.Dispatch<React.SetStateAction<ListingItemType[]>>
+  setListings: React.Dispatch<React.SetStateAction<ListingItemType[]>>,
+  commentId?: string // 👈 novo argumento opcional
 ) => {
   console.log("🧠 liking/unliking listing");
+  console.log("commentId? :", commentId);
 
   try {
-    const response = await fetch(
-      "http://localhost:5001/api/listings/likeListing",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ listingId, userId }),
-      }
-    );
+    const api = commentId
+      ? "http://localhost:5001/api/listings/likeComment"
+      : "http://localhost:5001/api/listings/likeListing";
+
+    const response = await fetch(api, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        listingId,
+        userId,
+        commentId,
+      }),
+    });
 
     const data = await response.json();
     console.log("🔁 API like response:", data);
 
-    if (response.ok && data.likedBy) {
-      // Atualiza o estado local
-      setListings((prevListings) =>
-        prevListings.map((listing) =>
-          listing._id === listingId
-            ? { ...listing, likedBy: data.likedBy }
-            : listing
-        )
-      );
+    if (response.ok) {
+      if (commentId) {
+        // Atualiza comentários do listing
+        setListings((prevListings) =>
+          prevListings.map((listing) =>
+            listing._id === listingId
+              ? { ...data.updatedListing } // 👈 atualiza tudo (incluindo commentedBy)
+              : listing
+          )
+        );
+      } else if (data.likedBy) {
+        // Atualiza apenas likedBy do listing
+        setListings((prevListings) =>
+          prevListings.map((listing) =>
+            listing._id === listingId
+              ? { ...listing, likedBy: data.likedBy }
+              : listing
+          )
+        );
+      }
     } else {
       console.warn("❌ Failed to like listing:", data.message);
     }
@@ -133,7 +150,6 @@ export const handleComment = async (
     console.log("❌ Erro ao comentar:", error);
   }
 };
-
 
 export const handleSave = () => {
   console.log("saving/unsaving listing");

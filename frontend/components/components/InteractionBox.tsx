@@ -21,9 +21,11 @@ type InteractionBoxProps = {
   listingId: string;
   userId: string;
   commentedBy?: {
+    _id: string;
     user: string | { _id: string; username: string; profileImage?: string };
     commentText: string;
     createdAt?: string;
+    likedBy?: string[]; // ← Add this
   }[];
   setListings: React.Dispatch<React.SetStateAction<ListingItemType[]>>;
 };
@@ -111,53 +113,101 @@ const InteractionBox = ({
 
           <View>
             {commentedBy && commentedBy.length > 0 ? (
-              commentedBy.map((comment, index) => (
-                <View key={index}>
-                  <View style={styles.innerCommentingContainer}>
-                    <View style={styles.innerCommentingContainerTop}>
-                      {/* Imagem de perfil */}
-                      {typeof comment.user === "object" &&
-                      "profileImage" in comment.user &&
-                      comment.user.profileImage ? (
-                        <Image
-                          source={{ uri: comment.user.profileImage }}
-                          style={{ width: 30, height: 30, borderRadius: 15 }}
-                        />
-                      ) : (
-                        <View
-                          style={{
-                            width: 30,
-                            height: 30,
-                            borderRadius: 15,
-                            backgroundColor: "#ccc",
-                          }}
-                        />
-                      )}
-                      <View>
-                        {/* name */}
-                      <Text style={{ fontWeight: "600" }}>
-                        {typeof comment.user === "object" &&
-                        "username" in comment.user
-                          ? comment.user.username
-                          : comment.user}
-                      </Text>
-                      {/* date */}
-                      {comment.createdAt && (
-                        <Text style={{ fontSize: 12, color: "gray" }}>
-                          {new Date(comment.createdAt).toLocaleDateString()}
-                        </Text>
-                      )}
-                      </ View>
-                    </View>
+              commentedBy.map((comment, index) => {
+                const isCommentLiked =
+                  Array.isArray((comment as any).likedBy) &&
+                  (comment as any).likedBy.includes(userId);
 
-                    {/* Texto do comentário */}
-                    <View>
-                      <Text>{comment.commentText}</Text>
-                  
+                return (
+                  <View key={index}>
+                    <View style={styles.innerCommentingContainer}>
+                      <View style={styles.innerCommentingContainerTop}>
+                        {/* Profile Image */}
+                        {typeof comment.user === "object" &&
+                        "profileImage" in comment.user &&
+                        comment.user.profileImage ? (
+                          <Image
+                            source={{ uri: comment.user.profileImage }}
+                            style={{ width: 30, height: 30, borderRadius: 15 }}
+                          />
+                        ) : (
+                          <View
+                            style={{
+                              width: 30,
+                              height: 30,
+                              borderRadius: 15,
+                              backgroundColor: "#ccc",
+                            }}
+                          />
+                        )}
+
+                        <View>
+                          {/* Username */}
+                          <Text style={{ fontWeight: "600" }}>
+                            {typeof comment.user === "object" &&
+                            "username" in comment.user
+                              ? comment.user.username
+                              : comment.user}
+                          </Text>
+
+                          {/* Date */}
+                          {comment.createdAt && (
+                            <Text style={{ fontSize: 12, color: "gray" }}>
+                              {new Date(comment.createdAt).toLocaleDateString()}
+                            </Text>
+                          )}
+                        </View>
+                      </View>
+
+                      {/* Comment Content + Like */}
+                      <View>
+                        <Text>{comment.commentText}</Text>
+                        <View style={styles.commentInteractionButtons}>
+                          {/* ❤️ Like */}
+                          <View style={styles.iconGroup}>
+                            <Pressable
+                              onPress={() =>
+                                handleLike(
+                                  listingId,
+                                  userId,
+                                  setListings,
+                                  comment._id
+                                )
+                              }
+                            >
+                              <MaterialCommunityIcons
+                                name={
+                                  isCommentLiked ? "heart" : "heart-outline"
+                                }
+                                size={23}
+                                color={isCommentLiked ? "red" : "gray"}
+                              />
+                            </Pressable>
+                            {/* Optional: Count of likes for the comment */}
+                            {/* You might want to store likesCount in comment */}
+                          </View>
+
+                          {/* 💬 (Re)Comment */}
+                          <View style={styles.iconGroup}>
+                            <Pressable
+                              onPress={() => {
+                                setShowCommentingBox(!showCommentingBox);
+                              }}
+                            >
+                              <MaterialCommunityIcons
+                                name="comment-processing"
+                                size={23}
+                                color={"gray"}
+                              />
+                            </Pressable>
+                            {commentsCount > 0 && <Text>{commentsCount}</Text>}
+                          </View>
+                        </View>
+                      </View>
                     </View>
                   </View>
-                </View>
-              ))
+                );
+              })
             ) : (
               <Text style={{ color: "gray" }}>Nenhum comentário ainda.</Text>
             )}
@@ -174,11 +224,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 20,
   },
+
   iconGroup: {
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
   },
+
+  commentInteractionButtons: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 20,
+  },
+
   bookmark: {
     position: "absolute",
     right: 0,
@@ -196,7 +254,7 @@ const styles = StyleSheet.create({
     gap: 10,
     marginBottom: 10,
     // backgroundColor: "red",
-    marginTop: 10
+    marginTop: 10,
   },
 
   innerCommentingContainerTop: {
@@ -204,7 +262,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    gap: 10
+    gap: 10,
   },
 
   input: {

@@ -70,7 +70,8 @@ const listingSchema = new mongoose.Schema(
         createdAt: {
           type: Date,
           default: Date.now
-        }
+        },
+        likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }] // <-- Add this
       }
     ],
 

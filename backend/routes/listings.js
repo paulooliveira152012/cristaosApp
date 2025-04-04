@@ -101,7 +101,7 @@ router.get("/getListings", async (req, res) => {
       })
       .populate({
         path: "commentedBy.user", // 👈 isso popula o user dos comentários
-        select: "username profileImage",
+        select: " _id username profileImage",
       })
       .sort({ createdAt: -1 });
 
@@ -149,6 +149,33 @@ router.post("/likeListing", async (req, res) => {
     res.status(500).json({ message: "Server error liking listing" });
   }
 });
+
+router.post("/likeComment", async (req, res) => {
+  const { listingId, commentId, userId } = req.body;
+
+  const listing = await Listing.findById(listingId);
+  if (!listing) return res.status(404).json({ message: "Listing not found" });
+
+  const comment = listing.commentedBy.id(commentId);
+  if (!comment) return res.status(404).json({ message: "Comment not found" });
+
+  const alreadyLiked = comment.likedBy.includes(userId);
+  if (alreadyLiked) {
+    comment.likedBy.pull(userId);
+  } else {
+    comment.likedBy.push(userId);
+  }
+
+  await listing.save();
+
+  const updated = await Listing.findById(listingId).populate([
+    { path: "createdBy", select: "_id username profileImage" },
+    { path: "commentedBy.user", select: "_id username profileImage" },
+  ]);
+
+  res.status(200).json({ message: "Comment like toggled", updatedListing: updated });
+});
+
 
 router.post("/addComment", async (req, res) => {
   console.log("📩 Rota de adicionar comentário chamada!");
