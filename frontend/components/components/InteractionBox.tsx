@@ -1,4 +1,11 @@
-import { View, Text, Pressable, TextInput, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  Pressable,
+  TextInput,
+  StyleSheet,
+} from "react-native";
 import React, { useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ListingItemType } from "./Types/ListingTypes";
@@ -14,7 +21,7 @@ type InteractionBoxProps = {
   listingId: string;
   userId: string;
   commentedBy?: {
-    user: string;
+    user: string | { _id: string; username: string; profileImage?: string };
     commentText: string;
     createdAt?: string;
   }[];
@@ -105,20 +112,50 @@ const InteractionBox = ({
           <View>
             {commentedBy && commentedBy.length > 0 ? (
               commentedBy.map((comment, index) => (
-                <View key={index} style={{ marginBottom: 8 }}>
-                  <Text style={{ fontWeight: "600" }}>
-                    {typeof comment.user === "string"
-                      ? comment.user
-                      : (comment.user as any).username}
-                  </Text>
+                <View key={index}>
+                  <View style={styles.innerCommentingContainer}>
+                    <View style={styles.innerCommentingContainerTop}>
+                      {/* Imagem de perfil */}
+                      {typeof comment.user === "object" &&
+                      "profileImage" in comment.user &&
+                      comment.user.profileImage ? (
+                        <Image
+                          source={{ uri: comment.user.profileImage }}
+                          style={{ width: 30, height: 30, borderRadius: 15 }}
+                        />
+                      ) : (
+                        <View
+                          style={{
+                            width: 30,
+                            height: 30,
+                            borderRadius: 15,
+                            backgroundColor: "#ccc",
+                          }}
+                        />
+                      )}
+                      <View>
+                        {/* name */}
+                      <Text style={{ fontWeight: "600" }}>
+                        {typeof comment.user === "object" &&
+                        "username" in comment.user
+                          ? comment.user.username
+                          : comment.user}
+                      </Text>
+                      {/* date */}
+                      {comment.createdAt && (
+                        <Text style={{ fontSize: 12, color: "gray" }}>
+                          {new Date(comment.createdAt).toLocaleDateString()}
+                        </Text>
+                      )}
+                      </ View>
+                    </View>
 
-                  <Text>{comment.commentText}</Text>
-
-                  {comment.createdAt && (
-                    <Text style={{ fontSize: 12, color: "gray" }}>
-                      {new Date(comment.createdAt).toLocaleDateString()}
-                    </Text>
-                  )}
+                    {/* Texto do comentário */}
+                    <View>
+                      <Text>{comment.commentText}</Text>
+                  
+                    </View>
+                  </View>
                 </View>
               ))
             ) : (
@@ -152,6 +189,24 @@ const styles = StyleSheet.create({
     backgroundColor: "#f2f2f2",
     borderRadius: 10,
   },
+
+  innerCommentingContainer: {
+    flexDirection: "column",
+    // alignItems: "center",
+    gap: 10,
+    marginBottom: 10,
+    // backgroundColor: "red",
+    marginTop: 10
+  },
+
+  innerCommentingContainerTop: {
+    // backgroundColor: "green",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10
+  },
+
   input: {
     backgroundColor: "white",
     borderRadius: 8,
