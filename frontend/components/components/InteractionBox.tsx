@@ -9,7 +9,7 @@ import {
 import React, { useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ListingItemType } from "./Types/ListingTypes";
-import { handleComment, handleLike, handleSave } from "./functions/functions";
+import { handleComment, handleReply, handleLike, handleSave } from "./functions/functions";
 import ListingDetails from "@/ListingDetails";
 
 type InteractionBoxProps = {
@@ -44,6 +44,11 @@ const InteractionBox = ({
   const [showCommentingBox, setShowCommentingBox] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState("");
+  // commenting on comments
+  const [replyingToCommentId, setReplyingToCommentId] = useState<string | null>(
+    null
+  );
+  const [replyText, setReplyText] = useState(""); // texto da resposta
 
   const submitComment = async () => {
     if (commentText.trim() === "") return;
@@ -162,6 +167,43 @@ const InteractionBox = ({
                       {/* Comment Content + Like */}
                       <View>
                         <Text>{comment.commentText}</Text>
+
+                        {replyingToCommentId === comment._id && (
+                          <View style={{ marginTop: 8 }}>
+                            <TextInput
+                              style={styles.input}
+                              placeholder="Responder..."
+                              value={replyText}
+                              onChangeText={setReplyText}
+                            />
+                            <Pressable
+                              style={styles.submitButton}
+                              onPress={async() => {
+                                // Aqui você pode chamar uma função handleReply
+                                console.log(
+                                  "📩 Enviando resposta para o comentário:",
+                                  comment._id
+                                );
+                                // TODO: implementar handleReply()
+                                setReplyText("");
+                                setReplyingToCommentId(null);
+                                await handleReply(
+                                  replyText,
+                                  comment._id,
+                                  listingId,
+                                  userId,
+                                  setListings
+                                );
+                                
+                              }}
+                            >
+                              <Text style={styles.submitText}>
+                                Enviar resposta
+                              </Text>
+                            </Pressable>
+                          </View>
+                        )}
+
                         <View style={styles.commentInteractionButtons}>
                           {/* ❤️ Like */}
                           <View style={styles.iconGroup}>
@@ -191,7 +233,7 @@ const InteractionBox = ({
                           <View style={styles.iconGroup}>
                             <Pressable
                               onPress={() => {
-                                setShowCommentingBox(!showCommentingBox);
+                                setReplyingToCommentId(comment._id);
                               }}
                             >
                               <MaterialCommunityIcons
@@ -200,6 +242,7 @@ const InteractionBox = ({
                                 color={"gray"}
                               />
                             </Pressable>
+
                             {commentsCount > 0 && <Text>{commentsCount}</Text>}
                           </View>
                         </View>

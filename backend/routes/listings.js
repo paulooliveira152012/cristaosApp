@@ -219,5 +219,54 @@ router.post("/addComment", async (req, res) => {
   }
 });
 
+// In routes/listings.js or wherever your routes are defined
+router.post("/replyComment", async (req, res) => {
+  const { listingId, parentCommentId, userId, replyText } = req.body;
+
+  console.log("📨 Replying to comment:", { listingId, parentCommentId, userId, replyText });
+
+  if (!listingId || !parentCommentId || !userId || !replyText) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
+
+  try {
+    const listing = await Listing.findById(listingId);
+
+    if (!listing) {
+      return res.status(404).json({ message: "Listing not found" });
+    }
+
+    const comment = listing.commentedBy.id(parentCommentId); // Mongoose subdoc access
+
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    comment.replies = comment.replies || [];
+
+    comment.replies.push({
+      user: userId,
+      replyText,
+      createdAt: new Date(),
+    });
+
+    await listing.save();
+
+    const updatedListing = await Listing.findById(listingId)
+      .populate("createdBy", "_id username profileImage")
+      .populate("commentedBy.user", "_id username profileImage")
+      .populate("commentedBy.replies.user", "_id username profileImage");
+
+    res.status(200).json({
+      message: "Reply added",
+      updatedListing,
+    });
+  } catch (error) {
+    console.error("❌ Error replying to comment:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
 
 module.exports = router;

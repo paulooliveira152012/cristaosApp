@@ -71,9 +71,37 @@ const listingSchema = new mongoose.Schema(
           type: Date,
           default: Date.now
         },
-        likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }] // <-- Add this
+        likedBy: [
+          {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+          }
+        ],
+        replies: [
+          {
+            user: {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: "User"
+            },
+            replyText: {
+              type: String,
+              required: true
+            },
+            createdAt: {
+              type: Date,
+              default: Date.now
+            },
+            likedBy: [
+              {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User"
+              }
+            ]
+          }
+        ]
       }
     ],
+    
 
     // list with people who has saved the listing
     savedBy: [

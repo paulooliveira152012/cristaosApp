@@ -151,6 +151,43 @@ export const handleComment = async (
   }
 };
 
+
+export const handleReply = async (
+  replyText: string,
+  parentCommentId: string,
+  listingId: string,
+  userId: string,
+  setListings: React.Dispatch<React.SetStateAction<ListingItemType[]>>
+) => {
+  try {
+    const res = await fetch("http://localhost:5001/api/listings/replyComment", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        replyText,
+        parentCommentId,
+        listingId,
+        userId,
+      }),
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      setListings((prev: ListingItemType[]) =>
+        prev.map((listing) =>
+          listing._id === listingId ? data.updatedListing : listing
+        )
+      );
+    } else {
+      console.warn("❌ Failed to reply:", data.message);
+    }
+  } catch (error) {
+    console.error("❌ Error replying to comment:", error);
+  }
+};
+
+
+
 export const handleSave = () => {
   console.log("saving/unsaving listing");
 };
