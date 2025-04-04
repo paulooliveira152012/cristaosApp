@@ -9,7 +9,12 @@ import {
 import React, { useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ListingItemType } from "./Types/ListingTypes";
-import { handleComment, handleReply, handleLike, handleSave } from "./functions/functions";
+import {
+  handleComment,
+  handleReply,
+  handleLike,
+  handleSave,
+} from "./functions/functions";
 import ListingDetails from "@/ListingDetails";
 
 type InteractionBoxProps = {
@@ -25,8 +30,15 @@ type InteractionBoxProps = {
     user: string | { _id: string; username: string; profileImage?: string };
     commentText: string;
     createdAt?: string;
-    likedBy?: string[]; // ← Add this
+    likedBy?: string[];
+    replies?: {
+      _id: string;
+      user: string | { _id: string; username: string; profileImage?: string };
+      replyText: string;
+      createdAt?: string;
+    }[];
   }[];
+  
   setListings: React.Dispatch<React.SetStateAction<ListingItemType[]>>;
 };
 
@@ -178,7 +190,7 @@ const InteractionBox = ({
                             />
                             <Pressable
                               style={styles.submitButton}
-                              onPress={async() => {
+                              onPress={async () => {
                                 // Aqui você pode chamar uma função handleReply
                                 console.log(
                                   "📩 Enviando resposta para o comentário:",
@@ -194,7 +206,6 @@ const InteractionBox = ({
                                   userId,
                                   setListings
                                 );
-                                
                               }}
                             >
                               <Text style={styles.submitText}>
@@ -246,6 +257,67 @@ const InteractionBox = ({
                             {commentsCount > 0 && <Text>{commentsCount}</Text>}
                           </View>
                         </View>
+
+                        {comment.replies && comment.replies.length > 0 && (
+                          <View style={{ paddingLeft: 40, marginTop: 10 }}>
+                            {comment.replies?.map((reply: any, replyIndex: number) => (
+                              <View
+                                key={replyIndex}
+                                style={{ marginBottom: 10 }}
+                              >
+                                <View
+                                  style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    gap: 10,
+                                  }}
+                                >
+                                  {/* imagem de perfil da reply */}
+                                  {reply.user?.profileImage ? (
+                                    <Image
+                                      source={{ uri: reply.user.profileImage }}
+                                      style={{
+                                        width: 25,
+                                        height: 25,
+                                        borderRadius: 12,
+                                      }}
+                                    />
+                                  ) : (
+                                    <View
+                                      style={{
+                                        width: 25,
+                                        height: 25,
+                                        borderRadius: 12,
+                                        backgroundColor: "#ccc",
+                                      }}
+                                    />
+                                  )}
+
+                                  <View>
+                                    <Text
+                                      style={{
+                                        fontWeight: "600",
+                                        fontSize: 13,
+                                      }}
+                                    >
+                                      {reply.user?.username || reply.user}
+                                    </Text>
+                                    <Text>{reply.replyText}</Text>
+                                    {reply.createdAt && (
+                                      <Text
+                                        style={{ fontSize: 10, color: "gray" }}
+                                      >
+                                        {new Date(
+                                          reply.createdAt
+                                        ).toLocaleDateString()}
+                                      </Text>
+                                    )}
+                                  </View>
+                                </View>
+                              </View>
+                            ))}
+                          </View>
+                        )}
                       </View>
                     </View>
                   </View>

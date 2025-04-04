@@ -103,6 +103,10 @@ router.get("/getListings", async (req, res) => {
         path: "commentedBy.user", // 👈 isso popula o user dos comentários
         select: " _id username profileImage",
       })
+      .populate({
+        path: "commentedBy.replies.user",
+        select: "_id username profileImage"
+      })
       .sort({ createdAt: -1 });
 
     res.status(200).json(listings);
@@ -168,13 +172,15 @@ router.post("/likeComment", async (req, res) => {
 
   await listing.save();
 
-  const updated = await Listing.findById(listingId).populate([
-    { path: "createdBy", select: "_id username profileImage" },
-    { path: "commentedBy.user", select: "_id username profileImage" },
-  ]);
+  // 🧠 Popula tudo o que precisa, inclusive os replies
+  const updated = await Listing.findById(listingId)
+    .populate("createdBy", "_id username profileImage")
+    .populate("commentedBy.user", "_id username profileImage")
+    .populate("commentedBy.replies.user", "_id username profileImage");
 
   res.status(200).json({ message: "Comment like toggled", updatedListing: updated });
 });
+
 
 
 router.post("/addComment", async (req, res) => {
