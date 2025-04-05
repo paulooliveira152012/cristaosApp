@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+      "target": "ESNext",
+      "module": "ESNext",
+      "lib": ["ESNext", "DOM"],
+      "allowJs": true,
+      "jsx": "react-native",
+      "strict": true,
+      "noEmit": true,
+      "moduleResolution": "node16",
+      "resolveJsonModule": true,
+      "isolatedModules": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "baseUrl": "./",
+      "paths": {
+        "@/*": ["app/*"],
+        "components/*": ["app/components/*"],
+        "constants/*": ["app/constants/*"],
+        "hooks/*": ["app/hooks/*"]
+      }
+    },
+    "exclude": ["node_modules", "babel.config.js", "metro.config.js"]
+  }
+  

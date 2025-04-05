@@ -9,6 +9,7 @@ import InteractionBox from "../components/components/InteractionBox";
 
 // ✅ Define TypeScript interface for listings
 interface ListingItemType {
+  _id: string;
   type: "Blog" | "Image" | "Video" | "Poll" | "String";
   title: string;
   image?: any;
@@ -26,10 +27,13 @@ type RootStackParamList = {
   ListingDetails: { item: ListingItemType };
 };
 
-// ✅ Get route props
 const ListingDetails: React.FC = () => {
   const route = useRoute<RouteProp<RootStackParamList, "ListingDetails">>();
   const { item } = route.params;
+
+  // 🔐 Simular usuário
+  const userId = "user123"; // Substitua com ID real depois
+  const fakeSetListings = () => {}; // placeholder pra tipagem
 
   return (
     <ScrollView style={styles.container}>
@@ -42,9 +46,11 @@ const ListingDetails: React.FC = () => {
             liked={item.liked ?? false}
             commented={item.commented ?? false}
             saved={item.saved ?? false}
+            listingId={item._id}
+            userId={userId}
+            setListings={fakeSetListings}
           />
         </>
-        
       )}
 
       {item.type === "Blog" && item.image && (
@@ -55,6 +61,9 @@ const ListingDetails: React.FC = () => {
             liked={item.liked ?? false}
             commented={item.commented ?? false}
             saved={item.saved ?? false}
+            listingId={item._id}
+            userId={userId}
+            setListings={fakeSetListings}
           />
         </>
       )}
@@ -67,19 +76,25 @@ const ListingDetails: React.FC = () => {
             liked={item.liked ?? false}
             commented={item.commented ?? false}
             saved={item.saved ?? false}
+            listingId={item._id}
+            userId={userId}
+            setListings={fakeSetListings}
           />
         </>
       )}
 
       {item.type === "Video" && item.videoUrl && (
         <>
-        <Text style={styles.content}>🎥 Video: {item.videoUrl}</Text>
-        <InteractionBox
+          <Text style={styles.content}>🎥 Video: {item.videoUrl}</Text>
+          <InteractionBox
             liked={item.liked ?? false}
             commented={item.commented ?? false}
             saved={item.saved ?? false}
+            listingId={item._id}
+            userId={userId}
+            setListings={fakeSetListings}
           />
-          </>
+        </>
       )}
 
       {item.type === "Poll" && item.options && (
@@ -93,6 +108,9 @@ const ListingDetails: React.FC = () => {
             liked={item.liked ?? false}
             commented={item.commented ?? false}
             saved={item.saved ?? false}
+            listingId={item._id}
+            userId={userId}
+            setListings={fakeSetListings}
           />
         </View>
       )}
@@ -100,7 +118,6 @@ const ListingDetails: React.FC = () => {
   );
 };
 
-// ✅ Styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,

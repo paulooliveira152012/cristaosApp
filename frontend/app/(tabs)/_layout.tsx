@@ -8,6 +8,9 @@ import { Colors } from "constants/Colors";
 import { useColorScheme } from "hooks/useColorScheme.web";
 import { MaterialIcons } from "@expo/vector-icons";
 import { getBackgroundColorAsync } from "expo-system-ui";
+import type { BottomTabBarIconProps } from "@react-navigation/bottom-tabs";
+
+
 
 // import { UserProvider } from "context/UserContext";
 
@@ -38,7 +41,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "",
-          tabBarIcon: ({ color }) => (
+          tabBarIcon: ({ color } : BottomTabBarIconProps) => (
             <IconSymbol size={28} name="house.fill" color={color} />
           ),
         }}
@@ -47,7 +50,7 @@ export default function TabLayout() {
         name="explore"
         options={{
           title: "",
-          tabBarIcon: ({ color }) => (
+          tabBarIcon: ({ color } : BottomTabBarIconProps) => (
             <IconSymbol size={28} name="magnifyingglass" color={color} />
           ),
         }}
@@ -58,7 +61,7 @@ export default function TabLayout() {
         name="newListing"
         options={{
           title: "",
-          tabBarIcon: ({ color, focused }) => (
+          tabBarIcon: ({ color, focused } : BottomTabBarIconProps) => (
             <IconSymbol
               size={46}
               name="plus"
@@ -81,7 +84,7 @@ export default function TabLayout() {
         name="notification"
         options={{
           title: "",
-          tabBarIcon: ({ color }) => (
+          tabBarIcon: ({ color } : BottomTabBarIconProps) => (
             <IconSymbol size={28} name="bell.fill" color={color} />
           ),
         }}
@@ -90,7 +93,7 @@ export default function TabLayout() {
         name="chat"
         options={{
           title: "",
-          tabBarIcon: ({ color }) => (
+          tabBarIcon: ({ color } : BottomTabBarIconProps) => (
             <MaterialIcons name="wechat" size={28} color={color} />
           ),
         }}
