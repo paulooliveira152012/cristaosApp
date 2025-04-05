@@ -23,4 +23,20 @@ router.post("/newGroup", async (req, res) => {
   }
 });
 
+
+
+// ✅ Buscar todos os grupos
+router.get("/getGroups", async (req, res) => {
+  try {
+    const groups = await Group.find()
+      .populate("createdBy", "_id username profileImage") // opcional
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(groups);
+  } catch (err) {
+    console.error("Erro ao buscar grupos:", err);
+    res.status(500).json({ error: "Erro ao buscar grupos" });
+  }
+});
+
 module.exports = router;

@@ -28,7 +28,6 @@ router.post("/newRoom", async (req, res) => {
 // fetch all rooms
 router.get("/getRooms", async (req, res) => {
     console.log("📥 Buscando todas as salas...");
-  
     try {
       const rooms = await Room.find().sort({ createdAt: -1 }).populate("createdBy", "username"); // opcional: populate se 'createdBy' for ref de User
       res.status(200).json(rooms);
