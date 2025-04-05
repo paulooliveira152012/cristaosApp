@@ -254,10 +254,12 @@ const InteractionBox = ({
                               />
                             </Pressable>
 
-                            {commentsCount > 0 && <Text>{commentsCount}</Text>}
+                            {/* repply count */}
+                            {commentsCount > 0 && <Text>{comment.replies?.length}</Text>}
                           </View>
                         </View>
 
+                        
                         {comment.replies && comment.replies.length > 0 && (
                           <View style={{ paddingLeft: 40, marginTop: 10 }}>
                             {comment.replies?.map((reply: any, replyIndex: number) => (
