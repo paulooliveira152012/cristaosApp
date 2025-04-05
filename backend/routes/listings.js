@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Listing = require("../models/Listings");
+const User = require("../models/User");
 
 // Create a new listing
 router.post("/newListing", async (req, res) => {
@@ -82,6 +83,7 @@ router.post("/newListing", async (req, res) => {
 
     const newListing = new Listing(newListingData);
     const saved = await newListing.save();
+    
 
     console.log("✅ New listing created:", saved);
     res.status(201).json(saved);
@@ -105,7 +107,7 @@ router.get("/getListings", async (req, res) => {
       })
       .populate({
         path: "commentedBy.replies.user",
-        select: "_id username profileImage"
+        select: "_id username profileImage",
       })
       .sort({ createdAt: -1 });
 
@@ -115,7 +117,6 @@ router.get("/getListings", async (req, res) => {
     res.status(500).json({ message: "Server error getting listings" });
   }
 });
-
 
 router.post("/likeListing", async (req, res) => {
   console.log("liking a listing");
@@ -178,10 +179,10 @@ router.post("/likeComment", async (req, res) => {
     .populate("commentedBy.user", "_id username profileImage")
     .populate("commentedBy.replies.user", "_id username profileImage");
 
-  res.status(200).json({ message: "Comment like toggled", updatedListing: updated });
+  res
+    .status(200)
+    .json({ message: "Comment like toggled", updatedListing: updated });
 });
-
-
 
 router.post("/addComment", async (req, res) => {
   console.log("📩 Rota de adicionar comentário chamada!");
@@ -195,7 +196,8 @@ router.post("/addComment", async (req, res) => {
   try {
     // 1. Busca a listagem
     const listing = await Listing.findById(listingId);
-    if (!listing) return res.status(404).json({ message: "Listing não encontrado" });
+    if (!listing)
+      return res.status(404).json({ message: "Listing não encontrado" });
 
     // 2. Cria o comentário
     const newComment = {
@@ -229,7 +231,12 @@ router.post("/addComment", async (req, res) => {
 router.post("/replyComment", async (req, res) => {
   const { listingId, parentCommentId, userId, replyText } = req.body;
 
-  console.log("📨 Replying to comment:", { listingId, parentCommentId, userId, replyText });
+  console.log("📨 Replying to comment:", {
+    listingId,
+    parentCommentId,
+    userId,
+    replyText,
+  });
 
   if (!listingId || !parentCommentId || !userId || !replyText) {
     return res.status(400).json({ message: "Missing required fields" });
@@ -273,6 +280,50 @@ router.post("/replyComment", async (req, res) => {
   }
 });
 
+router.post("/saveListing", async (req, res) => {
+  console.log("🔗 Route for saving the listing reached");
+  const { userId, listingId } = req.body;
 
+  console.log("👤 userId saving the listing:", userId);
+  console.log("📦 listingId:", listingId);
+
+  if (!userId || !listingId) {
+    console.log("🚫 Missing userId or listingId");
+    return res.status(400).json({ message: "Missing userId or listingId" });
+  }
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      console.log("🚫 User not found");
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const alreadySaved = user.savedListings.includes(listingId);
+
+    if (alreadySaved) {
+      // ❌ Remove listing from saved
+      user.savedListings = user.savedListings.filter(
+        (id) => id.toString() !== listingId.toString()
+      );
+      console.log("❌ Listing removed from saved");
+    } else {
+      // ✅ Add listing to saved
+      user.savedListings.push(listingId);
+      console.log("✅ Listing added to saved");
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      message: alreadySaved ? "Listing unsaved" : "Listing saved",
+      savedListings: user.savedListings,
+    });
+  } catch (error) {
+    console.error("❌ Error saving listing:", error);
+    res.status(500).json({ message: "Server error saving listing" });
+  }
+});
 
 module.exports = router;

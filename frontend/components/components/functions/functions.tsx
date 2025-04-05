@@ -1,3 +1,4 @@
+import Listings from "../Listings";
 import { ListingItemType } from "../Types/ListingTypes";
 
 export const getRooms = async (setRooms: (rooms: any[]) => void) => {
@@ -188,6 +189,32 @@ export const handleReply = async (
 
 
 
-export const handleSave = () => {
+export const handleSave = async (
+  userId: string, 
+  listingId: string, 
+  setListings: React.Dispatch<React.SetStateAction<ListingItemType[]>>
+) => {
   console.log("saving/unsaving listing");
+
+  console.log("Saving listing: ", listingId, "to user: ", userId)
+
+  try {
+    const api = "http://localhost:5001/api/listings/saveListing"
+
+    const response = await fetch( api, {
+      method: "POST",
+      headers: { "Content-Type" : "application/json"},
+      body: JSON.stringify ({
+        userId,
+        listingId
+      })
+    })
+
+    const data = await response.json();
+   
+    console.log(data)
+
+  } catch (error) {
+    console.error("❌ Error saving listing:", error);
+  }
 };

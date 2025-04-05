@@ -105,7 +105,7 @@ const InteractionBox = ({
 
         {/* 📌 Save */}
         <View style={styles.bookmark}>
-          <Pressable onPress={handleSave}>
+          <Pressable onPress={ async () => handleSave(userId, listingId, setListings)}>
             <MaterialCommunityIcons
               name="bookmark"
               size={23}

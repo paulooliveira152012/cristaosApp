@@ -103,7 +103,15 @@ const userSchema = new mongoose.Schema(
     // 🔹 Password Reset
     resetPasswordToken: { type: String, required: false },
     resetPasswordExpires: { type: Date },
+
+    savedListings: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Listing",
+      }
+    ],
   },
+
   { timestamps: true } // Automatically adds `createdAt` and `updatedAt` fields
 );
 
