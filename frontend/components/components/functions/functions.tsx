@@ -1,6 +1,8 @@
 import Listings from "../Listings";
 import { ListingItemType } from "../Types/ListingTypes";
 
+
+
 export const getRooms = async (setRooms: (rooms: any[]) => void) => {
   console.log("📡 Fetching all rooms...");
 
