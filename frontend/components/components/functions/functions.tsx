@@ -1,6 +1,6 @@
 import Listings from "../Listings";
 import { ListingItemType } from "../Types/ListingTypes";
-
+import { ENV, API_DEVELOP, API_PRODUCTION } from '@env';
 
 
 export const getRooms = async (setRooms: (rooms: any[]) => void) => {
