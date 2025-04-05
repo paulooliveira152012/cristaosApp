@@ -83,7 +83,13 @@ router.post("/newListing", async (req, res) => {
 
     const newListing = new Listing(newListingData);
     const saved = await newListing.save();
-    
+
+    // 🔄 Adiciona à lista de "sharedListings" do usuário
+    await User.findByIdAndUpdate(
+      createdBy,
+      { $push: { sharedListings: saved._id } },
+      { new: true }
+    );
 
     console.log("✅ New listing created:", saved);
     res.status(201).json(saved);
@@ -109,6 +115,11 @@ router.get("/getListings", async (req, res) => {
         path: "commentedBy.replies.user",
         select: "_id username profileImage",
       })
+      .populate({
+        path: "savedBy",
+        select: "_id", // ou também "username profileImage" se quiser mais info
+      })
+      
       .sort({ createdAt: -1 });
 
     res.status(200).json(listings);
@@ -295,6 +306,8 @@ router.post("/saveListing", async (req, res) => {
   try {
     const user = await User.findById(userId);
 
+    const listing = await Listing.findById(listingId)
+
     if (!user) {
       console.log("🚫 User not found");
       return res.status(404).json({ message: "User not found" });
@@ -307,18 +320,26 @@ router.post("/saveListing", async (req, res) => {
       user.savedListings = user.savedListings.filter(
         (id) => id.toString() !== listingId.toString()
       );
+
+      listing.savedBy = listing.savedBy.filter(
+        (id) => id.toString() !== userId.toString()
+      );
+
       console.log("❌ Listing removed from saved");
     } else {
       // ✅ Add listing to saved
       user.savedListings.push(listingId);
+      listing.savedBy.push(userId);
       console.log("✅ Listing added to saved");
     }
 
     await user.save();
+    await listing.save();
 
     res.status(200).json({
       message: alreadySaved ? "Listing unsaved" : "Listing saved",
       savedListings: user.savedListings,
+      listingSavedBy: listing.savedBy,
     });
   } catch (error) {
     console.error("❌ Error saving listing:", error);

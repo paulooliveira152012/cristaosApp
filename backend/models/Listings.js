@@ -107,7 +107,8 @@ const listingSchema = new mongoose.Schema(
     savedBy: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        ref: "User",
+        default: [],
       }
     ]
 

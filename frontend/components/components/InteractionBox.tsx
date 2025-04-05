@@ -72,6 +72,8 @@ const InteractionBox = ({
     setShowCommentingBox(false);
   };
 
+
+
   return (
     <View style={{ marginTop: 10 }}>
       <View style={styles.container}>

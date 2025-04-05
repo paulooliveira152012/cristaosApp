@@ -194,26 +194,34 @@ export const handleSave = async (
   listingId: string, 
   setListings: React.Dispatch<React.SetStateAction<ListingItemType[]>>
 ) => {
-  console.log("saving/unsaving listing");
-
-  console.log("Saving listing: ", listingId, "to user: ", userId)
+  console.log("🔖 saving/unsaving listing");
+  console.log("Saving listing:", listingId, "to user:", userId);
 
   try {
-    const api = "http://localhost:5001/api/listings/saveListing"
+    const api = "http://localhost:5001/api/listings/saveListing";
 
-    const response = await fetch( api, {
+    const response = await fetch(api, {
       method: "POST",
-      headers: { "Content-Type" : "application/json"},
-      body: JSON.stringify ({
-        userId,
-        listingId
-      })
-    })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId, listingId }),
+    });
 
     const data = await response.json();
-   
-    console.log(data)
+    console.log("✅ Response from backend:", data);
 
+    if (!response.ok) {
+      console.error("❌ Failed to save listing:", data.message);
+      return;
+    }
+
+    // ✅ Atualiza a listing no estado com o novo savedBy
+    setListings((prevListings) =>
+      prevListings.map((listing) =>
+        listing._id === listingId
+          ? { ...listing, savedBy: data.listingSavedBy }
+          : listing
+      )
+    );
   } catch (error) {
     console.error("❌ Error saving listing:", error);
   }
