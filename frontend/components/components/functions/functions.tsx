@@ -1,12 +1,28 @@
 import Listings from "../Listings";
 import { ListingItemType } from "../Types/ListingTypes";
+import Constants from "expo-constants"; // ✅ certo
+
+
+
+const baseApi =
+  Constants.expoConfig?.extra?.apiUrl ?? "https://a876-2601-8c-4c80-5f70-207d-abab-7889-aaa8.ngrok-free.app";
+
+console.log("🔗 baseApi:", baseApi);
+
+
+
+var environment = "production"
+
+// const baseApi = environment === "development" ? 
+//   "http://localhost:5001" : 
+//   "https://1b9a-2601-8c-4c80-5f70-207d-abab-7889-aaa8.ngrok-free.app"
 
 
 export const getRooms = async (setRooms: (rooms: any[]) => void) => {
   console.log("📡 Fetching all rooms...");
 
   try {
-    const api = "http://localhost:5001/api/rooms/getRooms";
+    const api = `${baseApi}/api/rooms/getRooms`;
     const response = await fetch(api, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -29,7 +45,7 @@ export const getRooms = async (setRooms: (rooms: any[]) => void) => {
 export const getListings = async (setListings: (listings: any[]) => void) => {
   console.log("get listings function reached");
   try {
-    const api = "http://localhost:5001/api/listings/getListings";
+    const api = `${baseApi}/api/listings/getListings`;
     const response = await fetch(api, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -64,8 +80,8 @@ export const handleLike = async (
 
   try {
     const api = commentId
-      ? "http://localhost:5001/api/listings/likeComment"
-      : "http://localhost:5001/api/listings/likeListing";
+      ? `${baseApi}/api/listings/likeComment`
+      : `${baseApi}/api/listings/likeListing`;
 
     const response = await fetch(api, {
       method: "POST",
@@ -119,7 +135,7 @@ export const handleComment = async (
   console.log("✍️ commenting listing", { commentText, listingId, userId });
 
   try {
-    const api = "http://localhost:5001/api/listings/addComment";
+    const api = `${baseApi}/api/listings/addComment`;
 
     const response = await fetch(api, {
       method: "POST",
@@ -162,7 +178,7 @@ export const handleReply = async (
   setListings: React.Dispatch<React.SetStateAction<ListingItemType[]>>
 ) => {
   try {
-    const res = await fetch("http://localhost:5001/api/listings/replyComment", {
+    const res = await fetch(`${baseApi}/api/listings/replyComment`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -199,7 +215,7 @@ export const handleSave = async (
   console.log("Saving listing:", listingId, "to user:", userId);
 
   try {
-    const api = "http://localhost:5001/api/listings/saveListing";
+    const api = `${baseApi}/api/listings/saveListing`;
 
     const response = await fetch(api, {
       method: "POST",

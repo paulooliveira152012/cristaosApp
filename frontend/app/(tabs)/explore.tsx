@@ -10,6 +10,8 @@ import {
 import React, { useState, useEffect } from "react";
 import { Feather } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Constants  from "expo-constants";
+
 
 interface ListingItemType {
   category: "Post" | "Room" | "Group" | "User";
@@ -35,8 +37,6 @@ interface ListingItemType {
   comments?: any[];
 }
 
-
-
 const categoryMap: { [key: string]: ListingItemType["category"] } = {
   Users: "User",
   Posts: "Post",
@@ -52,33 +52,41 @@ const ExploreScreen = () => {
 
   const categories = ["All", "Users", "Rooms", "Groups", "Posts"];
 
+  
   // buscar tudo
   useEffect(() => {
+
+  const baseApi =
+  Constants.expoConfig?.extra?.apiUrl ??
+  "https://2cd4-2601-8c-4c80-5f70-207d-abab-7889-aaa8.ngrok-free.app";
+
+
     const fetchExploreData = async () => {
       try {
         const urls = [
-          "http://localhost:5001/api/listings/getListings",
-          "http://localhost:5001/api/users/getAllUsers",
-          "http://localhost:5001/api/rooms/getRooms",
-          "http://localhost:5001/api/groups/getGroups",
+          `${baseApi}/api/listings/getListings`,
+          `${baseApi}/api/users/getAllUsers`,
+          `${baseApi}/api/rooms/getRooms`,
+          `${baseApi}/api/groups/getGroups`,
         ];
-  
+
         const responses = await Promise.all(urls.map((url) => fetch(url)));
 
-        console.log("todos os items vindo para a pagina de busca:", responses)
-  
+        console.log("todos os items vindo para a pagina de busca:", responses);
+
         // Verifica se todas as respostas deram certo
         for (const res of responses) {
           if (!res.ok) {
-            throw new Error(`❌ Falha ao buscar: ${res.url} | Status: ${res.status}`);
+            throw new Error(
+              `❌ Falha ao buscar: ${res.url} | Status: ${res.status}`
+            );
           }
         }
-  
+
         const [listings, users, rooms, groups] = await Promise.all(
           responses.map((res) => res.json().catch(() => []))
         );
-        
-  
+
         const normalized: ListingItemType[] = [
           ...listings.map((item: any) => ({
             ...item,
@@ -86,8 +94,7 @@ const ExploreScreen = () => {
             type: item.type || "String",
             image: item.image ? { uri: item.image } : undefined, // 👈 isso aqui é chave
             title: item.title || item.caption || item.content || "Sem título",
-            content: item.content
-
+            content: item.content,
           })),
           ...users.map((user: any) => ({
             category: "User",
@@ -109,17 +116,16 @@ const ExploreScreen = () => {
             image: require("../../assets/placeholder.jpg"),
           })),
         ];
-  
+
         setLoading(false);
         setAllItems(normalized);
       } catch (error) {
         console.error("❌ Error loading explore data:", error);
       }
     };
-  
+
     fetchExploreData();
   }, []);
-  
 
   const filteredList = allItems.filter((item) => {
     const matchCategory =
@@ -186,9 +192,7 @@ const ExploreScreen = () => {
             </View>
 
             <View style={{ flex: 1, paddingBottom: 100 }}>
-              {Array.isArray(filteredList) && 
-              filteredList.length === 0 && (
-
+              {Array.isArray(filteredList) && filteredList.length === 0 && (
                 <Text style={{ textAlign: "center", marginTop: 20 }}>
                   Nenhum resultado encontrado.
                 </Text>

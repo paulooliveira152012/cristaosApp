@@ -1,5 +1,11 @@
 import * as ImagePicker from "expo-image-picker";
 
+import Constants from "expo-constants";
+const baseApi =
+  Constants.expoConfig?.extra?.apiUrl ??
+  "https://a876-2601-8c-4c80-5f70-207d-abab-7889-aaa8.ngrok-free.app"; // fallback
+
+
 export const handleSubmitNewListing = async (listingData) => {
   console.log("Submitting new listing", listingData);
 
@@ -10,7 +16,7 @@ export const handleSubmitNewListing = async (listingData) => {
   };
 
   let finalData = { ...baseListing };
-  let endpoint = "http://localhost:5001/api/listings/newListing"; // 👈 default
+  let endpoint = `${baseApi}/api/listings/newListing`; // 👈 default
 
   switch (listingData.type) {
     case "Thought":
@@ -58,7 +64,7 @@ export const handleSubmitNewListing = async (listingData) => {
       break;
 
     case "Group":
-      endpoint = "http://localhost:5001/api/groups/newGroup"; // 👈 muda a rota
+      endpoint = `${baseApi}/api/groups/newGroup`; // 👈 muda a rota
       finalData = {
         name: listingData.groupTitle?.trim(),
         description: listingData.groupDescription?.trim(),
