@@ -1,9 +1,12 @@
 import { Platform } from "react-native";
 
 const LOCAL_API = "http://localhost:5001";
-const NGROK_API = "https://67bd-2601-8c-4c80-5f70-418d-a4a-d148-b16a.ngrok-free.app";
+const NGROK_API = "https://5fa0-2601-8c-4c80-5f70-418d-a4a-d148-b16a.ngrok-free.app";
+
 
 export const getBaseApi = () => {
+    console.log("🌐 API usada no app:", NGROK_API);
+
   // Simulador usa localhost
   if (Platform.OS === "ios" || Platform.OS === "android") {
     const isDevice = typeof navigator !== "undefined" && !navigator.product?.includes("ReactNativeWeb");
