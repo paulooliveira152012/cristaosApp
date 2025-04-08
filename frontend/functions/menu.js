@@ -1,7 +1,13 @@
+import { getBaseApi } from "utils/getBaseApi";
+const baseApi = getBaseApi()
+
 export const handleLogin = async (email, password, login) => {
     console.log("Logging in with:", email, password);
 
-    const api = "http://localhost:5001/api/auth/login";
+    
+    // const api = "http://localhost:5001/api/auth/login";
+    const api = `${baseApi}/api/auth/login`
+
 
     try {
         const response = await fetch(api, {
@@ -56,7 +62,8 @@ export const handleSignup = async (
         return { success: false, message: "All required fields must be filled." };
     }
 
-    const api = "http://localhost:5001/api/auth/signup";
+    // const api = "http://localhost:5001/api/auth/signup";
+    const api = `${baseApi}/api/auth/signup`
 
     try {
         const response = await fetch(api, {

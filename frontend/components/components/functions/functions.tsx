@@ -1,11 +1,13 @@
 import Listings from "../Listings";
 import { ListingItemType } from "../Types/ListingTypes";
 import Constants from "expo-constants"; // ✅ certo
+import { getBaseApi } from "utils/getBaseApi";
 
 
-
-const baseApi =
-  Constants.expoConfig?.extra?.apiUrl ?? "https://a876-2601-8c-4c80-5f70-207d-abab-7889-aaa8.ngrok-free.app";
+const baseApi = getBaseApi()
+  
+// const baseApi = 
+//   Constants.expoConfig?.extra?.apiUrl ?? "https://67bd-2601-8c-4c80-5f70-418d-a4a-d148-b16a.ngrok-free.app/";
 
 console.log("🔗 baseApi:", baseApi);
 

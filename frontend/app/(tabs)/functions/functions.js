@@ -1,9 +1,10 @@
 import * as ImagePicker from "expo-image-picker";
+import { getBaseApi } from "utils/getBaseApi";
 
 import Constants from "expo-constants";
-const baseApi =
-  Constants.expoConfig?.extra?.apiUrl ??
-  "https://a876-2601-8c-4c80-5f70-207d-abab-7889-aaa8.ngrok-free.app"; // fallback
+
+
+const baseApi = getBaseApi()
 
 
 export const handleSubmitNewListing = async (listingData) => {

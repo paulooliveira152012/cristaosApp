@@ -140,6 +140,7 @@ router.post("/likeListing", async (req, res) => {
     const listing = await Listing.findById(listingId);
 
     if (!listing) {
+      console.log("listing not found")
       return res.status(404).json({ message: "Listing not found" });
     }
 
@@ -147,14 +148,17 @@ router.post("/likeListing", async (req, res) => {
 
     if (alreadyLiked) {
       // unlike
+      console.log("removing like to listing")
       listing.likedBy = listing.likedBy.filter(
         (id) => id.toString() !== userId
       );
     } else {
+      console.log("adding like from listing")
       listing.likedBy.push(userId);
     }
 
     await listing.save();
+    console.log("Done!")
 
     res.status(200).json({
       message: alreadyLiked ? "Like removed" : "Listing Liked",
