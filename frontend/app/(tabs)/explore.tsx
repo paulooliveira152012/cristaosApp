@@ -10,8 +10,8 @@ import {
 import React, { useState, useEffect } from "react";
 import { Feather } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Constants  from "expo-constants";
-
+import Constants from "expo-constants";
+import { useRouter } from "expo-router";
 
 interface ListingItemType {
   category: "Post" | "Room" | "Group" | "User";
@@ -35,6 +35,11 @@ interface ListingItemType {
   createdAt?: string;
   likes?: number;
   comments?: any[];
+  createdBy?: {
+    _id: string;
+    username: string;
+    profileImage?: string;
+  }; // ✅ adicionado!
 }
 
 const categoryMap: { [key: string]: ListingItemType["category"] } = {
@@ -49,32 +54,31 @@ const ExploreScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [loading, setLoading] = useState(true);
   const [allItems, setAllItems] = useState<ListingItemType[]>([]);
+  const router = useRouter()
 
   const categories = ["All", "Users", "Rooms", "Groups", "Posts"];
 
-  
   // buscar tudo
   useEffect(() => {
-
-  const baseApi =
-  Constants.expoConfig?.extra?.apiUrl ??
-  "https://2cd4-2601-8c-4c80-5f70-207d-abab-7889-aaa8.ngrok-free.app";
-
+    const baseApi =
+      Constants.expoConfig?.extra?.apiUrl ??
+      "https://2cd4-2601-8c-4c80-5f70-207d-abab-7889-aaa8.ngrok-free.app";
 
     const fetchExploreData = async () => {
       try {
         const urls = [
           `${baseApi}/api/listings/getListings`,
-          `${baseApi}/api/users/getAllUsers`,
           `${baseApi}/api/rooms/getRooms`,
           `${baseApi}/api/groups/getGroups`,
         ];
 
         const responses = await Promise.all(urls.map((url) => fetch(url)));
 
-        console.log("todos os items vindo para a pagina de busca:", responses);
+        console.log(
+          "📦 Todos os items vindos para a página de busca:",
+          responses
+        );
 
-        // Verifica se todas as respostas deram certo
         for (const res of responses) {
           if (!res.ok) {
             throw new Error(
@@ -83,33 +87,31 @@ const ExploreScreen = () => {
           }
         }
 
-        const [listings, users, rooms, groups] = await Promise.all(
+        const [listingsRes, roomsRes, groupsRes] = await Promise.all(
           responses.map((res) => res.json().catch(() => []))
         );
 
+        listingsRes.forEach((item: any, index: number) => {
+          console.log(`📦 Listing ${index + 1}:`, JSON.stringify(item, null, 2));
+        });
+        
+
         const normalized: ListingItemType[] = [
-          ...listings.map((item: any) => ({
+          ...listingsRes.map((item: any) => ({
             ...item,
             category: "Post",
             type: item.type || "String",
-            image: item.image ? { uri: item.image } : undefined, // 👈 isso aqui é chave
+            image: item.image ? { uri: item.image } : undefined,
             title: item.title || item.caption || item.content || "Sem título",
             content: item.content,
           })),
-          ...users.map((user: any) => ({
-            category: "User",
-            type: "User",
-            name: user.name || user.username,
-            username: user.username,
-            image: { uri: user.profileImage },
-          })),
-          ...groups.map((group: any) => ({
+          ...groupsRes.map((group: any) => ({
             category: "Group",
             type: "Group",
             title: group.name,
             image: require("../../assets/placeholder.jpg"),
           })),
-          ...rooms.map((room: any) => ({
+          ...roomsRes.map((room: any) => ({
             category: "Room",
             type: "Room",
             title: room.title,
@@ -200,6 +202,40 @@ const ExploreScreen = () => {
 
               {filteredList.map((item, index) => (
                 <View key={index} style={{ marginBottom: 24 }}>
+                  {item.createdBy && (
+                    <Pressable
+                    onPress={() => {
+                      if (item.createdBy?._id) {
+                        router.push(`/profile/${item.createdBy._id}`);
+                      }
+                    }}
+                  >
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        marginBottom: 8,
+                      }}
+                    >
+                      {item.createdBy.profileImage && (
+                        <Image
+                          source={{ uri: item.createdBy.profileImage }}
+                          style={{
+                            width: 32,
+                            height: 32,
+                            borderRadius: 16,
+                            marginRight: 8,
+                          }}
+                        />
+                      )}
+                      <Text style={{ fontWeight: "600" }}>
+                        @{item.createdBy.username}
+                      </Text>
+                    </View>
+                    </Pressable>
+                  )}
+
+                  {/* <Image source={item.listedBy}/> */}
                   {item.type === "User" && (
                     <View
                       style={{ flexDirection: "row", alignItems: "center" }}

@@ -43,8 +43,8 @@ const Header = ({
 
   // 1 access to user in context
   const user = useUser();
-  console.log("user in header:", user);
-  console.log("current user in header:", user?.currentUser)
+  // console.log("user in header:", user);
+  // console.log("current user in header:", user?.currentUser)
   if (user?.currentUser) {
     console.log("profile image:", user.currentUser.profileImage);
   }

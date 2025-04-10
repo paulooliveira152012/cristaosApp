@@ -12,13 +12,11 @@ import { Feather } from "@expo/vector-icons";
 import {
   handleSubmitNewListing,
   handleSelectImage,
-} from "./functions/functions";
+} from "../../functions/functions";
 import { useUser } from "context/UserContext";
+import { router } from "expo-router";
 
 const tabs = ["Post", "Imagem", "Enquete", "Link", "Chat", "Grupo"];
-
-
-
 
 const NewListing = () => {
   const [activeTab, setActiveTab] = useState("Post");
@@ -37,7 +35,7 @@ const NewListing = () => {
   const [linkDescription, setLinkDescription] = useState("");
   // chat
   const [chatTitle, setChatTitle] = useState("");
-  const [chatDescription, setChatDescription] = useState("")
+  const [chatDescription, setChatDescription] = useState("");
   const [coverUrl, setCoverUrl] = useState("");
   const placeholderImage =
     "https://via.placeholder.com/300x150.png?text=Room+Cover";
@@ -54,7 +52,6 @@ const NewListing = () => {
     Chat: "Chat",
     Grupo: "Group",
   };
-  
 
   const user = useUser();
 
@@ -361,9 +358,12 @@ const NewListing = () => {
             groupDescription,
             createdBy: user?.currentUser?._id,
           };
-          
 
-          handleSubmitNewListing(listingPayload);
+          {
+            handleSubmitNewListing(listingPayload),
+            console.log("navegar para pagina principal apos criar novoa listagem");
+            router.push("/");
+          }
         }}
       />
     </View>

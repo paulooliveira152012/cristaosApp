@@ -5,7 +5,7 @@ const NGROK_API = "https://5fa0-2601-8c-4c80-5f70-418d-a4a-d148-b16a.ngrok-free.
 
 
 export const getBaseApi = () => {
-    console.log("🌐 API usada no app:", NGROK_API);
+    console.log("🌐 API usada no app:", LOCAL_API);
 
   // Simulador usa localhost
   if (Platform.OS === "ios" || Platform.OS === "android") {
@@ -13,5 +13,6 @@ export const getBaseApi = () => {
     if (!isDevice) return LOCAL_API; // simulador
   }
 
-  return NGROK_API; // celular real
+  // return NGROK_API; // celular real
+  return LOCAL_API 
 };

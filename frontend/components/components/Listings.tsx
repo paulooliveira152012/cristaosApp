@@ -17,6 +17,9 @@ import { getListings } from "./functions/functions";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 import { useUser } from "context/UserContext";
 
+import { useFocusEffect } from "expo-router";
+import { useCallback } from "react";
+
 
 /* 
     Type of listings:
@@ -310,13 +313,24 @@ const ListingItem: React.FC<{ item: ListingItemType; setListings: React.Dispatch
 const Listings: React.FC = () => {
   const [listings, setListings] = useState<ListingItemType[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await getListings(setListings);
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     await getListings(setListings);
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        await getListings(setListings);
+      };
+  
+      fetchData();
+    }, [])
+  );
+  
 
   useEffect(() => {
     console.log("📦 Listings ready to display:", listings);
