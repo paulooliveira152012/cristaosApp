@@ -26,6 +26,12 @@ const ProfileScreen = () => {
 
   console.log("current user in user's profile page:", currentUser);
 
+  console.log("user who's profile is being visited:", user);
+
+  // console.log("🧾 Comentários do primeiro listing:", JSON.stringify(listings[0].commentedBy, null, 2));
+
+  // com base nesse log, como faco para ter acesso aos Objeto commentedBy quero logar eles?
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -77,7 +83,7 @@ const ProfileScreen = () => {
           style={{ width: 100, height: 100, borderRadius: 50 }}
         />
         <Text style={{ fontSize: 24, fontWeight: "bold", marginTop: 10 }}>
-          {user.name}
+          {user.firstName}
         </Text>
         <Text style={{ color: "#888" }}>@{user.username}</Text>
       </View>
@@ -112,7 +118,7 @@ const ProfileScreen = () => {
       {/* Listings */}
       <View style={{ marginTop: 30 }}>
         <Text style={{ fontSize: 18, fontWeight: "600", marginBottom: 10 }}>
-          Publicações de {user.name}:
+          Publicações de {user.firstName}:
         </Text>
         {listings.length === 0 ? (
           <Text>Este usuário ainda não postou nada.</Text>
@@ -135,6 +141,7 @@ const ProfileScreen = () => {
                   }}
                 />
               )}
+              {/* COMPONENTE DE INTERAÇAO */}
               <InteractionBox
                 liked={listing.likedBy?.includes(currentUser._id)}
                 commented={!!listing.commentedBy?.length}
@@ -144,6 +151,7 @@ const ProfileScreen = () => {
                 setListings={setListings}
               />
 
+              {/* COMENTARIOOS */}
               {listing.commentedBy?.length > 0 && (
                 <View style={{ marginTop: 10 }}>
                   <Text style={{ fontWeight: "600", marginBottom: 5 }}>
@@ -151,9 +159,24 @@ const ProfileScreen = () => {
                   </Text>
                   {listing.commentedBy.map((comment: any, i: number) => (
                     <View key={i} style={{ marginBottom: 8, paddingLeft: 10 }}>
-                      <Text style={{ fontWeight: "500" }}>
-                        {comment.user || "Usuário"}:
-                      </Text>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          gap: 8,
+                        }}
+                      >
+                        {comment.user?.profileImage && (
+                          <Image
+                            source={{ uri: comment.user.profileImage }}
+                            style={{ width: 24, height: 24, borderRadius: 12 }}
+                          />
+                        )}
+                        <Text style={{ fontWeight: "500" }}>
+                          {comment.user?.username || "Usuário"}:
+                        </Text>
+                      </View>
+
                       <Text>{comment.comment || comment.commentText}</Text>
                       {comment.createdAt && (
                         <Text style={{ fontSize: 12, color: "#888" }}>
@@ -164,7 +187,6 @@ const ProfileScreen = () => {
                   ))}
                 </View>
               )}
-              
             </View>
           ))
         )}

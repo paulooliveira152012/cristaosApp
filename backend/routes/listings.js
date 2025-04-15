@@ -131,9 +131,20 @@ router.get("/getListings", async (req, res) => {
 
 router.get("/getByUser/:id", async (req, res) => {
   const userId = req.params.id;
-  const listings = await Listing.find({ "createdBy": userId }); // ajuste o campo conforme o schema
-  res.status(200).json(listings); // <-- isso deve ser um array
+
+  try {
+    const listings = await Listing.find({ createdBy: userId })
+      .populate("createdBy", "username profileImage") // opcional, se quiser mostrar também
+      .populate("commentedBy.user", "username profileImage");
+
+    console.log("✅ Listagens para perfil carregadas:", listings);
+    res.status(200).json(listings);
+  } catch (error) {
+    console.error("❌ Erro ao buscar listagens:", error);
+    res.status(500).json({ message: "Erro ao buscar listagens" });
+  }
 });
+
 
 
 router.post("/likeListing", async (req, res) => {

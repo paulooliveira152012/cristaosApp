@@ -21,7 +21,7 @@ router.get("/getAllUsers", async (req, res) => {
 router.get("/getUser/:id", async (req, res) => {
   console.log("✅ ROTA de usuario unico encontrada")
   try {
-    const user = await User.findById(req.params.id).select("username name profileImage bio");
+    const user = await User.findById(req.params.id); // se quiser selecionar apenas alguns usar: .select(" firstName lastName... ")
     if (!user) {
       console.log("user not found!")
       return res.status(404).json({ message: "Usuário não encontrado" });

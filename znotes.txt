@@ -55,8 +55,3 @@ room title not scrollable in one line
 9 - implementar tela de perfil
 
 10 - dinamizar busca com items do banco de dados
-
-
-
-
-
