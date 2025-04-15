@@ -129,6 +129,13 @@ router.get("/getListings", async (req, res) => {
   }
 });
 
+router.get("/getByUser/:id", async (req, res) => {
+  const userId = req.params.id;
+  const listings = await Listing.find({ "createdBy": userId }); // ajuste o campo conforme o schema
+  res.status(200).json(listings); // <-- isso deve ser um array
+});
+
+
 router.post("/likeListing", async (req, res) => {
   console.log("liking a listing");
 
