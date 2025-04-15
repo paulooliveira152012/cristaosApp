@@ -1,8 +1,9 @@
-// components/ListingHeader.tsx
+import { router } from "expo-router";
 import React from "react";
 import { View, Text, Image, Pressable, StyleSheet } from "react-native";
 
 interface Props {
+  userId?: string;
   name?: string;
   username?: string;
   createdAt?: string;
@@ -10,21 +11,27 @@ interface Props {
 }
 
 const ListingHeader: React.FC<Props> = ({
+  userId,
   name,
   username,
   profileImage,
   createdAt,
 }) => {
+  const handleNavigate = () => {
+    console.log("navigating...")
+    if (userId) {
+      router.push(`/profile/${userId}`);
+      console.log("✅ Navegação para o perfil iniciada");
+    }
+  };
+
   return (
     <View style={styles.listingHeader}>
-      {profileImage && (
-        <Image source={{ uri: profileImage }} style={styles.avatar} />
-      )}
-
-      {/* <Text style={styles.listedByName}>{name} </Text> */}
-
-      <Pressable onPress={() => console.log("hey")}>
-        <Text style={styles.listedByLinkDate}>@{username} </Text>
+      <Pressable style={styles.profileNavigationClickArea} onPress={handleNavigate}>
+        {profileImage && (
+          <Image source={{ uri: profileImage }} style={styles.avatar} />
+        )}
+        <Text style={styles.listedByLinkDate}>@{username}</Text>
       </Pressable>
       <Text style={styles.listedByLinkDate}>· {createdAt}</Text>
     </View>
@@ -37,6 +44,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
   },
+  profileNavigationClickArea: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   listedByName: {
     fontWeight: "500",
   },
@@ -48,8 +59,7 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 15,
     marginRight: 8,
-  }
-  
+  },
 });
 
 export default ListingHeader;

@@ -57,6 +57,7 @@ export default function RootLayout() {
           <Stack.Screen name="signup" options={{ headerShown: false }} />
           <Stack.Screen name="newRoom" options={{ headerShown: false }} />
           <Stack.Screen name="room/[id]" options={{ headerShown: false }} />
+          <Stack.Screen name="profile/[id]" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
         </SafeAreaView>

@@ -176,6 +176,7 @@ const ListingItem: React.FC<{ item: ListingItemType; setListings: React.Dispatch
         <>
           {/* listing header */}
           <ListingHeader
+            userId={item.createdBy?._id}
             name={item.createdBy?.name || item.createdBy?.username}
             username={item.createdBy?.username}
             profileImage={item.createdBy?.profileImage}

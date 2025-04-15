@@ -4,17 +4,16 @@ import { useEffect, useState } from "react";
 import { getBaseApi } from "utils/getBaseApi";
 
 const ProfileScreen = () => {
-  const { id } = useLocalSearchParams();
+  const params = useLocalSearchParams();
+  const id = typeof params.id === 'string' ? params.id : null; // 👈 garante que é string
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const api = getBaseApi()
+  const api = getBaseApi();
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch(
-          `${api}/api/users/getUser/${id}`
-        );
+        const res = await fetch(`${api}/api/users/getUser/${id}`);
         const data = await res.json();
         setUser(data);
       } catch (error) {
@@ -39,7 +38,7 @@ const ProfileScreen = () => {
     <ScrollView contentContainerStyle={{ padding: 20 }}>
       <View style={{ alignItems: "center", marginBottom: 20 }}>
         <Image
-          source={{ uri: user.profileImage }}
+          source={{ uri: user.profileImage || "https://placehold.co/100x100?text=User" }}
           style={{ width: 100, height: 100, borderRadius: 50 }}
         />
         <Text style={{ fontSize: 24, fontWeight: "bold", marginTop: 10 }}>
