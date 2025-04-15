@@ -70,6 +70,7 @@ const ExploreScreen = () => {
           `${baseApi}/api/listings/getListings`,
           `${baseApi}/api/rooms/getRooms`,
           `${baseApi}/api/groups/getGroups`,
+          `${baseApi}/api/users/getAllUsers`,
         ];
 
         const responses = await Promise.all(urls.map((url) => fetch(url)));
@@ -87,7 +88,7 @@ const ExploreScreen = () => {
           }
         }
 
-        const [listingsRes, roomsRes, groupsRes] = await Promise.all(
+        const [listingsRes, roomsRes, groupsRes, usersRes] = await Promise.all(
           responses.map((res) => res.json().catch(() => []))
         );
 
@@ -105,6 +106,20 @@ const ExploreScreen = () => {
             title: item.title || item.caption || item.content || "Sem título",
             content: item.content,
           })),
+          ...usersRes.map((user: any) => ({
+            category: "User",
+            type: "User",
+            title: user.name,
+            name: user.name,
+            username: user.username,
+            image: user.profileImage ? { uri: user.profileImage } : require("../../assets/default-avatar.png"),
+            createdBy: {
+              _id: user._id,
+              username: user.username,
+              profileImage: user.profileImage,
+            },
+          })),
+          
           ...groupsRes.map((group: any) => ({
             category: "Group",
             type: "Group",
@@ -240,7 +255,7 @@ const ExploreScreen = () => {
                     <View
                       style={{ flexDirection: "row", alignItems: "center" }}
                     >
-                      <Image
+                      {/* <Image
                         source={item.image}
                         style={{
                           width: 50,
@@ -248,7 +263,7 @@ const ExploreScreen = () => {
                           borderRadius: 50,
                           marginVertical: 10,
                         }}
-                      />
+                      /> */}
                       <Text style={{ marginLeft: 10 }}>{item.name}</Text>
                     </View>
                   )}

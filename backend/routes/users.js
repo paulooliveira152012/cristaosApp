@@ -5,6 +5,7 @@ const User = require("../models/User");
 
 // ✅ Buscar todos os usuários (para Explore / Buscar)
 router.get("/getAllUsers", async (req, res) => {
+  console.log("fetching all users")
   try {
     const users = await User.find({}, "_id username name profileImage") // retorna apenas os campos úteis
       .sort({ username: 1 }); // ordena por nome
