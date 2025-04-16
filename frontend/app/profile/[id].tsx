@@ -77,15 +77,6 @@ const ProfileScreen = () => {
 
   return (
     <ScrollView contentContainerStyle={{ padding: 20 }}>
-      {isOwnProfile && (
-        <Pressable
-          style={[styles.button, { backgroundColor: "#888" }]}
-          onPress={() => router.push("/settings")}
-        >
-          <Text style={styles.buttonText}>Editar perfil</Text>
-        </Pressable>
-      )}
-
       <View style={{ alignItems: "center", marginBottom: 20 }}>
         <Image
           source={{
@@ -104,27 +95,46 @@ const ProfileScreen = () => {
       </Text>
 
       {/* Botões sociais */}
-      <View style={styles.buttonRow}>
-        <Pressable style={styles.button} onPress={() => setIsFriend(!isFriend)}>
-          <Text style={styles.buttonText}>
-            {isFriend ? "Unfriend" : "Add Friend"}
-          </Text>
-        </Pressable>
-        <Pressable
-          style={styles.button}
-          onPress={() => setIsFollowing(!isFollowing)}
-        >
-          <Text style={styles.buttonText}>
-            {isFollowing ? "Unfollow" : "Follow"}
-          </Text>
-        </Pressable>
-        <Pressable
-          style={styles.button}
-          onPress={() => alert("DM feature coming soon!")}
-        >
-          <Text style={styles.buttonText}>DM</Text>
-        </Pressable>
+      {!isOwnProfile && (
+        <View style={styles.buttonRow}>
+          <Pressable style={styles.button} onPress={() => setIsFriend(!isFriend)}>
+            <Text style={styles.buttonText}>
+              {isFriend ? "Unfriend" : "Add Friend"}
+            </Text>
+          </Pressable>
+          <Pressable
+            style={styles.button}
+            onPress={() => setIsFollowing(!isFollowing)}
+          >
+            <Text style={styles.buttonText}>
+              {isFollowing ? "Unfollow" : "Follow"}
+            </Text>
+          </Pressable>
+          <Pressable
+            style={styles.button}
+            onPress={() => alert("DM feature coming soon!")}
+          >
+            <Text style={styles.buttonText}>DM</Text>
+          </Pressable>
+        </View>
+
+      )}
+
+
+{/* 
+      {isOwnProfile && savedListings.length > 0 && (
+  <View style={{ marginTop: 40 }}>
+    <Text style={{ fontSize: 18, fontWeight: "600", marginBottom: 10 }}>
+      📌 Salvos por você:
+    </Text>
+    {savedListings.map((listing, idx) => (
+      <View key={idx} style={styles.listing}>
       </View>
+    ))}
+  </View>
+)}
+*/}
+
 
       {/* Listings */}
       <View style={{ marginTop: 30 }}>
