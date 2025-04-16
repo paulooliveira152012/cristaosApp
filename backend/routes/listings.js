@@ -135,11 +135,20 @@ router.get("/getByUser/:id", async (req, res) => {
   try {
     const listings = await Listing.find({ createdBy: userId })
       .populate("createdBy", "username profileImage") // opcional, se quiser mostrar também
-      .populate("commentedBy.user", "username profileImage")
+      .populate({
+        path: "commentedBy.user",
+        select: "username profileImage",
+        strictPopulate: false, // previne erros se o campo estiver faltando
+      })
       .populate("commentedBy.replies.user", "username profileImage"); // ✅ ADICIONA ESSE
 
     console.log("✅ Listagens para perfil carregadas:", listings);
-    console.log(JSON.stringify(listings[0].commentedBy, null, 2));
+    if (listings.length > 0) {
+      console.log(JSON.stringify(listings[0].commentedBy, null, 2));
+    } else {
+      console.log("🪹 Nenhuma listagem encontrada para este usuário.");
+    }
+    
 
     res.status(200).json(listings);
   } catch (error) {

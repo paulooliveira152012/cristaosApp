@@ -47,7 +47,9 @@ const Header = ({
   // console.log("current user in header:", user?.currentUser)
   if (user?.currentUser) {
     console.log("profile image:", user.currentUser.profileImage);
+    console.log("✅", user.currentUser._id)
   }
+
   
   // 2 have a default image when no user is online
 
@@ -134,7 +136,7 @@ const Header = ({
                         style={styles.profileButton}
                         onPress={() => {
                           setShowMenu(false);
-                          router.push("/profile");
+                          router.push(`/profile/${user.currentUser._id}`);
                         }}
                       >
                         <Text style={styles.profileButtonText}>Ver perfil</Text>

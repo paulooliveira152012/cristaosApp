@@ -151,11 +151,14 @@ const ProfileScreen = () => {
                 userId={currentUser._id} // substituir depois com seu contexto real
                 setListings={setListings}
                 commentedBy={
-                  listing.commentedBy?.map((comment: any) => ({
-                    ...comment,
-                    commentText: comment.commentText || comment.comment,
-                  }))
-                }   
+                  Array.isArray(listing.commentedBy)
+                    ? listing.commentedBy.map((comment: any) => ({
+                        ...comment,
+                        commentText: comment.commentText || comment.comment,
+                      }))
+                    : []
+                }
+              
               />
             </View>
           ))
