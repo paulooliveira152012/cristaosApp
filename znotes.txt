@@ -55,3 +55,38 @@ room title not scrollable in one line
 9 - implementar tela de perfil
 
 10 - dinamizar busca com items do banco de dados
+
+
+
+
+✅✅✅✅ focar nessas:
+[FASE 1]
+
+PERFIL
+1 - utilizar mesma pagina de perfil. (no momento tem "profile.tsx e profile/[id].tsx)
+2 - implementar opcoes no perfil unico para:
+    * Adicionar como amigo
+    * Seguir
+    * DM
+    * Link para instagram
+    * Link para X
+
+se perfil do usuario logado mostrar
+    * icone de ingrenagem no lugar da foto no header para configuraçøes
+    * botao para editar informacoes de perfil (indo direto para uma sub pagina das configuraceos)
+
+3 - mostrar as listagens salvas em uma cessao de listagens salvas no perfil
+
+
+LISTAGENS
+4 - mostrar icone de "..." em cada listagem do usuario logado para o usuario logado poder deletar-la ou editar-la
+
+[FASE 2]
+1 - Mostrar todos os tipos de listagems na pagina de abertura de listagem com caixa de interação implementada
+
+
+
+
+
+
+
