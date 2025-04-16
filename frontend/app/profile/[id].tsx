@@ -146,47 +146,17 @@ const ProfileScreen = () => {
                 liked={listing.likedBy?.includes(currentUser._id)}
                 commented={!!listing.commentedBy?.length}
                 saved={listing.savedBy?.includes(currentUser._id)}
+                commentsCount={listing.commentedBy?.length || 0}
                 listingId={listing._id}
                 userId={currentUser._id} // substituir depois com seu contexto real
                 setListings={setListings}
+                commentedBy={
+                  listing.commentedBy?.map((comment: any) => ({
+                    ...comment,
+                    commentText: comment.commentText || comment.comment,
+                  }))
+                }   
               />
-
-              {/* COMENTARIOOS */}
-              {listing.commentedBy?.length > 0 && (
-                <View style={{ marginTop: 10 }}>
-                  <Text style={{ fontWeight: "600", marginBottom: 5 }}>
-                    💬 Comentários:
-                  </Text>
-                  {listing.commentedBy.map((comment: any, i: number) => (
-                    <View key={i} style={{ marginBottom: 8, paddingLeft: 10 }}>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          gap: 8,
-                        }}
-                      >
-                        {comment.user?.profileImage && (
-                          <Image
-                            source={{ uri: comment.user.profileImage }}
-                            style={{ width: 24, height: 24, borderRadius: 12 }}
-                          />
-                        )}
-                        <Text style={{ fontWeight: "500" }}>
-                          {comment.user?.username || "Usuário"}:
-                        </Text>
-                      </View>
-
-                      <Text>{comment.comment || comment.commentText}</Text>
-                      {comment.createdAt && (
-                        <Text style={{ fontSize: 12, color: "#888" }}>
-                          {new Date(comment.createdAt).toLocaleDateString()}
-                        </Text>
-                      )}
-                    </View>
-                  ))}
-                </View>
-              )}
             </View>
           ))
         )}
