@@ -20,12 +20,14 @@ const ProfileScreen = () => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [listings, setListings] = useState<any[]>([]);
+  const [savedListings, setSavedListings] = useState<any[]>([]);
+  const [showingSavedListings, setShowingSavedListings] = useState(false);
   const [isFriend, setIsFriend] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
   const api = getBaseApi();
   const { currentUser } = useUser();
   const isOwnProfile = currentUser?._id === user?._id;
-  const router = useRouter()
+  const router = useRouter();
 
   // console.log("🧾 Comentários do primeiro listing:", JSON.stringify(listings[0].commentedBy, null, 2));
 
@@ -41,6 +43,7 @@ const ProfileScreen = () => {
         // Simulação de verificação de amizade/seguimento
         setIsFriend(data.friends?.includes("CURRENT_USER_ID")); // ajuste depois
         setIsFollowing(data.followers?.includes("CURRENT_USER_ID"));
+        setSavedListings(data.savedListings);
       } catch (error) {
         console.error("❌ Erro ao carregar usuário:", error);
       } finally {
@@ -75,6 +78,7 @@ const ProfileScreen = () => {
       </Text>
     );
 
+  console.log("Saved listings: ", savedListings);
   return (
     <ScrollView contentContainerStyle={{ padding: 20 }}>
       <View style={{ alignItems: "center", marginBottom: 20 }}>
@@ -97,7 +101,10 @@ const ProfileScreen = () => {
       {/* Botões sociais */}
       {!isOwnProfile && (
         <View style={styles.buttonRow}>
-          <Pressable style={styles.button} onPress={() => setIsFriend(!isFriend)}>
+          <Pressable
+            style={styles.button}
+            onPress={() => setIsFriend(!isFriend)}
+          >
             <Text style={styles.buttonText}>
               {isFriend ? "Unfriend" : "Add Friend"}
             </Text>
@@ -117,71 +124,86 @@ const ProfileScreen = () => {
             <Text style={styles.buttonText}>DM</Text>
           </Pressable>
         </View>
-
       )}
 
+      {isOwnProfile && (
+        <View style={[styles.buttonRow, { marginBottom: 10 }]}>
+          <Pressable
+            style={[
+              styles.button,
+              showingSavedListings ? {} : { backgroundColor: "#2D7EF8" },
+            ]}
+            onPress={() => setShowingSavedListings(false)}
+          >
+            <Text style={styles.buttonText}>Publicações</Text>
+          </Pressable>
 
-{/* 
-      {isOwnProfile && savedListings.length > 0 && (
-  <View style={{ marginTop: 40 }}>
-    <Text style={{ fontSize: 18, fontWeight: "600", marginBottom: 10 }}>
-      📌 Salvos por você:
-    </Text>
-    {savedListings.map((listing, idx) => (
-      <View key={idx} style={styles.listing}>
-      </View>
-    ))}
-  </View>
-)}
-*/}
-
+          <Pressable
+            style={[
+              styles.button,
+              showingSavedListings ? { backgroundColor: "#2D7EF8" } : {},
+            ]}
+            onPress={() => setShowingSavedListings(true)}
+          >
+            <Text style={styles.buttonText}>Salvos</Text>
+          </Pressable>
+        </View>
+      )}
 
       {/* Listings */}
       <View style={{ marginTop: 30 }}>
         <Text style={{ fontSize: 18, fontWeight: "600", marginBottom: 10 }}>
-          Publicações de {user.firstName}:
+          {showingSavedListings
+            ? "📌 Listagens Salvas:"
+            : `Publicações de ${user.firstName}:`}
         </Text>
-        {listings.length === 0 ? (
-          <Text>Este usuário ainda não postou nada.</Text>
+
+        {(showingSavedListings ? savedListings : listings).length === 0 ? (
+          <Text>
+            {showingSavedListings
+              ? "Você ainda não salvou nenhuma publicação."
+              : "Este usuário ainda não postou nada."}
+          </Text>
         ) : (
-          listings.map((listing, index) => (
-            <View key={index} style={styles.listing}>
-              {listing.createdAt && <Text>{listing.createdAt}</Text>}
-              {listing.title && (
-                <Text style={styles.listingTitle}>{listing.title}</Text>
-              )}
-              {listing.content && <Text>{listing.content}</Text>}
-              {listing.image && (
-                <Image
-                  source={{ uri: listing.image }}
-                  style={{
-                    width: "100%",
-                    height: 150,
-                    borderRadius: 10,
-                    marginTop: 10,
-                  }}
+          (showingSavedListings ? savedListings : listings).map(
+            (listing, index) => (
+              <View key={index} style={styles.listing}>
+                {listing.createdAt && <Text>{listing.createdAt}</Text>}
+                {listing.title && (
+                  <Text style={styles.listingTitle}>{listing.title}</Text>
+                )}
+                {listing.content && <Text>{listing.content}</Text>}
+                {listing.image && (
+                  <Image
+                    source={{ uri: listing.image }}
+                    style={{
+                      width: "100%",
+                      height: 150,
+                      borderRadius: 10,
+                      marginTop: 10,
+                    }}
+                  />
+                )}
+                <InteractionBox
+                  liked={listing.likedBy?.includes(currentUser._id)}
+                  commented={!!listing.commentedBy?.length}
+                  saved={listing.savedBy?.includes(currentUser._id)}
+                  commentsCount={listing.commentedBy?.length || 0}
+                  listingId={listing._id}
+                  userId={currentUser?._id || ""}
+                  setListings={setListings}
+                  commentedBy={
+                    Array.isArray(listing.commentedBy)
+                      ? listing.commentedBy.map((comment: any) => ({
+                          ...comment,
+                          commentText: comment.commentText || comment.comment,
+                        }))
+                      : []
+                  }
                 />
-              )}
-              {/* COMPONENTE DE INTERAÇAO */}
-              <InteractionBox
-                liked={listing.likedBy?.includes(currentUser._id)}
-                commented={!!listing.commentedBy?.length}
-                saved={listing.savedBy?.includes(currentUser._id)}
-                commentsCount={listing.commentedBy?.length || 0}
-                listingId={listing._id}
-                userId={currentUser?._id || ""} // evita crash
-                setListings={setListings}
-                commentedBy={
-                  Array.isArray(listing.commentedBy)
-                    ? listing.commentedBy.map((comment: any) => ({
-                        ...comment,
-                        commentText: comment.commentText || comment.comment,
-                      }))
-                    : []
-                }
-              />
-            </View>
-          ))
+              </View>
+            )
+          )
         )}
       </View>
     </ScrollView>
