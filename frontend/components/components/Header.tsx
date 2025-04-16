@@ -28,7 +28,9 @@ const Header = ({
   profileImage = true,
   showRoomTitle = true,
   roomMock = null,
-  exitRoom = true
+  exitRoom = true,
+  settingsGear = true
+  
 }) => {
   const [showMenu, setShowMenu] = useState(false); // ✅ Start with menu closed
   const insets = useSafeAreaInsets();
@@ -80,7 +82,14 @@ const Header = ({
     pathname == "/chat";
 
     // display profile image / menu icon on all but pages except...
-    const displayProfileImage = !pathname.startsWith("/room/");
+    const displayProfileImage = 
+    !pathname.startsWith("/room/") &&
+    pathname !== `/profile/${user?.currentUser?._id}`;
+
+    const displaySettingsGear =
+    pathname.startsWith("/profile/") &&
+    pathname === `/profile/${user?.currentUser?._id}`;
+
 
 
   // Close menu when screen loses focus
@@ -260,6 +269,13 @@ const Header = ({
               />
             </Pressable>
           )}
+
+          {settingsGear && displaySettingsGear &&(
+            <Pressable onPress={() => router.push("/SettingsMain")}>
+              <Text>Settings</Text>
+            </Pressable>
+          )}
+
         </View>
       </View>
     </>

@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { getBaseApi } from "utils/getBaseApi";
 import InteractionBox from "../../components/components/InteractionBox";
 import { useUser } from "context/UserContext";
+import { useRouter } from "expo-router";
 
 const ProfileScreen = () => {
   const params = useLocalSearchParams();
@@ -23,10 +24,8 @@ const ProfileScreen = () => {
   const [isFollowing, setIsFollowing] = useState(false);
   const api = getBaseApi();
   const { currentUser } = useUser();
-
-  console.log("current user in user's profile page:", currentUser);
-
-  console.log("user who's profile is being visited:", user);
+  const isOwnProfile = currentUser?._id === user?._id;
+  const router = useRouter()
 
   // console.log("🧾 Comentários do primeiro listing:", JSON.stringify(listings[0].commentedBy, null, 2));
 
@@ -65,7 +64,10 @@ const ProfileScreen = () => {
     }
   }, [id]);
 
-  if (loading) return <ActivityIndicator style={{ marginTop: 40 }} />;
+  if (loading || currentUser === null) {
+    return <ActivityIndicator style={{ marginTop: 40 }} />;
+  }
+
   if (!user)
     return (
       <Text style={{ textAlign: "center", marginTop: 40 }}>
@@ -75,6 +77,15 @@ const ProfileScreen = () => {
 
   return (
     <ScrollView contentContainerStyle={{ padding: 20 }}>
+      {isOwnProfile && (
+        <Pressable
+          style={[styles.button, { backgroundColor: "#888" }]}
+          onPress={() => router.push("/settings")}
+        >
+          <Text style={styles.buttonText}>Editar perfil</Text>
+        </Pressable>
+      )}
+
       <View style={{ alignItems: "center", marginBottom: 20 }}>
         <Image
           source={{
@@ -148,7 +159,7 @@ const ProfileScreen = () => {
                 saved={listing.savedBy?.includes(currentUser._id)}
                 commentsCount={listing.commentedBy?.length || 0}
                 listingId={listing._id}
-                userId={currentUser._id} // substituir depois com seu contexto real
+                userId={currentUser?._id || ""} // evita crash
                 setListings={setListings}
                 commentedBy={
                   Array.isArray(listing.commentedBy)
@@ -158,7 +169,6 @@ const ProfileScreen = () => {
                       }))
                     : []
                 }
-              
               />
             </View>
           ))
